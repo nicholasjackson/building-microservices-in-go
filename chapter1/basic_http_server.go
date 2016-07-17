@@ -1,13 +1,17 @@
-package chapter1
+package main
 
-import "net/http"
+import (
+	"fmt"
+	"log"
+	"net/http"
+)
 
 func main() {
-	http.Handler("/helloworld", helloWorldHandler)
+	http.HandleFunc("/helloworld", helloWorldHandler)
 
-	log.Fatal(http.ListenAndServe(":8080", nil)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
 func helloWorldHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello World")
+	fmt.Fprint(w, "Hello World\n")
 }
