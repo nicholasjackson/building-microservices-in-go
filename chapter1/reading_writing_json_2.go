@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 )
@@ -21,10 +20,7 @@ func main() {
 
 func helloWorldHandler(w http.ResponseWriter, r *http.Request) {
 	response := HelloWorldResponse{Message: "HelloWorld"}
-	data, err := json.Marshal(response)
-	if err != nil {
-		panic("Ooops")
-	}
 
-	fmt.Fprint(w, string(data))
+	encoder := json.NewEncoder(w)
+	encoder.Encode(response)
 }
