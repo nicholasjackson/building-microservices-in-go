@@ -34,3 +34,15 @@ func BenchmarkHelloHandlerEncoder(b *testing.B) {
 		encoder.Encode(response)
 	}
 }
+
+func BenchmarkHelloHandlerEncoderReference(b *testing.B) {
+	b.ResetTimer()
+
+	var writer = ioutil.Discard
+	response := Response{Message: "Hello World"}
+
+	for i := 0; i < b.N; i++ {
+		encoder := json.NewEncoder(writer)
+		encoder.Encode(&response)
+	}
+}
