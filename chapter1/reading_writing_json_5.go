@@ -2,11 +2,10 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 )
-
-var name string
 
 type helloWorldResponse struct {
 	Message string `json:"message"`
@@ -16,47 +15,27 @@ type helloWorldRequest struct {
 	Name string `json:"name"`
 }
 
-type validationHandler struct {
-	next http.Handler
-}
-
-type helloWorldHandler struct {
-}
-
-func newValidationHandler(next http.Handler) http.Handler {
-	return validationHandler{next: next}
-}
-
-func newHelloWorldHandler() http.Handler {
-	return helloWorldHandler{}
-}
-
 func main() {
-	handler := newValidationHandler(newHelloWorldHandler())
+	port := 8080
 
-	http.Handle("/helloworld", handler)
+	http.HandleFunc("/helloworld", helloWorldHandler)
 
-	log.Printf("Starting server on port %v\n", 8080)
-
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Printf("Server starting on port %v\n", port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", port), nil))
 }
 
-func (h validationHandler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+func helloWorldHandler(w http.ResponseWriter, r *http.Request) {
+
 	var request helloWorldRequest
 	decoder := json.NewDecoder(r.Body)
 
 	err := decoder.Decode(&request)
 	if err != nil {
-		http.Error(rw, "Bad request", http.StatusBadRequest)
-	} else {
-		name = request.Name
-		h.next.ServeHTTP(rw, r)
+		http.Error(w, "Bad request", http.StatusBadRequest)
 	}
-}
 
-func (h helloWorldHandler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	response := helloWorldResponse{Message: "Hello " + name}
+	response := helloWorldResponse{Message: "Hello " + request.Name}
 
-	encoder := json.NewEncoder(rw)
+	encoder := json.NewEncoder(w)
 	encoder.Encode(response)
 }
