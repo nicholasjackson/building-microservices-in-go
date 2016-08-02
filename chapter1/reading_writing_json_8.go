@@ -82,6 +82,7 @@ func (h validationHandler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&request)
 	if err != nil {
 		http.Error(rw, "Bad request", http.StatusBadRequest)
+		return
 	} else {
 		ctx := contextForRequest(r)
 		*ctx = context.WithValue(*ctx, nameKey, request.Name)

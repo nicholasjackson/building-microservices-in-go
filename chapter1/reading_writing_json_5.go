@@ -32,6 +32,7 @@ func helloWorldHandler(w http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&request)
 	if err != nil {
 		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
 	}
 
 	response := helloWorldResponse{Message: "Hello " + request.Name}

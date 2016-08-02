@@ -43,6 +43,7 @@ func (h validationHandler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&request)
 	if err != nil {
 		http.Error(rw, "Bad request", http.StatusBadRequest)
+		return
 	} else {
 		name = request.Name
 		h.next.ServeHTTP(rw, r)

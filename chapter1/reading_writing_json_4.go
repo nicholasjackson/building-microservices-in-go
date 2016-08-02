@@ -30,12 +30,14 @@ func helloWorldHandler(w http.ResponseWriter, r *http.Request) {
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
 	}
 
 	var request helloWorldRequest
 	err = json.Unmarshal(body, &request)
 	if err != nil {
 		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
 	}
 
 	response := helloWorldResponse{Message: "Hello " + request.Name}

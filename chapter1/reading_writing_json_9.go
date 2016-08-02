@@ -96,6 +96,7 @@ func (h validationHandler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	err := decoder.Decode(&request)
 	if err != nil {
 		http.Error(rw, "Bad request", http.StatusBadRequest)
+		return
 	} else {
 		setContextValueForRequest(r, nameKey, request.Name)
 
