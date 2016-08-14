@@ -21,7 +21,7 @@ func main() {
 }
 
 func helloWorldHandler(w http.ResponseWriter, r *http.Request) {
-	response := helloWorldResponse{Message: "HelloWorld"}
+	response := helloWorldResponse{Message: "Hello World"}
 	data, err := json.Marshal(response)
 	if err != nil {
 		panic("Ooops")
