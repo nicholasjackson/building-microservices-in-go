@@ -1,21 +1,18 @@
-package main
+package rpc
 
 import (
-	"fmt"
-	"log"
-	"net/rpc"
 	"testing"
+
+	client "github.com/nicholasjackson/building-microservices-in-go/chapter2/rpc/client"
+	server "github.com/nicholasjackson/building-microservices-in-go/chapter2/rpc/server"
 )
 
 func BenchmarkDial(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		client, err := rpc.Dial("tcp", fmt.Sprintf("localhost:%v", port))
-		if err != nil {
-			log.Fatal("dialing:", err)
-		}
-		client.Close()
+		c := client.CreateClient()
+		c.Close()
 	}
 }
 
@@ -23,16 +20,10 @@ func BenchmarkDial(b *testing.B) {
 func BenchmarkHelloWorldHandler(b *testing.B) {
 	b.ResetTimer()
 
-	client, err := rpc.Dial("tcp", fmt.Sprintf("localhost:%v", port))
-	if err != nil {
-		log.Fatal("dialing:", err)
-	}
+	c := client.CreateClient()
 
 	for i := 0; i < b.N; i++ {
-		args := &HelloWorldRequest{Name: "World"}
-
-		var reply HelloWorldResponse
-		err = client.Call("HelloWorldHandler.HelloWorld", args, &reply)
+		client.PerformRequest(c)
 	}
 
 	client.Close()
@@ -41,5 +32,5 @@ func BenchmarkHelloWorldHandler(b *testing.B) {
 
 func init() {
 	// start the server
-	go server()
+	go server.Server()
 }
