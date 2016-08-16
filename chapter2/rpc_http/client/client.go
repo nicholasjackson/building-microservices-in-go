@@ -11,19 +11,18 @@ import (
 const port = 1234
 
 func CreateClient() *rpc.Client {
-	client, err := rpc.Dial("tcp", fmt.Sprintf("localhost:%v", port))
+	client, err := rpc.DialHTTP("tcp", fmt.Sprintf("localhost:%v", port))
 	if err != nil {
 		log.Fatal("dialing:", err)
 	}
-
 	return client
 }
 
-func PerformRequest(client *rpc.Client) contract.HelloWorldResponse {
+func PerformRequest(c *rpc.Client) contract.HelloWorldResponse {
 	args := &contract.HelloWorldRequest{Name: "World"}
 	var reply contract.HelloWorldResponse
+	err := c.Call("HelloWorldHandler.HelloWorld", args, &reply)
 
-	err := client.Call("HelloWorldHandler.HelloWorld", args, &reply)
 	if err != nil {
 		log.Fatal("error:", err)
 	}

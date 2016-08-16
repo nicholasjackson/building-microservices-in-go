@@ -1,31 +1,22 @@
 package main
 
 import (
-	"bytes"
-	"net/http"
 	"testing"
+
+	"github.com/nicholasjackson/building-microservices-in-go/chapter2/rpc_http_json/client"
+	"github.com/nicholasjackson/building-microservices-in-go/chapter2/rpc_http_json/server"
 )
 
 func BenchmarkHelloWorldHandlerJSONRPC(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		r, _ := http.Post(
-			"http://localhost:1234",
-			"application/json",
-			bytes.NewBuffer([]byte(`{"id": 1, "method": "HelloWorldHandler.HelloWorld", "params": [{"name":"World"}]}`)),
-		)
-		r.Body.Close()
-		/*
-			data, _ := ioutil.ReadAll(r.Body)
-			r.Body.Close()
+		_ = client.PerformRequest()
 
-			fmt.Println(string(data)) // {"id":1,"result":{"message":"Hello World"},"error":null}
-		*/
 	}
 }
 
 func init() {
 	// start the server
-	go server()
+	go server.StartServer()
 }

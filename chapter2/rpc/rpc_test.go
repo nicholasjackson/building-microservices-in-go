@@ -1,10 +1,10 @@
-package rpc
+package main
 
 import (
 	"testing"
 
-	client "github.com/nicholasjackson/building-microservices-in-go/chapter2/rpc/client"
-	server "github.com/nicholasjackson/building-microservices-in-go/chapter2/rpc/server"
+	"github.com/nicholasjackson/building-microservices-in-go/chapter2/rpc/client"
+	"github.com/nicholasjackson/building-microservices-in-go/chapter2/rpc/server"
 )
 
 func BenchmarkDial(b *testing.B) {
@@ -26,11 +26,11 @@ func BenchmarkHelloWorldHandler(b *testing.B) {
 		client.PerformRequest(c)
 	}
 
-	client.Close()
+	c.Close()
 
 }
 
 func init() {
 	// start the server
-	go server.Server()
+	go server.StartServer()
 }
