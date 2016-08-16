@@ -11,9 +11,17 @@ type helloWorldResponse struct {
 	Message string `json:"message"`
 }
 
-func main() {
-	port := 8080
+type helloWorldRequest struct {
+	Name string `json:"name"`
+}
 
+const port = 8080
+
+func main() {
+	server()
+}
+
+func server() {
 	http.HandleFunc("/helloworld", helloWorldHandler)
 
 	log.Printf("Server starting on port %v\n", port)
@@ -22,18 +30,17 @@ func main() {
 
 func helloWorldHandler(w http.ResponseWriter, r *http.Request) {
 
-	if r.Method == "OPTIONS" {
-		w.Header().Add("Access-Control-Allow-Origin", "*")
-		w.Header().Add("Access-Control-Allow-Methods", "GET")
-		w.WriteHeader(http.StatusNoContent)
+	var request helloWorldRequest
+	decoder := json.NewDecoder(r.Body)
+
+	err := decoder.Decode(&request)
+	if err != nil {
+		http.Error(w, "Bad request", http.StatusBadRequest)
 		return
 	}
 
-	response := helloWorldResponse{Message: "HelloWorld"}
-	data, err := json.Marshal(response)
-	if err != nil {
-		panic("Ooops")
-	}
+	response := helloWorldResponse{Message: "Hello " + request.Name}
 
-	fmt.Fprint(w, string(data))
+	encoder := json.NewEncoder(w)
+	encoder.Encode(response)
 }
