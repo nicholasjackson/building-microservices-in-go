@@ -23,6 +23,13 @@ func (c *HttpConn) Read(p []byte) (n int, err error)  { return c.in.Read(p) }
 func (c *HttpConn) Write(d []byte) (n int, err error) { return c.out.Write(d) }
 func (c *HttpConn) Close() error                      { return nil }
 
+type HelloWorldHandler struct{}
+
+func (h *HelloWorldHandler) HelloWorld(args *contract.HelloWorldRequest, reply *contract.HelloWorldResponse) error {
+	reply.Message = "Hello " + args.Name
+	return nil
+}
+
 func StartServer() {
 	helloWorld := new(HelloWorldHandler)
 	rpc.Register(helloWorld)
@@ -43,11 +50,4 @@ func httpHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error while serving JSON request, details have been logged.", 500)
 		return
 	}
-}
-
-type HelloWorldHandler struct{}
-
-func (h *HelloWorldHandler) HelloWorld(args *contract.HelloWorldRequest, reply *contract.HelloWorldResponse) error {
-	reply.Message = "Hello " + args.Name
-	return nil
 }
