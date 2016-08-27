@@ -1,27 +1,12 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
-	"sync"
-
-	"golang.org/x/net/context"
 )
-
-// CONTEXT HAS BEEN MOVED INTO THE STANDARD PACKAGE AS OF GO 1.7
-// THIS ALSO INTRODUCES THE CAPABILITY TO OBTAIN CONTEXT FROM A REQUEST
-// OBJECT REMOVING THE REQUIREMENT FOR BOLIER PLAT IN EXAMPLE
-// 8-9
-// THIS CODE EXAMPLE NEEDS TO BE RE_WRITTEN
-
-type key int
-
-type requestContext struct {
-	context *context.Context
-	cancel  context.CancelFunc
-}
 
 type helloWorldResponse struct {
 	Message string `json:"message"`
@@ -29,38 +14,6 @@ type helloWorldResponse struct {
 
 type helloWorldRequest struct {
 	Name string `json:"name"`
-}
-
-const nameKey key = 0
-
-var contexts = map[*http.Request]requestContext{}
-var contextLock sync.Mutex
-var ctx = context.Background()
-
-// returns the Context for our request, creates a new Context if one does not exist
-func contextForRequest(r *http.Request) *context.Context {
-	contextLock.Lock()
-	defer contextLock.Unlock()
-
-	c, ok := contexts[r]
-
-	if !ok {
-		c, cancel := context.WithCancel(ctx) // copy root and add to map
-		contexts[r] = requestContext{context: &c, cancel: cancel}
-		return &c
-	}
-
-	return c.context // context has already been created
-}
-
-// deletes the context for our request, must be called or we will leak memory
-func deleteContextForRequest(r *http.Request) {
-	contextLock.Lock()
-	defer contextLock.Unlock()
-
-	contexts[r].cancel()
-
-	delete(contexts, r)
 }
 
 func main() {
@@ -90,10 +43,8 @@ func (h validationHandler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, "Bad request", http.StatusBadRequest)
 		return
 	} else {
-		ctx := contextForRequest(r)
-		*ctx = context.WithValue(*ctx, nameKey, request.Name)
-
-		defer deleteContextForRequest(r) // cleanup
+		c := context.WithValue(r.Context(), "name", request.Name)
+		r = r.WithContext(c)
 		h.next.ServeHTTP(rw, r)
 	}
 }
@@ -106,9 +57,7 @@ func newHelloWorldHandler() http.Handler {
 }
 
 func (h helloWorldHandler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	ctx := *contextForRequest(r)
-	name := ctx.Value(nameKey).(string)
-
+	name := r.Context().Value("name").(string)
 	response := helloWorldResponse{Message: "Hello " + name}
 
 	encoder := json.NewEncoder(rw)
