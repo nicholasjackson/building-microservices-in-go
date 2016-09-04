@@ -24,3 +24,6 @@ _testmain.go
 *.prof
 
 .DS_Store
+
+#project binaries
+chapter3/working_with_dockerfiles/server
