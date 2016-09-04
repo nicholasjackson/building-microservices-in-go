@@ -1,0 +1,9 @@
+version: '2'
+services:
+    testserver:
+        image: testserver
+    curl:
+        image: appropriate/curl 
+        entrypoint: sh -c  "sleep 3 && curl -XPOST testserver:8080/helloworld -d '{\"name\":\"Nic\"}'"
+        links:
+            - testserver
