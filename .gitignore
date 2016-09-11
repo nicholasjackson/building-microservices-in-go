@@ -1,3 +1,5 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Go template
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
 *.o
 *.a
@@ -24,6 +26,3 @@ _testmain.go
 *.prof
 
 .DS_Store
-
-#project binaries
-chapter3/working_with_dockerfiles/server

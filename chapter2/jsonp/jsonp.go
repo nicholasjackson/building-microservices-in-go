@@ -29,10 +29,9 @@ func helloWorldHandler(w http.ResponseWriter, r *http.Request) {
 
 	callback := r.URL.Query().Get("callback")
 	if callback != "" {
-	  r.Headers().Add("Content-Type", "application/javascript")
+		r.Headers().Add("Content-Type", "application/javascript")
 		fmt.Fprintf(w, "%s(%s)", callback, string(data))
 	} else {
 		fmt.Fprint(w, string(data))
 	}
-
 }

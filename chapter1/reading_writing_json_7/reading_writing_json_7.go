@@ -44,10 +44,10 @@ func (h validationHandler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(rw, "Bad request", http.StatusBadRequest)
 		return
-	} else {
-		name = request.Name
-		h.next.ServeHTTP(rw, r)
 	}
+
+	name = request.Name
+	h.next.ServeHTTP(rw, r)
 }
 
 type helloWorldHandler struct{}
