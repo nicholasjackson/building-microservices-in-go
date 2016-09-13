@@ -32,4 +32,6 @@ RUN git clone -b v1.0.x https://github.com/grpc/grpc && \
     ldconfig && \
     cp /grpc/third_party/protobuf/src/protoc /usr/local/bin/protoc
 
-RUN gem install grpc -v 1.0.0
+RUN gem install grpc -v 1.0.0 && \
+    gem install json-rpc-objects && \
+    gem install json-rpc-objects-json
