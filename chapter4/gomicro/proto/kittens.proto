@@ -2,8 +2,15 @@ syntax = "proto3";
 
 package bmigo.micro;
 
-service Kittens {
-    rpc List(Request) returns (Response) {}
+message RequestEnvelope {
+    string service_method = 1;
+    fixed64 seq = 2;
+}
+
+message ResponseEnvelope {
+    string service_method = 1;
+    fixed64 seq = 2;
+    string error = 3;
 }
 
 message Request {
@@ -12,4 +19,8 @@ message Request {
 
 message Response {
     string msg = 1;
+}
+
+service Kittens {
+    rpc List(Request) returns (Response) {}
 }
