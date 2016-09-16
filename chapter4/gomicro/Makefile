@@ -13,4 +13,4 @@ runclient:
 protoc:
 	echo "Generating protobuf code"
 	docker run -v $(shell pwd)/proto:/proto nicholasjackson/building-microservices-in-go bash -c 'protoc -I /proto --go_out=. /proto/kittens.proto'
-	docker run -v $(shell pwd)/proto:/proto nicholasjackson/building-microservices-in-go bash -c 'protoc -I /proto --ruby_out=/proto --grpc_out=/proto --plugin=protoc-gen-grpc=`which grpc_ruby_plugin` /proto/kittens.proto'
+	docker run -v $(shell pwd)/proto:/proto nicholasjackson/building-microservices-in-go bash -c 'protoc -I /proto --ruby_out=/proto /proto/kittens.proto'
