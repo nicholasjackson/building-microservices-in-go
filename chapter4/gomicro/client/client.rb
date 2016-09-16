@@ -7,13 +7,22 @@ $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
 require 'grpc'
 require 'multi_json'
 require 'kittens_services_pb'
+require 'net/http'
+require 'uri'
 
 include Bmigo::Micro
 
 def main()
-  stub = Kittens::Stub.new('kittenserver_kittenserver_1:8091', :this_channel_is_insecure)
-  
-  message = stub.list(Request.new(name: "World")).message
+    puts "Connecting to Kittenserver"
+    http = Net::HTTP.new('kittenserver_kittenserver_1',8091)
+    request = Net::HTTP::Post.new('/rpc')
+    request.content_type = 'application/json'
+
+    message = Request.new(name: "World")
+    request.body = Request.encode_json(message)
+    puts request.body
+    response = http.request(request)
+    puts response.body
 end
 
 main
