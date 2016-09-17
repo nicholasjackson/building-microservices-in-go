@@ -4,6 +4,15 @@
 require 'google/protobuf'
 
 Google::Protobuf::DescriptorPool.generated_pool.build do
+  add_message "bmigo.micro.RequestEnvelope" do
+    optional :service_method, :string, 1
+    optional :seq, :fixed64, 2
+  end
+  add_message "bmigo.micro.ResponseEnvelope" do
+    optional :service_method, :string, 1
+    optional :seq, :fixed64, 2
+    optional :error, :string, 3
+  end
   add_message "bmigo.micro.Request" do
     optional :name, :string, 1
   end
@@ -14,6 +23,8 @@ end
 
 module Bmigo
   module Micro
+    RequestEnvelope = Google::Protobuf::DescriptorPool.generated_pool.lookup("bmigo.micro.RequestEnvelope").msgclass
+    ResponseEnvelope = Google::Protobuf::DescriptorPool.generated_pool.lookup("bmigo.micro.ResponseEnvelope").msgclass
     Request = Google::Protobuf::DescriptorPool.generated_pool.lookup("bmigo.micro.Request").msgclass
     Response = Google::Protobuf::DescriptorPool.generated_pool.lookup("bmigo.micro.Response").msgclass
   end
