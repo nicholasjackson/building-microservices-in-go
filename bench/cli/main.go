@@ -20,14 +20,13 @@ func main() {
 }
 
 type GoMicroRequest struct {
-	err error
 }
 
 func (r *GoMicroRequest) Do() error {
-	if r.err != nil {
-		r.err = nil
-	} else {
-		r.err = fmt.Errorf("sd")
+
+	if time.Now().UnixNano()%2 == 0 {
+		return fmt.Errorf("dfdf")
 	}
-	return r.err
+
+	return nil
 }
