@@ -14,6 +14,7 @@ include Bmigo::Micro
 
 MESSAGE_SIZE_BYTES = 4
 
+# read the response from the go micro server
 def read_response(body)
 
   envelope, envelope_size = read_envelope(body) 
@@ -24,9 +25,10 @@ def read_response(body)
   return envelope, message
 end
 
+# reads the message envelope and returns a ResponseEnvelope
 def read_envelope(body)
-  end_pos = MESSAGE_SIZE_BYTES - 1
- 
+
+  end_pos = MESSAGE_SIZE_BYTES - 1 
   message_len = body[0..end_pos].unpack('N*')[0]
   
   end_pos = end_pos + message_len
@@ -35,16 +37,20 @@ def read_envelope(body)
   return ResponseEnvelope.decode(resp), message_len
 end
 
+# reads the message object from the response stream
 def read_message(start_pos, body)
+
   end_pos = start_pos + MESSAGE_SIZE_BYTES
   message_len = body[start_pos..end_pos].unpack('N*')[0]
+ 
   start_pos = end_pos
   end_pos = start_pos + message_len
   message = body[start_pos..end_pos]
-  puts message.inspect  
+  
   Response.decode(message)
 end
 
+# construct the request objects and send them to the server
 def send_request()
 
   http = Net::HTTP.new('kittenserver_kittenserver_1',8091)
@@ -54,6 +60,7 @@ def send_request()
   # Create envelope
   envelope = RequestEnvelope.new(service_method: "Kittens.List", seq: 2)
   encoded_envelope = RequestEnvelope.encode(envelope)
+  # Message size is encoded into 4 bytes as an unsigned integer
   envelope_size = Array(encoded_envelope.length).pack('N*') 
 
   # Create message
@@ -61,6 +68,7 @@ def send_request()
   encoded_message = Request.encode(message)
   message_size = Array(encoded_message.length).pack('N*')
 
+  # Add the message body in the format of message length followed by the message
   request.body = envelope_size + encoded_envelope + message_size + encoded_message
   response = http.request(request)
 
