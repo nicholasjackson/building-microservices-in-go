@@ -3,6 +3,9 @@ package bench
 import (
 	"fmt"
 	"time"
+
+	"github.com/nicholasjackson/building-microservices-in-go/bench/errors"
+	"github.com/nicholasjackson/building-microservices-in-go/bench/results"
 )
 
 // Bench is the main application object it allows the profiling of calls to a remote endpoint defined by a Request
@@ -11,22 +14,6 @@ type Bench struct {
 	testTime time.Duration
 	timeout  time.Duration
 	request  Request
-}
-
-// Results represents a set of benchmark results
-type Results struct {
-	TotalRequests  int
-	AvgRequestTime time.Duration
-	TotalFailures  int
-}
-
-// String implements String from the Stringer interface and
-// allows results to be serialized to a sting
-func (r Results) String() string {
-
-	rStr := fmt.Sprintf("Total Requests: %v\n", r.TotalRequests)
-	rStr = fmt.Sprintf("%vAvg Request Time: %v\n", rStr, r.AvgRequestTime)
-	return fmt.Sprintf("%vTotal Failures: %v\n", rStr, r.TotalFailures)
 }
 
 // New creates a new bench and intializes the intial values of...
@@ -53,32 +40,83 @@ func New(
 // RunBenchmarks executes the benchmarks based upon the given criteria
 //
 // Returns a resultset
-func (b *Bench) RunBenchmarks() Results {
-	r := Results{
-		TotalRequests:  0,
-		TotalFailures:  0,
-		AvgRequestTime: 0,
-	}
+func (b *Bench) RunBenchmarks() []results.Result {
 
 	startTime := time.Now()
 	endTime := startTime.Add(b.testTime)
-	totalRequestTime := 0 * time.Second
+
+	semaphore := make(chan struct{}, b.threads)
+	abandon := make(chan bool, b.threads) //  use a buffered channel as if we don't when nothing reads we block
+	out := make(chan results.Result)
+	var results []results.Result
+
+	// handle the returns from the threads
+	go handleResult(out, &results)
 
 	for run := true; run; run = (time.Now().Before(endTime)) {
-		r.TotalRequests += 1
-		requestStart := time.Now()
-		err := b.request.Do()
-		duration := time.Now().Sub(requestStart)
 
-		if err != nil {
-			r.TotalFailures += 1
-		} else {
-			totalRequestTime += duration
-		}
+		semaphore <- struct{}{} // blocks when channel is full
+
+		// execute a request
+		go doRequest(b.request, b.timeout, semaphore, out, abandon)
 	}
 
-	avgTime := int64(totalRequestTime) / int64(r.TotalRequests-r.TotalFailures)
-	r.AvgRequestTime = time.Duration(avgTime)
+	// Instruct all threads to abandon
+	for i := 0; i < b.threads; i++ {
+		abandon <- true
+	}
 
-	return r
+	// wait for threads to return
+	// once we fill the buffer to capacity we know that
+	// we can safely quit
+	for i := 0; i < cap(semaphore); i++ {
+		semaphore <- struct{}{}
+	}
+
+	// close the output channel so the handle result method returns
+	close(out)
+
+	return results
+}
+
+func handleResult(out chan results.Result, results *[]results.Result) {
+
+	for result := range out {
+		*results = append(*results, result)
+	}
+}
+
+func doRequest(request Request, timeout time.Duration, semaphore chan struct{}, out chan results.Result, abandon chan bool) {
+
+	defer func() {
+		<-semaphore // notify we are done at the end of the routine
+	}()
+
+	requestStart := time.Now()
+
+	timeoutC := time.After(timeout)
+	complete := make(chan results.Result)
+
+	go func() {
+		err := request.Do()
+		complete <- results.Result{
+			Error:       err,
+			RequestTime: time.Now().Sub(requestStart),
+			Timestamp:   time.Now(),
+		}
+	}()
+
+	var ret results.Result
+
+	select {
+	case ret = <-complete:
+	case <-timeoutC:
+		ret.Error = errors.Timeout{Message: "Timeout error"}
+		ret.RequestTime = timeout
+		ret.Timestamp = time.Now()
+	case <-abandon:
+		fmt.Println("Abandon")
+	}
+
+	out <- ret
 }
