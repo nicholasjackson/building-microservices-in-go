@@ -16,7 +16,7 @@ import (
 func main() {
 	fmt.Println("Benchmarking application")
 
-	b := bench.New(2000, 300*time.Second, 90*time.Second, 5*time.Second)
+	b := bench.New(400, 300*time.Second, 90*time.Second, 5*time.Second)
 	b.AddOutput(301*time.Second, os.Stdout, output.WriteTabularData)
 	b.AddOutput(1*time.Second, util.NewFile("./output.txt"), output.WriteTabularData)
 	b.AddOutput(1*time.Second, util.NewFile("./error.txt"), output.WriteErrorLogs)
