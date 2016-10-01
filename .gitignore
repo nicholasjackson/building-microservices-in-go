@@ -28,5 +28,8 @@ _testmain.go
 
 .DS_Store
 
+# binaries
+kittenserver
+
 # Remove ctags
 /tags
