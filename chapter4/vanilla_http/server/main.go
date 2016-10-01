@@ -34,13 +34,14 @@ func (h validationHandler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 
 	err := decoder.Decode(&request)
 	if err != nil {
-		c := context.WithValue(r.Context(), "name", request.Name)
-		r = r.WithContext(c)
+		http.Error(rw, "Bad request", http.StatusBadRequest)
 		return
 	}
 
+	c := context.WithValue(r.Context(), "name", request.Name)
+	r = r.WithContext(c)
+
 	h.next.ServeHTTP(rw, r)
-	http.Error(rw, "Bad request", http.StatusBadRequest)
 }
 
 type helloWorldHandler struct {
