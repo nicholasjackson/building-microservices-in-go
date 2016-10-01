@@ -1,217 +1,1647 @@
-Start Time: 2016-09-24 15:44:03.791722534 +0000 UTC
+Start Time: 2016-10-01 14:18:16.249737744 +0000 UTC
 Elapsed Time: 0s
-Total Requests: 2
-Avg Request Time: 66.704843ms
-Total Success: 2
+Threads: 16
+Total Requests: 349
+Avg Request Time: 7.302046ms
+Total Success: 349
 Total Timeouts: 0
 Total Failures: 0
-Start Time: 2016-09-24 15:44:03.922736159 +0000 UTC
-Elapsed Time: 131.013625ms
-Total Requests: 25
-Avg Request Time: 66.724672ms
-Total Success: 25
+
+Start Time: 2016-10-01 14:18:16.591516819 +0000 UTC
+Elapsed Time: 341.779075ms
+Threads: 60
+Total Requests: 1747
+Avg Request Time: 19.891233ms
+Total Success: 1747
 Total Timeouts: 0
 Total Failures: 0
-Start Time: 2016-09-24 15:44:04.94820255 +0000 UTC
-Elapsed Time: 1.156480016s
-Total Requests: 58
-Avg Request Time: 73.933587ms
-Total Success: 58
+
+Start Time: 2016-10-01 14:18:17.591644018 +0000 UTC
+Elapsed Time: 1.341906274s
+Threads: 105
+Total Requests: 1828
+Avg Request Time: 41.914419ms
+Total Success: 1828
 Total Timeouts: 0
 Total Failures: 0
-Start Time: 2016-09-24 15:44:05.933045866 +0000 UTC
-Elapsed Time: 2.141323332s
-Total Requests: 79
-Avg Request Time: 88.913381ms
-Total Success: 79
+
+Start Time: 2016-10-01 14:18:18.591834371 +0000 UTC
+Elapsed Time: 2.342096627s
+Threads: 149
+Total Requests: 1571
+Avg Request Time: 75.227643ms
+Total Success: 1571
 Total Timeouts: 0
 Total Failures: 0
-Start Time: 2016-09-24 15:44:06.930510567 +0000 UTC
-Elapsed Time: 3.138788033s
-Total Requests: 115
-Avg Request Time: 85.791477ms
-Total Success: 115
+
+Start Time: 2016-10-01 14:18:19.591423433 +0000 UTC
+Elapsed Time: 3.341685689s
+Threads: 193
+Total Requests: 2020
+Avg Request Time: 75.809823ms
+Total Success: 2020
 Total Timeouts: 0
 Total Failures: 0
-Start Time: 2016-09-24 15:44:07.996673252 +0000 UTC
-Elapsed Time: 4.204950718s
-Total Requests: 129
-Avg Request Time: 112.224523ms
-Total Success: 128
-Total Timeouts: 1
-Total Failures: 1
-Start Time: 2016-09-24 15:44:08.919159935 +0000 UTC
-Elapsed Time: 5.127437401s
-Total Requests: 143
-Avg Request Time: 148.84793ms
-Total Success: 142
-Total Timeouts: 1
-Total Failures: 1
-Start Time: 2016-09-24 15:44:09.949280005 +0000 UTC
-Elapsed Time: 6.157557471s
-Total Requests: 150
-Avg Request Time: 173.131517ms
-Total Success: 150
+
+Start Time: 2016-10-01 14:18:20.594896477 +0000 UTC
+Elapsed Time: 4.345158733s
+Threads: 236
+Total Requests: 1830
+Avg Request Time: 99.296822ms
+Total Success: 1830
 Total Timeouts: 0
 Total Failures: 0
-Start Time: 2016-09-24 15:44:10.921520638 +0000 UTC
-Elapsed Time: 7.129798104s
-Total Requests: 164
-Avg Request Time: 194.59557ms
-Total Success: 164
+
+Start Time: 2016-10-01 14:18:21.591336897 +0000 UTC
+Elapsed Time: 5.341599153s
+Threads: 268
+Total Requests: 1270
+Avg Request Time: 193.507982ms
+Total Success: 1270
 Total Timeouts: 0
 Total Failures: 0
-Start Time: 2016-09-24 15:44:11.92996951 +0000 UTC
-Elapsed Time: 8.138246976s
-Total Requests: 181
-Avg Request Time: 244.277748ms
-Total Success: 179
-Total Timeouts: 2
-Total Failures: 2
-Start Time: 2016-09-24 15:44:12.939064675 +0000 UTC
-Elapsed Time: 9.147342141s
-Total Requests: 187
-Avg Request Time: 252.020718ms
-Total Success: 187
+
+Start Time: 2016-10-01 14:18:22.592280059 +0000 UTC
+Elapsed Time: 6.342542315s
+Threads: 289
+Total Requests: 1226
+Avg Request Time: 185.996607ms
+Total Success: 1226
 Total Timeouts: 0
 Total Failures: 0
-Start Time: 2016-09-24 15:44:13.918684556 +0000 UTC
-Elapsed Time: 10.126962022s
-Total Requests: 177
-Avg Request Time: 299.506102ms
-Total Success: 175
-Total Timeouts: 2
-Total Failures: 2
-Start Time: 2016-09-24 15:44:14.922201997 +0000 UTC
-Elapsed Time: 11.130479463s
-Total Requests: 218
-Avg Request Time: 320.582255ms
-Total Success: 217
-Total Timeouts: 1
-Total Failures: 1
-Start Time: 2016-09-24 15:44:15.921687637 +0000 UTC
-Elapsed Time: 12.129965103s
-Total Requests: 190
-Avg Request Time: 399.584756ms
-Total Success: 185
-Total Timeouts: 5
-Total Failures: 5
-Start Time: 2016-09-24 15:44:16.921819395 +0000 UTC
-Elapsed Time: 13.130096861s
-Total Requests: 197
-Avg Request Time: 363.117652ms
-Total Success: 193
-Total Timeouts: 4
-Total Failures: 4
-Start Time: 2016-09-24 15:44:17.922735949 +0000 UTC
-Elapsed Time: 14.131013415s
-Total Requests: 198
-Avg Request Time: 497.689232ms
-Total Success: 197
-Total Timeouts: 1
-Total Failures: 1
-Start Time: 2016-09-24 15:44:18.929357268 +0000 UTC
-Elapsed Time: 15.137634734s
-Total Requests: 202
-Avg Request Time: 511.818215ms
-Total Success: 193
-Total Timeouts: 9
-Total Failures: 9
-Start Time: 2016-09-24 15:44:19.921730848 +0000 UTC
-Elapsed Time: 16.130008314s
-Total Requests: 205
-Avg Request Time: 554.782811ms
-Total Success: 195
+
+Start Time: 2016-10-01 14:18:23.611113986 +0000 UTC
+Elapsed Time: 7.361376242s
+Threads: 331
+Total Requests: 1914
+Avg Request Time: 96.015651ms
+Total Success: 1914
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:24.591914569 +0000 UTC
+Elapsed Time: 8.342176825s
+Threads: 368
+Total Requests: 1488
+Avg Request Time: 237.91865ms
+Total Success: 1488
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:25.621813883 +0000 UTC
+Elapsed Time: 9.372076139s
+Threads: 407
+Total Requests: 1779
+Avg Request Time: 208.309428ms
+Total Success: 1779
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:26.591316349 +0000 UTC
+Elapsed Time: 10.341578605s
+Threads: 446
+Total Requests: 1882
+Avg Request Time: 215.12305ms
+Total Success: 1882
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:27.596398492 +0000 UTC
+Elapsed Time: 11.346660748s
+Threads: 485
+Total Requests: 2103
+Avg Request Time: 163.118853ms
+Total Success: 2103
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:28.591358004 +0000 UTC
+Elapsed Time: 12.34162026s
+Threads: 527
+Total Requests: 1626
+Avg Request Time: 251.987799ms
+Total Success: 1626
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:29.594292912 +0000 UTC
+Elapsed Time: 13.344555168s
+Threads: 555
+Total Requests: 1320
+Avg Request Time: 383.045168ms
+Total Success: 1320
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:30.591344537 +0000 UTC
+Elapsed Time: 14.341606793s
+Threads: 598
+Total Requests: 1383
+Avg Request Time: 210.584767ms
+Total Success: 1383
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:31.595435569 +0000 UTC
+Elapsed Time: 15.345697825s
+Threads: 621
+Total Requests: 1445
+Avg Request Time: 597.449218ms
+Total Success: 1445
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:32.597926816 +0000 UTC
+Elapsed Time: 16.348189072s
+Threads: 649
+Total Requests: 1451
+Avg Request Time: 267.532022ms
+Total Success: 1422
+Total Timeouts: 29
+Total Failures: 29
+
+Start Time: 2016-10-01 14:18:33.598710741 +0000 UTC
+Elapsed Time: 17.348972997s
+Threads: 670
+Total Requests: 1480
+Avg Request Time: 431.58545ms
+Total Success: 1480
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:34.591462688 +0000 UTC
+Elapsed Time: 18.341724944s
+Threads: 689
+Total Requests: 1597
+Avg Request Time: 404.218521ms
+Total Success: 1597
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:35.691816831 +0000 UTC
+Elapsed Time: 19.442079087s
+Threads: 705
+Total Requests: 1532
+Avg Request Time: 484.328878ms
+Total Success: 1532
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:36.615417125 +0000 UTC
+Elapsed Time: 20.365679381s
+Threads: 717
+Total Requests: 1517
+Avg Request Time: 345.496512ms
+Total Success: 1517
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:37.61051936 +0000 UTC
+Elapsed Time: 21.360781616s
+Threads: 753
+Total Requests: 1559
+Avg Request Time: 305.252912ms
+Total Success: 1559
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:38.592529548 +0000 UTC
+Elapsed Time: 22.342791804s
+Threads: 786
+Total Requests: 1144
+Avg Request Time: 557.654844ms
+Total Success: 1144
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:39.594592027 +0000 UTC
+Elapsed Time: 23.344854283s
+Threads: 824
+Total Requests: 2063
+Avg Request Time: 363.833861ms
+Total Success: 2063
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:40.597238804 +0000 UTC
+Elapsed Time: 24.34750106s
+Threads: 858
+Total Requests: 1875
+Avg Request Time: 393.810406ms
+Total Success: 1875
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:41.598430305 +0000 UTC
+Elapsed Time: 25.348692561s
+Threads: 899
+Total Requests: 2076
+Avg Request Time: 461.504574ms
+Total Success: 2076
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:42.592163779 +0000 UTC
+Elapsed Time: 26.342426035s
+Threads: 940
+Total Requests: 1789
+Avg Request Time: 396.303474ms
+Total Success: 1789
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:43.592204122 +0000 UTC
+Elapsed Time: 27.342466378s
+Threads: 979
+Total Requests: 1949
+Avg Request Time: 264.475626ms
+Total Success: 1923
+Total Timeouts: 26
+Total Failures: 26
+
+Start Time: 2016-10-01 14:18:44.59132361 +0000 UTC
+Elapsed Time: 28.341585866s
+Threads: 1022
+Total Requests: 1656
+Avg Request Time: 607.970401ms
+Total Success: 1646
 Total Timeouts: 10
 Total Failures: 10
-Start Time: 2016-09-24 15:44:20.918753314 +0000 UTC
-Elapsed Time: 17.12703078s
-Total Requests: 202
-Avg Request Time: 527.566876ms
-Total Success: 202
-Total Timeouts: 0
-Total Failures: 0
-Start Time: 2016-09-24 15:44:21.926747811 +0000 UTC
-Elapsed Time: 18.135025277s
-Total Requests: 225
-Avg Request Time: 519.053294ms
-Total Success: 218
-Total Timeouts: 7
-Total Failures: 7
-Start Time: 2016-09-24 15:44:22.919750124 +0000 UTC
-Elapsed Time: 19.12802759s
-Total Requests: 206
-Avg Request Time: 501.568343ms
-Total Success: 197
-Total Timeouts: 9
-Total Failures: 9
-Start Time: 2016-09-24 15:44:23.922130835 +0000 UTC
-Elapsed Time: 20.130408301s
-Total Requests: 212
-Avg Request Time: 566.103131ms
-Total Success: 207
-Total Timeouts: 5
-Total Failures: 5
-Start Time: 2016-09-24 15:44:24.917857771 +0000 UTC
-Elapsed Time: 21.126135237s
-Total Requests: 201
-Avg Request Time: 525.318817ms
-Total Success: 199
-Total Timeouts: 2
-Total Failures: 2
-Start Time: 2016-09-24 15:44:25.929350318 +0000 UTC
-Elapsed Time: 22.137627784s
-Total Requests: 211
-Avg Request Time: 487.665211ms
-Total Success: 202
-Total Timeouts: 9
-Total Failures: 9
-Start Time: 2016-09-24 15:44:26.930189307 +0000 UTC
-Elapsed Time: 23.138466773s
-Total Requests: 207
-Avg Request Time: 639.694139ms
-Total Success: 206
-Total Timeouts: 1
-Total Failures: 1
-Start Time: 2016-09-24 15:44:27.925785113 +0000 UTC
-Elapsed Time: 24.134062579s
-Total Requests: 203
-Avg Request Time: 519.761222ms
-Total Success: 199
+
+Start Time: 2016-10-01 14:18:45.592121542 +0000 UTC
+Elapsed Time: 29.342383798s
+Threads: 1060
+Total Requests: 1834
+Avg Request Time: 506.825533ms
+Total Success: 1830
 Total Timeouts: 4
 Total Failures: 4
-Start Time: 2016-09-24 15:44:28.930825983 +0000 UTC
-Elapsed Time: 25.139103449s
-Total Requests: 208
-Avg Request Time: 565.55357ms
-Total Success: 207
-Total Timeouts: 1
-Total Failures: 1
-Start Time: 2016-09-24 15:44:29.920982327 +0000 UTC
-Elapsed Time: 26.129259793s
-Total Requests: 229
-Avg Request Time: 597.899165ms
-Total Success: 229
-Total Timeouts: 0
-Total Failures: 0
-Start Time: 2016-09-24 15:44:30.921991585 +0000 UTC
-Elapsed Time: 27.130269051s
-Total Requests: 203
-Avg Request Time: 493.530452ms
-Total Success: 202
-Total Timeouts: 1
-Total Failures: 1
-Start Time: 2016-09-24 15:44:31.925463956 +0000 UTC
-Elapsed Time: 28.133741422s
-Total Requests: 188
-Avg Request Time: 603.303734ms
-Total Success: 177
+
+Start Time: 2016-10-01 14:18:46.591530669 +0000 UTC
+Elapsed Time: 30.341792925s
+Threads: 1095
+Total Requests: 1851
+Avg Request Time: 584.787455ms
+Total Success: 1817
+Total Timeouts: 34
+Total Failures: 34
+
+Start Time: 2016-10-01 14:18:47.591653594 +0000 UTC
+Elapsed Time: 31.34191585s
+Threads: 1136
+Total Requests: 1600
+Avg Request Time: 375.571611ms
+Total Success: 1589
 Total Timeouts: 11
 Total Failures: 11
-Start Time: 2016-09-24 15:44:32.922117234 +0000 UTC
-Elapsed Time: 29.1303947s
-Total Requests: 231
-Avg Request Time: 486.745328ms
-Total Success: 229
+
+Start Time: 2016-10-01 14:18:48.599899572 +0000 UTC
+Elapsed Time: 32.350161828s
+Threads: 1179
+Total Requests: 1728
+Avg Request Time: 653.410003ms
+Total Success: 1728
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:49.592548856 +0000 UTC
+Elapsed Time: 33.342811112s
+Threads: 1217
+Total Requests: 1874
+Avg Request Time: 395.585275ms
+Total Success: 1782
+Total Timeouts: 92
+Total Failures: 92
+
+Start Time: 2016-10-01 14:18:50.592895465 +0000 UTC
+Elapsed Time: 34.343157721s
+Threads: 1253
+Total Requests: 1976
+Avg Request Time: 590.326949ms
+Total Success: 1976
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:51.59323737 +0000 UTC
+Elapsed Time: 35.343499626s
+Threads: 1289
+Total Requests: 1830
+Avg Request Time: 548.989244ms
+Total Success: 1776
+Total Timeouts: 54
+Total Failures: 54
+
+Start Time: 2016-10-01 14:18:52.593812196 +0000 UTC
+Elapsed Time: 36.344074452s
+Threads: 1327
+Total Requests: 1504
+Avg Request Time: 400.699984ms
+Total Success: 1445
+Total Timeouts: 59
+Total Failures: 59
+
+Start Time: 2016-10-01 14:18:53.59209143 +0000 UTC
+Elapsed Time: 37.342353686s
+Threads: 1369
+Total Requests: 1138
+Avg Request Time: 1.042215366s
+Total Success: 1110
+Total Timeouts: 28
+Total Failures: 28
+
+Start Time: 2016-10-01 14:18:54.591702933 +0000 UTC
+Elapsed Time: 38.341965189s
+Threads: 1396
+Total Requests: 1427
+Avg Request Time: 974.790181ms
+Total Success: 1389
+Total Timeouts: 38
+Total Failures: 38
+
+Start Time: 2016-10-01 14:18:55.592135956 +0000 UTC
+Elapsed Time: 39.342398212s
+Threads: 1406
+Total Requests: 1726
+Avg Request Time: 1.190888174s
+Total Success: 1693
+Total Timeouts: 33
+Total Failures: 33
+
+Start Time: 2016-10-01 14:18:56.625877741 +0000 UTC
+Elapsed Time: 40.376139997s
+Threads: 1415
+Total Requests: 1233
+Avg Request Time: 896.408981ms
+Total Success: 1194
+Total Timeouts: 39
+Total Failures: 39
+
+Start Time: 2016-10-01 14:18:57.592311419 +0000 UTC
+Elapsed Time: 41.342573675s
+Threads: 1437
+Total Requests: 1518
+Avg Request Time: 515.873762ms
+Total Success: 1518
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:58.592222156 +0000 UTC
+Elapsed Time: 42.342484412s
+Threads: 1474
+Total Requests: 1505
+Avg Request Time: 393.902825ms
+Total Success: 1505
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:18:59.592100006 +0000 UTC
+Elapsed Time: 43.342362262s
+Threads: 1488
+Total Requests: 1543
+Avg Request Time: 997.672061ms
+Total Success: 1543
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:00.604929879 +0000 UTC
+Elapsed Time: 44.355192135s
+Threads: 1522
+Total Requests: 1760
+Avg Request Time: 961.7069ms
+Total Success: 1760
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:01.59205708 +0000 UTC
+Elapsed Time: 45.342319336s
+Threads: 1558
+Total Requests: 1683
+Avg Request Time: 716.673757ms
+Total Success: 1483
+Total Timeouts: 200
+Total Failures: 200
+
+Start Time: 2016-10-01 14:19:02.597395448 +0000 UTC
+Elapsed Time: 46.347657704s
+Threads: 1596
+Total Requests: 1440
+Avg Request Time: 601.503717ms
+Total Success: 1440
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:03.613788609 +0000 UTC
+Elapsed Time: 47.364050865s
+Threads: 1618
+Total Requests: 1534
+Avg Request Time: 936.057287ms
+Total Success: 1534
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:04.61325341 +0000 UTC
+Elapsed Time: 48.363515666s
+Threads: 1633
+Total Requests: 1776
+Avg Request Time: 923.050748ms
+Total Success: 1772
+Total Timeouts: 4
+Total Failures: 4
+
+Start Time: 2016-10-01 14:19:05.612238257 +0000 UTC
+Elapsed Time: 49.362500513s
+Threads: 1659
+Total Requests: 2095
+Avg Request Time: 768.243837ms
+Total Success: 1963
+Total Timeouts: 132
+Total Failures: 132
+
+Start Time: 2016-10-01 14:19:06.607838277 +0000 UTC
+Elapsed Time: 50.358100533s
+Threads: 1676
+Total Requests: 1268
+Avg Request Time: 711.168921ms
+Total Success: 1216
+Total Timeouts: 52
+Total Failures: 52
+
+Start Time: 2016-10-01 14:19:07.595457599 +0000 UTC
+Elapsed Time: 51.345719855s
+Threads: 1686
+Total Requests: 1717
+Avg Request Time: 1.240380179s
+Total Success: 1666
+Total Timeouts: 51
+Total Failures: 51
+
+Start Time: 2016-10-01 14:19:08.610552143 +0000 UTC
+Elapsed Time: 52.360814399s
+Threads: 1701
+Total Requests: 1343
+Avg Request Time: 807.084506ms
+Total Success: 1343
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:09.59243953 +0000 UTC
+Elapsed Time: 53.342701786s
+Threads: 1711
+Total Requests: 1769
+Avg Request Time: 694.945865ms
+Total Success: 1769
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:10.623396092 +0000 UTC
+Elapsed Time: 54.373658348s
+Threads: 1723
+Total Requests: 1496
+Avg Request Time: 830.281344ms
+Total Success: 1482
+Total Timeouts: 14
+Total Failures: 14
+
+Start Time: 2016-10-01 14:19:11.592525558 +0000 UTC
+Elapsed Time: 55.342787814s
+Threads: 1753
+Total Requests: 1735
+Avg Request Time: 1.224105869s
+Total Success: 1735
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:12.593741516 +0000 UTC
+Elapsed Time: 56.344003772s
+Threads: 1789
+Total Requests: 2012
+Avg Request Time: 597.538056ms
+Total Success: 2012
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:13.607618298 +0000 UTC
+Elapsed Time: 57.357880554s
+Threads: 1828
+Total Requests: 1548
+Avg Request Time: 412.005683ms
+Total Success: 1548
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:14.606243662 +0000 UTC
+Elapsed Time: 58.356505918s
+Threads: 1863
+Total Requests: 1750
+Avg Request Time: 993.395637ms
+Total Success: 1670
+Total Timeouts: 80
+Total Failures: 80
+
+Start Time: 2016-10-01 14:19:15.596232731 +0000 UTC
+Elapsed Time: 59.346494987s
+Threads: 1899
+Total Requests: 1596
+Avg Request Time: 898.379533ms
+Total Success: 1596
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:16.591711164 +0000 UTC
+Elapsed Time: 1m0.34197342s
+Threads: 1932
+Total Requests: 2127
+Avg Request Time: 721.280368ms
+Total Success: 1910
+Total Timeouts: 217
+Total Failures: 217
+
+Start Time: 2016-10-01 14:19:17.591902133 +0000 UTC
+Elapsed Time: 1m1.342164389s
+Threads: 1959
+Total Requests: 1479
+Avg Request Time: 1.06963825s
+Total Success: 1295
+Total Timeouts: 184
+Total Failures: 184
+
+Start Time: 2016-10-01 14:19:18.592635393 +0000 UTC
+Elapsed Time: 1m2.342897649s
+Threads: 1988
+Total Requests: 1936
+Avg Request Time: 513.489871ms
+Total Success: 1859
+Total Timeouts: 77
+Total Failures: 77
+
+Start Time: 2016-10-01 14:19:19.59141495 +0000 UTC
+Elapsed Time: 1m3.341677206s
+Threads: 2020
+Total Requests: 1622
+Avg Request Time: 557.104991ms
+Total Success: 1622
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:20.592048655 +0000 UTC
+Elapsed Time: 1m4.342310911s
+Threads: 2042
+Total Requests: 1671
+Avg Request Time: 1.286537272s
+Total Success: 1403
+Total Timeouts: 268
+Total Failures: 268
+
+Start Time: 2016-10-01 14:19:21.653536357 +0000 UTC
+Elapsed Time: 1m5.403798613s
+Threads: 2061
+Total Requests: 1371
+Avg Request Time: 1.265031042s
+Total Success: 1133
+Total Timeouts: 238
+Total Failures: 238
+
+Start Time: 2016-10-01 14:19:22.59811192 +0000 UTC
+Elapsed Time: 1m6.348374176s
+Threads: 2085
+Total Requests: 1726
+Avg Request Time: 754.708131ms
+Total Success: 1726
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:23.591699093 +0000 UTC
+Elapsed Time: 1m7.341961349s
+Threads: 2091
+Total Requests: 1647
+Avg Request Time: 1.021485039s
+Total Success: 1407
+Total Timeouts: 240
+Total Failures: 240
+
+Start Time: 2016-10-01 14:19:24.598191997 +0000 UTC
+Elapsed Time: 1m8.348454253s
+Threads: 2101
+Total Requests: 1419
+Avg Request Time: 1.635786927s
+Total Success: 1419
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:25.592198847 +0000 UTC
+Elapsed Time: 1m9.342461103s
+Threads: 2125
+Total Requests: 2157
+Avg Request Time: 942.752681ms
+Total Success: 2157
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:26.591335707 +0000 UTC
+Elapsed Time: 1m10.341597963s
+Threads: 2155
+Total Requests: 1380
+Avg Request Time: 817.996685ms
+Total Success: 1380
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:27.593840833 +0000 UTC
+Elapsed Time: 1m11.344103089s
+Threads: 2164
+Total Requests: 1644
+Avg Request Time: 1.34351206s
+Total Success: 1592
+Total Timeouts: 52
+Total Failures: 52
+
+Start Time: 2016-10-01 14:19:28.59742931 +0000 UTC
+Elapsed Time: 1m12.347691566s
+Threads: 2186
+Total Requests: 1383
+Avg Request Time: 591.455866ms
+Total Success: 1383
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:29.598212439 +0000 UTC
+Elapsed Time: 1m13.348474695s
+Threads: 2199
+Total Requests: 1678
+Avg Request Time: 814.063572ms
+Total Success: 1678
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:30.591342104 +0000 UTC
+Elapsed Time: 1m14.34160436s
+Threads: 2205
+Total Requests: 1992
+Avg Request Time: 1.206944662s
+Total Success: 1514
+Total Timeouts: 478
+Total Failures: 478
+
+Start Time: 2016-10-01 14:19:31.591318066 +0000 UTC
+Elapsed Time: 1m15.341580322s
+Threads: 2212
+Total Requests: 1682
+Avg Request Time: 1.236070632s
+Total Success: 1495
+Total Timeouts: 187
+Total Failures: 187
+
+Start Time: 2016-10-01 14:19:32.600170512 +0000 UTC
+Elapsed Time: 1m16.350432768s
+Threads: 2235
+Total Requests: 1756
+Avg Request Time: 680.64073ms
+Total Success: 1756
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:33.592291305 +0000 UTC
+Elapsed Time: 1m17.342553561s
+Threads: 2273
+Total Requests: 2015
+Avg Request Time: 762.280534ms
+Total Success: 1997
+Total Timeouts: 18
+Total Failures: 18
+
+Start Time: 2016-10-01 14:19:34.596652658 +0000 UTC
+Elapsed Time: 1m18.346914914s
+Threads: 2282
+Total Requests: 1040
+Avg Request Time: 1.289119666s
+Total Success: 989
+Total Timeouts: 51
+Total Failures: 51
+
+Start Time: 2016-10-01 14:19:35.635848915 +0000 UTC
+Elapsed Time: 1m19.386111171s
+Threads: 2288
+Total Requests: 1881
+Avg Request Time: 2.057656299s
+Total Success: 1881
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:36.593751031 +0000 UTC
+Elapsed Time: 1m20.344013287s
+Threads: 2312
+Total Requests: 1731
+Avg Request Time: 474.990758ms
+Total Success: 1685
+Total Timeouts: 46
+Total Failures: 46
+
+Start Time: 2016-10-01 14:19:37.597625591 +0000 UTC
+Elapsed Time: 1m21.347887847s
+Threads: 2334
+Total Requests: 2258
+Avg Request Time: 1.264538918s
+Total Success: 2138
+Total Timeouts: 120
+Total Failures: 120
+
+Start Time: 2016-10-01 14:19:38.591901435 +0000 UTC
+Elapsed Time: 1m22.342163691s
+Threads: 2373
+Total Requests: 1560
+Avg Request Time: 594.900653ms
+Total Success: 1560
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:39.598728691 +0000 UTC
+Elapsed Time: 1m23.348990947s
+Threads: 2400
+Total Requests: 1934
+Avg Request Time: 1.103383265s
+Total Success: 1934
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:40.594316563 +0000 UTC
+Elapsed Time: 1m24.344578819s
+Threads: 2429
+Total Requests: 1275
+Avg Request Time: 1.349723894s
+Total Success: 1275
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:41.591848174 +0000 UTC
+Elapsed Time: 1m25.34211043s
+Threads: 2442
+Total Requests: 1299
+Avg Request Time: 1.702811116s
+Total Success: 1197
+Total Timeouts: 102
+Total Failures: 102
+
+Start Time: 2016-10-01 14:19:42.594872179 +0000 UTC
+Elapsed Time: 1m26.345134435s
+Threads: 2450
+Total Requests: 1594
+Avg Request Time: 1.228063407s
+Total Success: 1437
+Total Timeouts: 157
+Total Failures: 157
+
+Start Time: 2016-10-01 14:19:43.597433348 +0000 UTC
+Elapsed Time: 1m27.347695604s
+Threads: 2478
+Total Requests: 1412
+Avg Request Time: 401.241342ms
+Total Success: 1298
+Total Timeouts: 114
+Total Failures: 114
+
+Start Time: 2016-10-01 14:19:44.591346208 +0000 UTC
+Elapsed Time: 1m28.341608464s
+Threads: 2487
+Total Requests: 1413
+Avg Request Time: 1.090610959s
+Total Success: 1238
+Total Timeouts: 175
+Total Failures: 175
+
+Start Time: 2016-10-01 14:19:45.591399204 +0000 UTC
+Elapsed Time: 1m29.34166146s
+Threads: 2509
+Total Requests: 2171
+Avg Request Time: 627.335453ms
+Total Success: 1764
+Total Timeouts: 407
+Total Failures: 407
+
+Start Time: 2016-10-01 14:19:46.593749749 +0000 UTC
+Elapsed Time: 1m30.344012005s
+Threads: 2522
+Total Requests: 2364
+Avg Request Time: 1.679838714s
+Total Success: 2123
+Total Timeouts: 241
+Total Failures: 241
+
+Start Time: 2016-10-01 14:19:47.59389987 +0000 UTC
+Elapsed Time: 1m31.344162126s
+Threads: 2542
+Total Requests: 1420
+Avg Request Time: 897.300319ms
+Total Success: 1420
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:48.593823579 +0000 UTC
+Elapsed Time: 1m32.344085835s
+Threads: 2575
+Total Requests: 1638
+Avg Request Time: 885.846126ms
+Total Success: 1588
+Total Timeouts: 50
+Total Failures: 50
+
+Start Time: 2016-10-01 14:19:49.59304524 +0000 UTC
+Elapsed Time: 1m33.343307496s
+Threads: 2611
+Total Requests: 1798
+Avg Request Time: 1.400123215s
+Total Success: 1797
+Total Timeouts: 1
+Total Failures: 1
+
+Start Time: 2016-10-01 14:19:50.591515718 +0000 UTC
+Elapsed Time: 1m34.341777974s
+Threads: 2621
+Total Requests: 1130
+Avg Request Time: 1.879724182s
+Total Success: 1130
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:51.59146431 +0000 UTC
+Elapsed Time: 1m35.341726566s
+Threads: 2627
+Total Requests: 1110
+Avg Request Time: 1.526882151s
+Total Success: 1032
+Total Timeouts: 78
+Total Failures: 78
+
+Start Time: 2016-10-01 14:19:52.605862364 +0000 UTC
+Elapsed Time: 1m36.35612462s
+Threads: 2631
+Total Requests: 1617
+Avg Request Time: 1.465054508s
+Total Success: 1521
+Total Timeouts: 96
+Total Failures: 96
+
+Start Time: 2016-10-01 14:19:53.620173338 +0000 UTC
+Elapsed Time: 1m37.370435594s
+Threads: 2636
+Total Requests: 1080
+Avg Request Time: 1.359372882s
+Total Success: 678
+Total Timeouts: 402
+Total Failures: 402
+
+Start Time: 2016-10-01 14:19:54.601980099 +0000 UTC
+Elapsed Time: 1m38.352242355s
+Threads: 2639
+Total Requests: 1409
+Avg Request Time: 1.947043581s
+Total Success: 1369
+Total Timeouts: 40
+Total Failures: 40
+
+Start Time: 2016-10-01 14:19:55.591328274 +0000 UTC
+Elapsed Time: 1m39.34159053s
+Threads: 2668
+Total Requests: 1973
+Avg Request Time: 1.025686036s
+Total Success: 1973
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:56.621409757 +0000 UTC
+Elapsed Time: 1m40.371672013s
+Threads: 2700
+Total Requests: 1666
+Avg Request Time: 874.709445ms
+Total Success: 1666
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:57.611088915 +0000 UTC
+Elapsed Time: 1m41.361351171s
+Threads: 2722
+Total Requests: 1416
+Avg Request Time: 723.72899ms
+Total Success: 1416
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:19:58.597183721 +0000 UTC
+Elapsed Time: 1m42.347445977s
+Threads: 2745
+Total Requests: 1729
+Avg Request Time: 1.871128271s
+Total Success: 1500
+Total Timeouts: 229
+Total Failures: 229
+
+Start Time: 2016-10-01 14:19:59.657820311 +0000 UTC
+Elapsed Time: 1m43.408082567s
+Threads: 2770
+Total Requests: 1948
+Avg Request Time: 1.671877522s
+Total Success: 1754
+Total Timeouts: 194
+Total Failures: 194
+
+Start Time: 2016-10-01 14:20:00.600351929 +0000 UTC
+Elapsed Time: 1m44.350614185s
+Threads: 2793
+Total Requests: 1936
+Avg Request Time: 732.525918ms
+Total Success: 1657
+Total Timeouts: 279
+Total Failures: 279
+
+Start Time: 2016-10-01 14:20:01.591546976 +0000 UTC
+Elapsed Time: 1m45.341809232s
+Threads: 2831
+Total Requests: 1226
+Avg Request Time: 862.9704ms
+Total Success: 1226
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:20:02.594823352 +0000 UTC
+Elapsed Time: 1m46.345085608s
+Threads: 2870
+Total Requests: 1602
+Avg Request Time: 1.729905223s
+Total Success: 1583
+Total Timeouts: 19
+Total Failures: 19
+
+Start Time: 2016-10-01 14:20:03.591322609 +0000 UTC
+Elapsed Time: 1m47.341584865s
+Threads: 2905
+Total Requests: 1738
+Avg Request Time: 1.317886627s
+Total Success: 1597
+Total Timeouts: 141
+Total Failures: 141
+
+Start Time: 2016-10-01 14:20:04.592747106 +0000 UTC
+Elapsed Time: 1m48.343009362s
+Threads: 2925
+Total Requests: 1446
+Avg Request Time: 1.038559978s
+Total Success: 1372
+Total Timeouts: 74
+Total Failures: 74
+
+Start Time: 2016-10-01 14:20:05.595390931 +0000 UTC
+Elapsed Time: 1m49.345653187s
+Threads: 2931
+Total Requests: 2229
+Avg Request Time: 1.210332563s
+Total Success: 1577
+Total Timeouts: 652
+Total Failures: 652
+
+Start Time: 2016-10-01 14:20:06.591545613 +0000 UTC
+Elapsed Time: 1m50.341807869s
+Threads: 2943
+Total Requests: 1837
+Avg Request Time: 1.265432216s
+Total Success: 1686
+Total Timeouts: 151
+Total Failures: 151
+
+Start Time: 2016-10-01 14:20:07.611806354 +0000 UTC
+Elapsed Time: 1m51.36206861s
+Threads: 2978
+Total Requests: 1488
+Avg Request Time: 711.270299ms
+Total Success: 1394
+Total Timeouts: 94
+Total Failures: 94
+
+Start Time: 2016-10-01 14:20:08.5913565 +0000 UTC
+Elapsed Time: 1m52.341618756s
+Threads: 3018
+Total Requests: 1631
+Avg Request Time: 1.229258629s
+Total Success: 1630
+Total Timeouts: 1
+Total Failures: 1
+
+Start Time: 2016-10-01 14:20:09.591766912 +0000 UTC
+Elapsed Time: 1m53.342029168s
+Threads: 3045
+Total Requests: 1748
+Avg Request Time: 1.991167255s
+Total Success: 1724
+Total Timeouts: 24
+Total Failures: 24
+
+Start Time: 2016-10-01 14:20:10.635732167 +0000 UTC
+Elapsed Time: 1m54.385994423s
+Threads: 3067
+Total Requests: 1681
+Avg Request Time: 1.366340125s
+Total Success: 1271
+Total Timeouts: 410
+Total Failures: 410
+
+Start Time: 2016-10-01 14:20:11.591340892 +0000 UTC
+Elapsed Time: 1m55.341603148s
+Threads: 3097
+Total Requests: 1712
+Avg Request Time: 1.187871098s
+Total Success: 1712
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:20:12.591345729 +0000 UTC
+Elapsed Time: 1m56.341607985s
+Threads: 3134
+Total Requests: 1615
+Avg Request Time: 874.118613ms
+Total Success: 1327
+Total Timeouts: 288
+Total Failures: 288
+
+Start Time: 2016-10-01 14:20:13.592349928 +0000 UTC
+Elapsed Time: 1m57.342612184s
+Threads: 3164
+Total Requests: 2324
+Avg Request Time: 897.341385ms
+Total Success: 2127
+Total Timeouts: 197
+Total Failures: 197
+
+Start Time: 2016-10-01 14:20:14.595844984 +0000 UTC
+Elapsed Time: 1m58.34610724s
+Threads: 3183
+Total Requests: 2100
+Avg Request Time: 1.651195526s
+Total Success: 1656
+Total Timeouts: 444
+Total Failures: 444
+
+Start Time: 2016-10-01 14:20:15.591344718 +0000 UTC
+Elapsed Time: 1m59.341606974s
+Threads: 3200
+Total Requests: 1758
+Avg Request Time: 858.637679ms
+Total Success: 1611
+Total Timeouts: 147
+Total Failures: 147
+
+Start Time: 2016-10-01 14:20:16.59389199 +0000 UTC
+Elapsed Time: 2m0.344154246s
+Threads: 3233
+Total Requests: 1626
+Avg Request Time: 1.288965254s
+Total Success: 1424
+Total Timeouts: 202
+Total Failures: 202
+
+Start Time: 2016-10-01 14:20:17.591619948 +0000 UTC
+Elapsed Time: 2m1.341882204s
+Threads: 3263
+Total Requests: 1626
+Avg Request Time: 1.368938427s
+Total Success: 1379
+Total Timeouts: 247
+Total Failures: 247
+
+Start Time: 2016-10-01 14:20:18.591432186 +0000 UTC
+Elapsed Time: 2m2.341694442s
+Threads: 3291
+Total Requests: 1266
+Avg Request Time: 1.450968211s
+Total Success: 979
+Total Timeouts: 287
+Total Failures: 287
+
+Start Time: 2016-10-01 14:20:19.608359158 +0000 UTC
+Elapsed Time: 2m3.358621414s
+Threads: 3313
+Total Requests: 2237
+Avg Request Time: 1.899052576s
+Total Success: 2175
+Total Timeouts: 62
+Total Failures: 62
+
+Start Time: 2016-10-01 14:20:20.596192335 +0000 UTC
+Elapsed Time: 2m4.346454591s
+Threads: 3344
+Total Requests: 1766
+Avg Request Time: 890.623435ms
+Total Success: 1445
+Total Timeouts: 321
+Total Failures: 321
+
+Start Time: 2016-10-01 14:20:21.591506306 +0000 UTC
+Elapsed Time: 2m5.341768562s
+Threads: 3368
+Total Requests: 1847
+Avg Request Time: 1.150558173s
+Total Success: 1639
+Total Timeouts: 208
+Total Failures: 208
+
+Start Time: 2016-10-01 14:20:22.593378792 +0000 UTC
+Elapsed Time: 2m6.343641048s
+Threads: 3391
+Total Requests: 1221
+Avg Request Time: 680.257931ms
+Total Success: 1207
+Total Timeouts: 14
+Total Failures: 14
+
+Start Time: 2016-10-01 14:20:23.591404562 +0000 UTC
+Elapsed Time: 2m7.341666818s
+Threads: 3417
+Total Requests: 1400
+Avg Request Time: 2.880633628s
+Total Success: 1348
+Total Timeouts: 52
+Total Failures: 52
+
+Start Time: 2016-10-01 14:20:24.591890073 +0000 UTC
+Elapsed Time: 2m8.342152329s
+Threads: 3437
+Total Requests: 1867
+Avg Request Time: 1.928196809s
+Total Success: 1287
+Total Timeouts: 580
+Total Failures: 580
+
+Start Time: 2016-10-01 14:20:25.592617325 +0000 UTC
+Elapsed Time: 2m9.342879581s
+Threads: 3459
+Total Requests: 1954
+Avg Request Time: 1.029179534s
+Total Success: 1715
+Total Timeouts: 239
+Total Failures: 239
+
+Start Time: 2016-10-01 14:20:26.612593304 +0000 UTC
+Elapsed Time: 2m10.36285556s
+Threads: 3496
+Total Requests: 1787
+Avg Request Time: 1.296281652s
+Total Success: 1787
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:20:27.600528626 +0000 UTC
+Elapsed Time: 2m11.350790882s
+Threads: 3517
+Total Requests: 1668
+Avg Request Time: 1.716566614s
+Total Success: 1568
+Total Timeouts: 100
+Total Failures: 100
+
+Start Time: 2016-10-01 14:20:28.591511768 +0000 UTC
+Elapsed Time: 2m12.341774024s
+Threads: 3525
+Total Requests: 1727
+Avg Request Time: 1.588866732s
+Total Success: 1301
+Total Timeouts: 426
+Total Failures: 426
+
+Start Time: 2016-10-01 14:20:29.658224974 +0000 UTC
+Elapsed Time: 2m13.40848723s
+Threads: 3535
+Total Requests: 2165
+Avg Request Time: 2.238848653s
+Total Success: 2165
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:20:30.597274403 +0000 UTC
+Elapsed Time: 2m14.347536659s
+Threads: 3561
+Total Requests: 1981
+Avg Request Time: 679.901524ms
+Total Success: 1799
+Total Timeouts: 182
+Total Failures: 182
+
+Start Time: 2016-10-01 14:20:31.591333321 +0000 UTC
+Elapsed Time: 2m15.341595577s
+Threads: 3579
+Total Requests: 1335
+Avg Request Time: 1.309649021s
+Total Success: 1281
+Total Timeouts: 54
+Total Failures: 54
+
+Start Time: 2016-10-01 14:20:32.591518702 +0000 UTC
+Elapsed Time: 2m16.341780958s
+Threads: 3607
+Total Requests: 1568
+Avg Request Time: 2.142473491s
+Total Success: 1529
+Total Timeouts: 39
+Total Failures: 39
+
+Start Time: 2016-10-01 14:20:33.601795256 +0000 UTC
+Elapsed Time: 2m17.352057512s
+Threads: 3638
+Total Requests: 1577
+Avg Request Time: 1.898795281s
+Total Success: 1577
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:20:34.593311826 +0000 UTC
+Elapsed Time: 2m18.343574082s
+Threads: 3670
+Total Requests: 2627
+Avg Request Time: 1.330348994s
+Total Success: 2044
+Total Timeouts: 583
+Total Failures: 583
+
+Start Time: 2016-10-01 14:20:35.59490271 +0000 UTC
+Elapsed Time: 2m19.345164966s
+Threads: 3702
+Total Requests: 1431
+Avg Request Time: 1.388546732s
+Total Success: 1367
+Total Timeouts: 64
+Total Failures: 64
+
+Start Time: 2016-10-01 14:20:36.594380384 +0000 UTC
+Elapsed Time: 2m20.34464264s
+Threads: 3719
+Total Requests: 1729
+Avg Request Time: 1.821384975s
+Total Success: 1548
+Total Timeouts: 181
+Total Failures: 181
+
+Start Time: 2016-10-01 14:20:37.595452223 +0000 UTC
+Elapsed Time: 2m21.345714479s
+Threads: 3741
+Total Requests: 2014
+Avg Request Time: 2.08894776s
+Total Success: 1739
+Total Timeouts: 275
+Total Failures: 275
+
+Start Time: 2016-10-01 14:20:38.591469154 +0000 UTC
+Elapsed Time: 2m22.34173141s
+Threads: 3774
+Total Requests: 1227
+Avg Request Time: 1.836520544s
+Total Success: 1130
+Total Timeouts: 97
+Total Failures: 97
+
+Start Time: 2016-10-01 14:20:39.591687597 +0000 UTC
+Elapsed Time: 2m23.341949853s
+Threads: 3790
+Total Requests: 2113
+Avg Request Time: 1.787465788s
+Total Success: 2111
 Total Timeouts: 2
 Total Failures: 2
+
+Start Time: 2016-10-01 14:20:40.592055834 +0000 UTC
+Elapsed Time: 2m24.34231809s
+Threads: 3815
+Total Requests: 912
+Avg Request Time: 1.216056808s
+Total Success: 912
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:20:41.609633348 +0000 UTC
+Elapsed Time: 2m25.359895604s
+Threads: 3824
+Total Requests: 2496
+Avg Request Time: 1.808738999s
+Total Success: 2404
+Total Timeouts: 92
+Total Failures: 92
+
+Start Time: 2016-10-01 14:20:42.598713719 +0000 UTC
+Elapsed Time: 2m26.348975975s
+Threads: 3839
+Total Requests: 1980
+Avg Request Time: 1.279177709s
+Total Success: 1525
+Total Timeouts: 455
+Total Failures: 455
+
+Start Time: 2016-10-01 14:20:43.595366825 +0000 UTC
+Elapsed Time: 2m27.345629081s
+Threads: 3872
+Total Requests: 1637
+Avg Request Time: 2.021255547s
+Total Success: 1449
+Total Timeouts: 188
+Total Failures: 188
+
+Start Time: 2016-10-01 14:20:44.591562255 +0000 UTC
+Elapsed Time: 2m28.341824511s
+Threads: 3903
+Total Requests: 2304
+Avg Request Time: 1.267800013s
+Total Success: 2195
+Total Timeouts: 109
+Total Failures: 109
+
+Start Time: 2016-10-01 14:20:45.610708885 +0000 UTC
+Elapsed Time: 2m29.360971141s
+Threads: 3915
+Total Requests: 1325
+Avg Request Time: 2.352950967s
+Total Success: 1183
+Total Timeouts: 142
+Total Failures: 142
+
+Start Time: 2016-10-01 14:20:46.59143645 +0000 UTC
+Elapsed Time: 2m30.341698706s
+Threads: 3926
+Total Requests: 2151
+Avg Request Time: 1.720984426s
+Total Success: 2148
+Total Timeouts: 3
+Total Failures: 3
+
+Start Time: 2016-10-01 14:20:47.613323071 +0000 UTC
+Elapsed Time: 2m31.363585327s
+Threads: 3930
+Total Requests: 1339
+Avg Request Time: 1.840780376s
+Total Success: 1287
+Total Timeouts: 52
+Total Failures: 52
+
+Start Time: 2016-10-01 14:20:48.591948103 +0000 UTC
+Elapsed Time: 2m32.342210359s
+Threads: 3932
+Total Requests: 1817
+Avg Request Time: 2.894546093s
+Total Success: 1234
+Total Timeouts: 583
+Total Failures: 583
+
+Start Time: 2016-10-01 14:20:49.645139587 +0000 UTC
+Elapsed Time: 2m33.395401843s
+Threads: 3937
+Total Requests: 1474
+Avg Request Time: 1.438045092s
+Total Success: 1244
+Total Timeouts: 230
+Total Failures: 230
+
+Start Time: 2016-10-01 14:20:50.669735666 +0000 UTC
+Elapsed Time: 2m34.419997922s
+Threads: 3945
+Total Requests: 1635
+Avg Request Time: 2.386575718s
+Total Success: 1508
+Total Timeouts: 127
+Total Failures: 127
+
+Start Time: 2016-10-01 14:20:51.670871957 +0000 UTC
+Elapsed Time: 2m35.421134213s
+Threads: 3950
+Total Requests: 1579
+Avg Request Time: 1.829446306s
+Total Success: 1414
+Total Timeouts: 165
+Total Failures: 165
+
+Start Time: 2016-10-01 14:20:52.592164476 +0000 UTC
+Elapsed Time: 2m36.342426732s
+Threads: 3954
+Total Requests: 847
+Avg Request Time: 1.408765012s
+Total Success: 847
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:20:53.592584328 +0000 UTC
+Elapsed Time: 2m37.342846584s
+Threads: 3957
+Total Requests: 2122
+Avg Request Time: 2.250560142s
+Total Success: 2108
+Total Timeouts: 14
+Total Failures: 14
+
+Start Time: 2016-10-01 14:20:54.616542307 +0000 UTC
+Elapsed Time: 2m38.366804563s
+Threads: 3962
+Total Requests: 2182
+Avg Request Time: 1.630052266s
+Total Success: 1973
+Total Timeouts: 209
+Total Failures: 209
+
+Start Time: 2016-10-01 14:20:55.595692968 +0000 UTC
+Elapsed Time: 2m39.345955224s
+Threads: 3972
+Total Requests: 981
+Avg Request Time: 1.846409054s
+Total Success: 963
+Total Timeouts: 18
+Total Failures: 18
+
+Start Time: 2016-10-01 14:20:56.596637023 +0000 UTC
+Elapsed Time: 2m40.346899279s
+Threads: 3990
+Total Requests: 2547
+Avg Request Time: 1.516038043s
+Total Success: 2158
+Total Timeouts: 389
+Total Failures: 389
+
+Start Time: 2016-10-01 14:20:57.593535712 +0000 UTC
+Elapsed Time: 2m41.343797968s
+Threads: 4000
+Total Requests: 1486
+Avg Request Time: 1.327575508s
+Total Success: 1486
+Total Timeouts: 0
+Total Failures: 0
+
+Start Time: 2016-10-01 14:20:58.591738933 +0000 UTC
+Elapsed Time: 2m42.342001189s
+Threads: 4000
+Total Requests: 1745
+Avg Request Time: 1.539870898s
+Total Success: 1555
+Total Timeouts: 190
+Total Failures: 190
+
+Start Time: 2016-10-01 14:20:59.591334773 +0000 UTC
+Elapsed Time: 2m43.341597029s
+Threads: 4000
+Total Requests: 2222
+Avg Request Time: 2.282581495s
+Total Success: 2195
+Total Timeouts: 27
+Total Failures: 27
+
+Start Time: 2016-10-01 14:21:00.628733129 +0000 UTC
+Elapsed Time: 2m44.378995385s
+Threads: 4000
+Total Requests: 1994
+Avg Request Time: 1.795111098s
+Total Success: 1919
+Total Timeouts: 75
+Total Failures: 75
+
+Start Time: 2016-10-01 14:21:01.593954339 +0000 UTC
+Elapsed Time: 2m45.344216595s
+Threads: 4000
+Total Requests: 1490
+Avg Request Time: 681.988467ms
+Total Success: 1178
+Total Timeouts: 312
+Total Failures: 312
+
+Start Time: 2016-10-01 14:21:02.6000112 +0000 UTC
+Elapsed Time: 2m46.350273456s
+Threads: 4000
+Total Requests: 1859
+Avg Request Time: 1.413423329s
+Total Success: 1632
+Total Timeouts: 227
+Total Failures: 227
+
+Start Time: 2016-10-01 14:21:03.591794839 +0000 UTC
+Elapsed Time: 2m47.342057095s
+Threads: 4000
+Total Requests: 2233
+Avg Request Time: 2.054561608s
+Total Success: 2120
+Total Timeouts: 113
+Total Failures: 113
+
+Start Time: 2016-10-01 14:21:04.592744521 +0000 UTC
+Elapsed Time: 2m48.343006777s
+Threads: 4000
+Total Requests: 2000
+Avg Request Time: 1.006062704s
+Total Success: 1413
+Total Timeouts: 587
+Total Failures: 587
+
+Start Time: 2016-10-01 14:21:05.607664801 +0000 UTC
+Elapsed Time: 2m49.357927057s
+Threads: 4000
+Total Requests: 2464
+Avg Request Time: 1.542844317s
+Total Success: 2190
+Total Timeouts: 274
+Total Failures: 274
+
+Start Time: 2016-10-01 14:21:06.593477014 +0000 UTC
+Elapsed Time: 2m50.34373927s
+Threads: 4000
+Total Requests: 1396
+Avg Request Time: 1.31095106s
+Total Success: 1318
+Total Timeouts: 78
+Total Failures: 78
+
+Start Time: 2016-10-01 14:21:07.599801837 +0000 UTC
+Elapsed Time: 2m51.350064093s
+Threads: 4000
+Total Requests: 2495
+Avg Request Time: 1.937563143s
+Total Success: 2301
+Total Timeouts: 194
+Total Failures: 194
+
+Start Time: 2016-10-01 14:21:08.591483025 +0000 UTC
+Elapsed Time: 2m52.341745281s
+Threads: 4000
+Total Requests: 1425
+Avg Request Time: 1.298142634s
+Total Success: 1422
+Total Timeouts: 3
+Total Failures: 3
+
+Start Time: 2016-10-01 14:21:09.592207265 +0000 UTC
+Elapsed Time: 2m53.342469521s
+Threads: 4000
+Total Requests: 2015
+Avg Request Time: 1.116411805s
+Total Success: 1554
+Total Timeouts: 461
+Total Failures: 461
+
+Start Time: 2016-10-01 14:21:10.592750215 +0000 UTC
+Elapsed Time: 2m54.343012471s
+Threads: 4000
+Total Requests: 1992
+Avg Request Time: 1.922750893s
+Total Success: 1683
+Total Timeouts: 309
+Total Failures: 309
+
+Start Time: 2016-10-01 14:21:11.596939308 +0000 UTC
+Elapsed Time: 2m55.347201564s
+Threads: 4000
+Total Requests: 2032
+Avg Request Time: 1.828596201s
+Total Success: 1707
+Total Timeouts: 325
+Total Failures: 325
+
+Start Time: 2016-10-01 14:21:12.591380011 +0000 UTC
+Elapsed Time: 2m56.341642267s
+Threads: 4000
+Total Requests: 2110
+Avg Request Time: 790.35786ms
+Total Success: 1661
+Total Timeouts: 449
+Total Failures: 449
+
+Start Time: 2016-10-01 14:21:13.598252396 +0000 UTC
+Elapsed Time: 2m57.348514652s
+Threads: 4000
+Total Requests: 1724
+Avg Request Time: 1.594915129s
+Total Success: 1614
+Total Timeouts: 110
+Total Failures: 110
+
+Start Time: 2016-10-01 14:21:14.59178638 +0000 UTC
+Elapsed Time: 2m58.342048636s
+Threads: 4000
+Total Requests: 1625
+Avg Request Time: 2.192143479s
+Total Success: 1455
+Total Timeouts: 170
+Total Failures: 170
+
+Start Time: 2016-10-01 14:21:15.594343391 +0000 UTC
+Elapsed Time: 2m59.344605647s
+Threads: 4000
+Total Requests: 1813
+Avg Request Time: 2.165256113s
+Total Success: 1344
+Total Timeouts: 469
+Total Failures: 469
+
+Start Time: 2016-10-01 14:21:16.591398835 +0000 UTC
+Elapsed Time: 3m0.341661091s
+Threads: 4000
+Total Requests: 1526
+Avg Request Time: 2.023717253s
+Total Success: 1512
+Total Timeouts: 14
+Total Failures: 14
+
+Start Time: 2016-10-01 14:21:17.595452441 +0000 UTC
+Elapsed Time: 3m1.345714697s
+Threads: 4000
+Total Requests: 1568
+Avg Request Time: 3.000908035s
+Total Success: 1422
+Total Timeouts: 146
+Total Failures: 146
+
