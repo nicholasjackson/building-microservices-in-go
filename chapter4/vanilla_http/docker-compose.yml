@@ -1,0 +1,14 @@
+version: '2'
+
+services:
+  kittenserver:
+    build: ./server/.
+    image: kittenserver:vanilla
+    command: sh -c '/kittenserver'
+    ports:
+      - 8091:8091
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
