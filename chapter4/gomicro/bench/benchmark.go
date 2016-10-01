@@ -16,9 +16,10 @@ import (
 func main() {
 	fmt.Println("Benchmarking application")
 
-	b := bench.New(20, 30*time.Second, 15*time.Second, 2*time.Second)
-	b.AddOutput(31*time.Second, os.Stdout, output.WriteTabularData)
+	b := bench.New(600, 180*time.Second, 90*time.Second, 5*time.Second)
+	b.AddOutput(181*time.Second, os.Stdout, output.WriteTabularData)
 	b.AddOutput(1*time.Second, util.NewFile("./output.txt"), output.WriteTabularData)
+	b.AddOutput(1*time.Second, util.NewFile("./error.txt"), output.WriteErrorLogs)
 	b.AddOutput(1*time.Second, util.NewFile("./output.png"), output.PlotData)
 	b.RunBenchmarks(GoMicroRequest)
 }
@@ -27,7 +28,7 @@ func main() {
 func GoMicroRequest() error {
 
 	c := rpc.NewClient()
-	request := c.NewRequest("bmigo.micro.Kittens", "Kittens.List", &kittens.Request{Name: "Nic"})
+	request := c.NewRequest("bmigo.micro.Kittens", "Kittens.Hello", &kittens.Request{Name: "Nic"})
 	response := &kittens.Response{}
 
 	err := c.CallRemote(

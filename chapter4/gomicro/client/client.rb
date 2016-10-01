@@ -18,7 +18,6 @@ MESSAGE_SIZE_BYTES = 4
 # body: the response returned from the http client
 # message_class: the class type expected to be returned in the response
 def read_response(body, message_class)
-
   envelope, envelope_size = read_envelope(body) 
 
   start_pos = MESSAGE_SIZE_BYTES + envelope_size
@@ -60,7 +59,7 @@ end
 def send_request(server, port, method, request)
 
   http = Net::HTTP.new(server,port)
- http_request = Net::HTTP::Post.new('/')
+  http_request = Net::HTTP::Post.new('/')
   http_request.content_type = 'application/octet-stream'
 
   # Create envelope
@@ -85,7 +84,7 @@ def main()
   puts "Connecting to Kittenserver"
 
   request = Bmigo::Micro::Request.new(name: 'Nic')
-  body = send_request('kittenserver_kittenserver_1', '8091', 'Kittens.List', request).body
+  body = send_request('kittenserver_kittenserver_1', '8091', 'Kittens.Hello', request).body
   envelope, message = read_response(body, Bmigo::Micro::Response)    
   
   puts envelope.inspect 

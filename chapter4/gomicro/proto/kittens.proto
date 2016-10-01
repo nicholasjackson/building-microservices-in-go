@@ -22,5 +22,5 @@ message Response {
 }
 
 service Kittens {
-    rpc List(Request) returns (Response) {}
+    rpc Hello(Request) returns (Response) {}
 }
