@@ -8,7 +8,12 @@ services:
     links:
       - consul
     ports:
-      -8091:8091
+      - 8091:8091
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
 
   consul:
     image: consul
