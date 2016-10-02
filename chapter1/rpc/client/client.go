@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/rpc"
 
-	"github.com/nicholasjackson/building-microservices-in-go/chapter2/rpc/contract"
+	"github.com/nicholasjackson/building-microservices-in-go/chapter1/rpc/contract"
 )
 
 const port = 1234
