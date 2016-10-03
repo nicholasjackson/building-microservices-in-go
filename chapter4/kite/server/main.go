@@ -2,11 +2,18 @@ package main
 
 import (
 	"fmt"
+	"log"
+
+	"net/http"
+	_ "net/http/pprof"
 
 	"github.com/koding/kite"
 )
 
 func main() {
+
+	go enablePProf()
+
 	k := kite.New("math", "1.0.0")
 
 	// Add our handler method with the name "square"
@@ -20,4 +27,9 @@ func main() {
 	k.Config.Port = 8091
 	k.Run()
 
+}
+
+func enablePProf() {
+	log.Println("Starting profiler")
+	log.Println(http.ListenAndServe(":6060", nil))
 }
