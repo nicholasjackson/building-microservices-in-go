@@ -12,7 +12,6 @@ import (
 type Kittens struct{}
 
 func (s *Kittens) Hello(ctx context.Context, req *kittens.Request, rsp *kittens.Response) error {
-	log.Info("Received Say.Hello request")
 	rsp.Msg = server.DefaultId + ": Hello " + req.Name
 
 	return nil

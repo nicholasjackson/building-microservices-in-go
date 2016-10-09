@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/micro/go-micro/client"
 	"github.com/micro/go-micro/client/rpc"
 	"github.com/nicholasjackson/bench"
 	"github.com/nicholasjackson/bench/output"
@@ -13,8 +14,12 @@ import (
 	kittens "github.com/nicholasjackson/building-microservices-in-go/chapter4/gomicro/proto"
 )
 
+var c client.Client
+
 func main() {
 	fmt.Println("Benchmarking application")
+
+	c = rpc.NewClient()
 
 	b := bench.New(400, 300*time.Second, 90*time.Second, 5*time.Second)
 	b.AddOutput(301*time.Second, os.Stdout, output.WriteTabularData)
@@ -27,7 +32,6 @@ func main() {
 // GoMicroRequest is executed by benchmarks
 func GoMicroRequest() error {
 
-	c := rpc.NewClient()
 	request := c.NewRequest("bmigo.micro.Kittens", "Kittens.Hello", &kittens.Request{Name: "Nic"})
 	response := &kittens.Response{}
 

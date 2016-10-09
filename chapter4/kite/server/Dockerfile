@@ -1,3 +1,3 @@
-FROM alpine:latest
+FROM golang:alpine
 
 COPY ./kittenserver /kittenserver

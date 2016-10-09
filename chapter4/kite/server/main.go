@@ -2,19 +2,22 @@ package main
 
 import (
 	"fmt"
-	"log"
 
-	"net/http"
 	_ "net/http/pprof"
+	"net/url"
 
 	"github.com/koding/kite"
+	"github.com/koding/kite/config"
 )
 
 func main() {
 
-	go enablePProf()
-
 	k := kite.New("math", "1.0.0")
+	c := config.MustGet()
+	k.Config = c
+	k.Config.KontrolURL = "http://kontrol:6000/kite"
+
+	k.RegisterForever(&url.URL{Scheme: "http", Host: "127.0.0.1:8091", Path: "/kite"})
 
 	// Add our handler method with the name "square"
 	k.HandleFunc("Hello", func(r *kite.Request) (interface{}, error) {
@@ -27,9 +30,4 @@ func main() {
 	k.Config.Port = 8091
 	k.Run()
 
-}
-
-func enablePProf() {
-	log.Println("Starting profiler")
-	log.Println(http.ListenAndServe(":6060", nil))
 }
