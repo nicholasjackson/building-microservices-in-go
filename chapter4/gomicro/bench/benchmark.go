@@ -22,7 +22,7 @@ func main() {
 	c = rpc.NewClient()
 
 	b := bench.New(400, 300*time.Second, 90*time.Second, 5*time.Second)
-	b.AddOutput(301*time.Second, os.Stdout, output.WriteTabularData)
+	b.AddOutput(0*time.Second, os.Stdout, output.WriteTabularData)
 	b.AddOutput(1*time.Second, util.NewFile("./output.txt"), output.WriteTabularData)
 	b.AddOutput(1*time.Second, util.NewFile("./error.txt"), output.WriteErrorLogs)
 	b.AddOutput(1*time.Second, util.NewFile("./output.png"), output.PlotData)
@@ -36,7 +36,7 @@ func GoMicroRequest() error {
 	response := &kittens.Response{}
 
 	err := c.CallRemote(
-		context.Background(),
+		context.TODO(),
 		"consul.acet.io:8091",
 		request,
 		response)

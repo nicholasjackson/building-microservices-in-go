@@ -2,13 +2,11 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"time"
-
+	"os"
+	"github.com/nicholasjackson/bench/output"
 	"github.com/koding/kite"
 	"github.com/nicholasjackson/bench"
-	"github.com/nicholasjackson/bench/output"
-	"github.com/nicholasjackson/bench/util"
 )
 
 var kittenServer *kite.Client
@@ -23,10 +21,10 @@ func main() {
 	kittenServer.Dial()
 
 	b := bench.New(400, 300*time.Second, 90*time.Second, 5*time.Second)
-	b.AddOutput(301*time.Second, os.Stdout, output.WriteTabularData)
-	b.AddOutput(1*time.Second, util.NewFile("./output.txt"), output.WriteTabularData)
-	b.AddOutput(1*time.Second, util.NewFile("./error.txt"), output.WriteErrorLogs)
-	b.AddOutput(1*time.Second, util.NewFile("./output.png"), output.PlotData)
+	b.AddOutput(0*time.Second, os.Stdout, output.WriteTabularData)
+//	b.AddOutput(1*time.Second, util.NewFile("./output.txt"), output.WriteTabularData)
+//	b.AddOutput(1*time.Second, util.NewFile("./error.txt"), output.WriteErrorLogs)
+//	b.AddOutput(1*time.Second, util.NewFile("./output.png"), output.PlotData)
 	b.RunBenchmarks(GoMicroRequest)
 }
 
@@ -34,7 +32,6 @@ func main() {
 func GoMicroRequest() error {
 
 	_, err := kittenServer.Tell("Hello", "Nic") // call "square" method with argument 4
-
 	if err != nil {
 		return err
 	}

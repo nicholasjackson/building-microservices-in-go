@@ -12,8 +12,12 @@ import (
 	context "golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
+var conn *grpc.ClientConn
 
 func main() {
+	conn, _ = grpc.Dial("consul.acet.io:9000", grpc.WithInsecure())
+	defer conn.Close()
+
 	fmt.Println("Benchmarking application")
 
 	b := bench.New(400, 300*time.Second, 90*time.Second, 5*time.Second)
@@ -26,14 +30,8 @@ func main() {
 
 // GrpcRequest is executed by benchmarks
 func GrpcRequest() error {
-
-	conn, err := grpc.Dial("consul.acet.io:9000", grpc.WithInsecure())
-	if err != nil {
-		return err
-	}
-
 	client := proto.NewKittensClient(conn)
-	_, err = client.Hello(context.Background(), &proto.Request{Name: "Nic"})
+	_, err := client.Hello(context.TODO(), &proto.Request{Name: "Nic"})
 
 	if err != nil {
 		return err
