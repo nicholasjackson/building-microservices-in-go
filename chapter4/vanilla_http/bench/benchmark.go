@@ -37,15 +37,19 @@ func GoMicroRequest() error {
 	req, err := http.NewRequest("POST", "http://consul.acet.io:8091/helloworld", bytes.NewBuffer(data))
 	req.Header.Set("Content-Type", "application/json")
 
-	client := http.DefaultClient
+	client := &http.Client{
+        		Transport: &http.Transport{
+            		MaxIdleConnsPerHost: 5,
+        	},
+        	Timeout: 5 * time.Second,
+    	}
 
 	resp, err := client.Do(req)
-
-	defer resp.Body.Close()
-
 	if err != nil {
 		return err
 	}
+	
+	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("Failed with status: %v", resp.Status)

@@ -19,8 +19,7 @@ var c client.Client
 func main() {
 	fmt.Println("Benchmarking application")
 
-	c = rpc.NewClient()
-
+	c = rpc.NewClient(client.PoolSize(256))
 	b := bench.New(400, 300*time.Second, 90*time.Second, 5*time.Second)
 	b.AddOutput(0*time.Second, os.Stdout, output.WriteTabularData)
 	b.AddOutput(1*time.Second, util.NewFile("./output.txt"), output.WriteTabularData)
