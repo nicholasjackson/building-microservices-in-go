@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package bmigo.grpc;
+
+message Request {
+    string name = 1;
+}
+
+message Response {
+    string msg = 1;
+}
+
+service Kittens {
+    rpc Hello(Request) returns (Response) {}
+}

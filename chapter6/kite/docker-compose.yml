@@ -1,0 +1,42 @@
+version: '2'
+
+services:
+  kittenserver:
+    build: ./server/.
+    image: kittenserver:kite
+    command: /kittenserver
+    ports:
+      - 8091:8091
+      - 6060:6060
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+    volumes:
+      - ./certs/:/root/.kite
+    links:
+      - kontrol
+  kontrol:
+    build: ./kontrol/.
+    image: kittenserver:kontrol
+    command: /bin/sh -c 'sleep 5 && /kontrol/kontrol'
+    environment:
+      - KONTROL_PRIVATEKEYFILE=/certs/key.pem
+      - KONTROL_PUBLICKEYFILE=/certs/key_pub.pem
+      - KONTROL_KONTROLURL=http://127.0.0.1:6000/kite
+      - KONTROL_STORAGE=etcd
+      - KONTROL_USERNAME=kontrol
+      - KONTROL_PORT=6000
+      - KONTROL_MACHINES=http://etcd:4001
+    volumes:
+      - ./certs/:/certs
+      - ./certs/:/root/.kite
+    links:
+      - etcd
+    ports:
+      - 6000:6000
+  etcd:
+    image: elcolio/etcd
+    entrypoint: /bin/etcd -data-dir=/data --advertise-client-urls 'http://etcd:4001' --listen-client-urls 'http://0.0.0.0:4001'
+
