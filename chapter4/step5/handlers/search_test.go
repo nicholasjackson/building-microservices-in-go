@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/alecthomas/assert"
-	"github.com/nicholasjackson/building-microservices-in-go/chapter4/step4/data"
+	"github.com/nicholasjackson/building-microservices-in-go/chapter4/step5/data"
 )
 
 var mockStore *data.MockStore
@@ -52,6 +52,7 @@ func TestSearchHandlerReturnsKittensWithValidQuery(t *testing.T) {
 	json.Unmarshal(rw.Body.Bytes(), &response)
 
 	assert.Equal(t, 1, len(response.Kittens))
+	assert.Equal(t, http.StatusOK, rw.Code)
 }
 
 func setupTest(d interface{}) (*http.Request, *httptest.ResponseRecorder, Search) {

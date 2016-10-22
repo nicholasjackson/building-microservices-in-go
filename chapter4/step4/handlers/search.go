@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/nicholasjackson/building-microservices-in-go/chapter4/step4/data"
+	"github.com/nicholasjackson/building-microservices-in-go/chapter4/step5/data"
 )
 
 type searchRequest struct {
