@@ -1,0 +1,21 @@
+version: '2'
+services:
+  kittenserver:
+    build: .
+    image: kittenserver:grpc
+    command: sh -c '/kittenserver -cpuprofile /profile/cpu.prof'
+    ports:
+      - 8323:8323
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+    links:
+      - mongodb:mongodb
+    volumes:
+      - ./:/profile
+  mongodb:
+    image: mongo
+    ports:
+      - 27017:27017

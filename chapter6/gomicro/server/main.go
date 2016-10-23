@@ -3,8 +3,6 @@ package main
 import (
 	"context"
 	"flag"
-	"os"
-	"runtime/pprof"
 
 	log "github.com/golang/glog"
 	"github.com/micro/go-micro/cmd"
@@ -23,15 +21,6 @@ func (s *Kittens) Hello(ctx context.Context, req *kittens.Request, rsp *kittens.
 var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to file")
 
 func main() {
-	flag.Parse()
-	if *cpuprofile != "" {
-		f, err := os.Create(*cpuprofile)
-		if err != nil {
-			log.Fatal(err)
-		}
-		pprof.StartCPUProfile(f)
-		defer pprof.StopCPUProfile()
-	}
 
 	cmd.Init()
 

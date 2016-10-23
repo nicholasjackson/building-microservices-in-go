@@ -11,7 +11,7 @@ import (
 	"github.com/nicholasjackson/bench"
 	"github.com/nicholasjackson/bench/output"
 	"github.com/nicholasjackson/bench/util"
-	"github.com/nicholasjackson/building-microservices-in-go/chapter4/vanilla_http/entities"
+	"github.com/nicholasjackson/building-microservices-in-go/chapter6/vanilla_http/entities"
 )
 
 func main() {
@@ -38,17 +38,17 @@ func GoMicroRequest() error {
 	req.Header.Set("Content-Type", "application/json")
 
 	client := &http.Client{
-        		Transport: &http.Transport{
-            		MaxIdleConnsPerHost: 5,
-        	},
-        	Timeout: 5 * time.Second,
-    	}
+		Transport: &http.Transport{
+			MaxIdleConnsPerHost: 5,
+		},
+		Timeout: 5 * time.Second,
+	}
 
 	resp, err := client.Do(req)
 	if err != nil {
 		return err
 	}
-	
+
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
