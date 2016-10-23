@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/nicholasjackson/building-microservices-in-go/chapter4/benchmark/data"
@@ -22,11 +23,14 @@ type Search struct {
 }
 
 func (s *Search) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	decoder := json.NewDecoder(r.Body)
+	//	decoder := json.NewDecoder(r.Body)
 	defer r.Body.Close()
 
 	request := new(searchRequest)
-	err := decoder.Decode(request)
+	body, _ := ioutil.ReadAll(r.Body)
+	err := json.Unmarshal(body, &request)
+
+	//err := decoder.Decode(request)
 	if err != nil || len(request.Query) < 1 {
 		http.Error(rw, "Bad Request", http.StatusBadRequest)
 		return
