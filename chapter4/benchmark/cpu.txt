@@ -1,0 +1,14 @@
+24460ms of 42630ms total (57.38%)
+Dropped 456 nodes (cum <= 213.15ms)
+Showing top 10 nodes out of 163 (cum >= 790ms)
+      flat  flat%   sum%        cum   cum%
+   16110ms 37.79% 37.79%    16790ms 39.39%  syscall.Syscall
+    2670ms  6.26% 44.05%     2670ms  6.26%  runtime._ExternalCode
+    1440ms  3.38% 47.43%     1560ms  3.66%  syscall.Syscall6
+     900ms  2.11% 49.54%      900ms  2.11%  runtime.epollctl
+     830ms  1.95% 51.49%     2370ms  5.56%  runtime.mallocgc
+     610ms  1.43% 52.92%     1470ms  3.45%  runtime.pcvalue
+     510ms  1.20% 54.12%      510ms  1.20%  runtime.heapBitsSetType
+     470ms  1.10% 55.22%     2810ms  6.59%  runtime.gentraceback
+     470ms  1.10% 56.32%      470ms  1.10%  runtime.memmove
+     450ms  1.06% 57.38%      790ms  1.85%  runtime.deferreturn

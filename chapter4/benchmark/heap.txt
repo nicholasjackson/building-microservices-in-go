@@ -1,0 +1,14 @@
+512.11kB of 512.11kB total (  100%)
+Dropped 83 nodes (cum <= 2.56kB)
+Showing top 10 nodes out of 12 (cum >= 512.11kB)
+      flat  flat%   sum%        cum   cum%
+  512.11kB   100%   100%   512.11kB   100%  labix.org/v2/mgo.newSocket
+         0     0%   100%   512.11kB   100%  github.com/nicholasjackson/building-microservices-in-go/chapter4/benchmark/data.(*MongoStore).Search
+         0     0%   100%   512.11kB   100%  github.com/nicholasjackson/building-microservices-in-go/chapter4/benchmark/handlers.(*Search).ServeHTTP
+         0     0%   100%   512.11kB   100%  labix.org/v2/mgo.(*Query).All
+         0     0%   100%   512.11kB   100%  labix.org/v2/mgo.(*Query).Iter
+         0     0%   100%   512.11kB   100%  labix.org/v2/mgo.(*Session).acquireSocket
+         0     0%   100%   512.11kB   100%  labix.org/v2/mgo.(*mongoCluster).AcquireSocket
+         0     0%   100%   512.11kB   100%  labix.org/v2/mgo.(*mongoServer).AcquireSocket
+         0     0%   100%   512.11kB   100%  labix.org/v2/mgo.(*mongoServer).Connect
+         0     0%   100%   512.11kB   100%  net/http.(*conn).serve

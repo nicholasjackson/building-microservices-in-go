@@ -6,7 +6,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"runtime"
 	"runtime/pprof"
+	"syscall"
 	"time"
 
 	"github.com/nicholasjackson/building-microservices-in-go/chapter4/benchmark/data"
@@ -21,22 +24,35 @@ func main() {
 	flag.Parse()
 
 	if *cpuprofile != "" {
+		fmt.Println("Running with CPU profile")
 		f, err := os.Create(*cpuprofile)
 		if err != nil {
 			log.Fatal(err)
 		}
 		pprof.StartCPUProfile(f)
-		defer pprof.StopCPUProfile()
 	}
 
-	if *memprofile != "" {
-		f, err := os.Create(*memprofile)
-		if err != nil {
-			log.Fatal(err)
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+
+	go func() {
+		<-sigs
+		fmt.Println("Finished")
+		if *memprofile != "" {
+			f, err := os.Create(*memprofile)
+			if err != nil {
+				log.Fatal(err)
+			}
+			runtime.GC()
+			pprof.WriteHeapProfile(f)
+			defer f.Close()
 		}
-		pprof.WriteHeapProfile(f)
-		defer f.Close()
-	}
+		if *cpuprofile != "" {
+			pprof.StopCPUProfile()
+		}
+
+		os.Exit(0)
+	}()
 
 	store = waitForDB()
 	clearDB()
@@ -47,6 +63,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println("Exit")
 }
 
 func waitForDB() *data.MongoStore {

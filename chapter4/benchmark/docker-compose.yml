@@ -2,8 +2,8 @@ version: '2'
 services:
   kittenserver:
     build: .
-    image: kittenserver:grpc
-    command: sh -c '/kittenserver -cpuprofile /profile/cpu.prof'
+    image: kittenserver:bench
+    entrypoint: '/kittenserver -cpuprofile /profile/cpu.prof -memprofile /profile/heap.prof'
     ports:
       - 8323:8323
     ulimits:
