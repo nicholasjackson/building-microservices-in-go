@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/nicholasjackson/building-microservices-in-go/chapter1/rpc/contract"
+	"github.com/nicholasjackson/building-microservices-in-go/chapter1/rpc_http_json/contract"
 )
 
 func PerformRequest() contract.HelloWorldResponse {

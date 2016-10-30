@@ -11,7 +11,7 @@ import (
 	"github.com/nicholasjackson/bench"
 	"github.com/nicholasjackson/bench/output"
 	"github.com/nicholasjackson/bench/util"
-	kittens "github.com/nicholasjackson/building-microservices-in-go/chapter4/gomicro/proto"
+	kittens "github.com/nicholasjackson/building-microservices-in-go/chapter6/gomicro/proto"
 )
 
 var c client.Client

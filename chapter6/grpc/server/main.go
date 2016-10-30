@@ -9,7 +9,7 @@ import (
 
 	"google.golang.org/grpc"
 
-	proto "github.com/nicholasjackson/building-microservices-in-go/chapter4/grpc/proto"
+	proto "github.com/nicholasjackson/building-microservices-in-go/chapter6/grpc/proto"
 )
 
 type kittenServer struct{}

@@ -9,7 +9,7 @@ import (
 	"net/rpc"
 	"net/rpc/jsonrpc"
 
-	"github.com/nicholasjackson/building-microservices-in-go/chapter1/rpc/contract"
+	"github.com/nicholasjackson/building-microservices-in-go/chapter1/rpc_http_json/contract"
 )
 
 const port = 1234

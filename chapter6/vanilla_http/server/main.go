@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/nicholasjackson/building-microservices-in-go/chapter4/vanilla_http/entities"
+	"github.com/nicholasjackson/building-microservices-in-go/chapter6/vanilla_http/entities"
 )
 
 func main() {

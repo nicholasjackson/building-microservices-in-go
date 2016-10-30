@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/DATA-DOG/godog"
-	"github.com/nicholasjackson/building-microservices-in-go/chapter4/step5/data"
+	"github.com/nicholasjackson/building-microservices-in-go/chapter4/benchmark/data"
 )
 
 var criteria interface{}

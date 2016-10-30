@@ -8,10 +8,11 @@ import (
 	"github.com/nicholasjackson/bench"
 	"github.com/nicholasjackson/bench/output"
 	"github.com/nicholasjackson/bench/util"
-	proto "github.com/nicholasjackson/building-microservices-in-go/chapter4/grpc/proto"
+	proto "github.com/nicholasjackson/building-microservices-in-go/chapter6/grpc/proto"
 	context "golang.org/x/net/context"
 	"google.golang.org/grpc"
 )
+
 var conn *grpc.ClientConn
 
 func main() {
