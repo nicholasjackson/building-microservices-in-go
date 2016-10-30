@@ -1,0 +1,17 @@
+language: go
+go:
+  - 1.5
+  - 1.6
+  - tip
+
+install: go install github.com/DATA-DOG/godog/cmd/godog
+
+script:
+  # run standard go tests
+  - go vet ./...
+  - go fmt ./...
+  - go test -v
+  - go test -race
+
+  # run features
+  - godog --format=progress --concurrency=4

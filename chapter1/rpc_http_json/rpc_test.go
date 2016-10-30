@@ -3,8 +3,8 @@ package main
 import (
 	"testing"
 
-	"github.com/nicholasjackson/building-microservices-in-go/chapter2/rpc_http_json/client"
-	"github.com/nicholasjackson/building-microservices-in-go/chapter2/rpc_http_json/server"
+	"github.com/nicholasjackson/building-microservices-in-go/chapter1/rpc_http_json/client"
+	"github.com/nicholasjackson/building-microservices-in-go/chapter1/rpc_http_json/server"
 )
 
 func BenchmarkHelloWorldHandlerJSONRPC(b *testing.B) {
