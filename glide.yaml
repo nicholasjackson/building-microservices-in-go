@@ -28,6 +28,10 @@ import:
 - package: google.golang.org/grpc
   version: ^1.0.3
 - package: labix.org/v2/mgo
+- package: github.com/eapache/go-resiliency
+  version: ^1.0.0
+  subpackages:
+  - deadline
 testImport:
 - package: github.com/DATA-DOG/godog
   version: ^0.5.4
