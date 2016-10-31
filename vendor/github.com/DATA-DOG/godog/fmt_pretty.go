@@ -2,22 +2,29 @@ package godog
 
 import (
 	"fmt"
+	"io"
 	"math"
 	"regexp"
 	"strings"
 	"time"
 	"unicode/utf8"
 
+	"github.com/DATA-DOG/godog/colors"
 	"github.com/DATA-DOG/godog/gherkin"
 )
 
 func init() {
-	Format("pretty", "Prints every feature with runtime statuses.", &pretty{
+	Format("pretty", "Prints every feature with runtime statuses.", prettyFunc)
+}
+
+func prettyFunc(suite string, out io.Writer) Formatter {
+	return &pretty{
 		basefmt: basefmt{
 			started: time.Now(),
 			indent:  2,
+			out:     out,
 		},
-	})
+	}
 }
 
 var outlinePlaceholderRegexp = regexp.MustCompile("<[^>]+>")
@@ -45,16 +52,16 @@ type pretty struct {
 	outlineNumExamples int
 }
 
-func (f *pretty) Feature(ft *gherkin.Feature, p string) {
+func (f *pretty) Feature(ft *gherkin.Feature, p string, c []byte) {
 	if len(f.features) != 0 {
 		// not a first feature, add a newline
-		fmt.Println("")
+		fmt.Fprintln(f.out, "")
 	}
 	f.features = append(f.features, &feature{Path: p, Feature: ft})
-	fmt.Println(bcl(ft.Keyword+": ", white) + ft.Name)
+	fmt.Fprintln(f.out, whiteb(ft.Keyword+": ")+ft.Name)
 	if strings.TrimSpace(ft.Description) != "" {
 		for _, line := range strings.Split(ft.Description, "\n") {
-			fmt.Println(s(f.indent) + strings.TrimSpace(line))
+			fmt.Fprintln(f.out, s(f.indent)+strings.TrimSpace(line))
 		}
 	}
 
@@ -104,7 +111,7 @@ func (f *pretty) Summary() {
 		}
 	}
 	if len(failedScenarios) > 0 {
-		fmt.Println("\n--- " + cl("Failed scenarios:", red) + "\n")
+		fmt.Fprintln(f.out, "\n--- "+red("Failed scenarios:")+"\n")
 		var unique []string
 		for _, fail := range failedScenarios {
 			var found bool
@@ -120,7 +127,7 @@ func (f *pretty) Summary() {
 		}
 
 		for _, fail := range unique {
-			fmt.Println("    " + cl(fail, red))
+			fmt.Fprintln(f.out, "    "+red(fail))
 		}
 	}
 	f.basefmt.Summary()
@@ -128,7 +135,7 @@ func (f *pretty) Summary() {
 
 func (f *pretty) printOutlineExample(outline *gherkin.ScenarioOutline) {
 	var msg string
-	clr := green
+	var clr colors.ColorFunc
 
 	ex := outline.Examples[f.outlineNumExample]
 	example, hasExamples := examples(ex)
@@ -148,7 +155,7 @@ func (f *pretty) printOutlineExample(outline *gherkin.ScenarioOutline) {
 			clr = res.typ.clr()
 		case res.typ == undefined || res.typ == pending:
 			clr = res.typ.clr()
-		case res.typ == skipped && clr == green:
+		case res.typ == skipped && clr == nil:
 			clr = cyan
 		}
 		if printSteps {
@@ -160,20 +167,20 @@ func (f *pretty) printOutlineExample(outline *gherkin.ScenarioOutline) {
 					var pos int
 					for i := 0; i < len(m); i++ {
 						pair := m[i]
-						text += cl(ostep.Text[pos:pair[0]], cyan)
-						text += bcl(ostep.Text[pair[0]:pair[1]], cyan)
+						text += cyan(ostep.Text[pos:pair[0]])
+						text += cyanb(ostep.Text[pair[0]:pair[1]])
 						pos = pair[1]
 					}
-					text += cl(ostep.Text[pos:len(ostep.Text)], cyan)
+					text += cyan(ostep.Text[pos:len(ostep.Text)])
 				} else {
-					text = cl(ostep.Text, cyan)
+					text = cyan(ostep.Text)
 				}
-				text += s(f.commentPos-f.length(ostep)+1) + cl(fmt.Sprintf("# %s", res.def.funcName()), black)
+				text += s(f.commentPos-f.length(ostep)+1) + black(fmt.Sprintf("# %s", res.def.definitionID()))
 			} else {
-				text = cl(ostep.Text, cyan)
+				text = cyan(ostep.Text)
 			}
 			// print the step outline
-			fmt.Println(s(f.indent*2) + cl(strings.TrimSpace(ostep.Keyword), cyan) + " " + text)
+			fmt.Fprintln(f.out, s(f.indent*2)+cyan(strings.TrimSpace(ostep.Keyword))+" "+text)
 		}
 	}
 
@@ -181,65 +188,68 @@ func (f *pretty) printOutlineExample(outline *gherkin.ScenarioOutline) {
 	max := longest(example)
 	// an example table header
 	if firstExample {
-		fmt.Println("")
-		fmt.Println(s(f.indent*2) + bcl(example.Keyword+": ", white) + example.Name)
+		fmt.Fprintln(f.out, "")
+		fmt.Fprintln(f.out, s(f.indent*2)+whiteb(example.Keyword+": ")+example.Name)
 
 		for i, cell := range example.TableHeader.Cells {
-			cells[i] = cl(cell.Value, cyan) + s(max[i]-len(cell.Value))
+			cells[i] = cyan(cell.Value) + s(max[i]-len(cell.Value))
 		}
-		fmt.Println(s(f.indent*3) + "| " + strings.Join(cells, " | ") + " |")
+		fmt.Fprintln(f.out, s(f.indent*3)+"| "+strings.Join(cells, " | ")+" |")
 	}
 
+	if clr == nil {
+		clr = green
+	}
 	// an example table row
 	row := example.TableBody[len(example.TableBody)-f.outlineNumExamples]
 	for i, cell := range row.Cells {
-		cells[i] = cl(cell.Value, clr) + s(max[i]-len(cell.Value))
+		cells[i] = clr(cell.Value) + s(max[i]-len(cell.Value))
 	}
-	fmt.Println(s(f.indent*3) + "| " + strings.Join(cells, " | ") + " |")
+	fmt.Fprintln(f.out, s(f.indent*3)+"| "+strings.Join(cells, " | ")+" |")
 
 	// if there is an error
 	if msg != "" {
-		fmt.Println(s(f.indent*4) + bcl(msg, red))
+		fmt.Fprintln(f.out, s(f.indent*4)+redb(msg))
 	}
 }
 
-func (f *pretty) printStep(step *gherkin.Step, def *StepDef, c color) {
-	text := s(f.indent*2) + cl(strings.TrimSpace(step.Keyword), c) + " "
+func (f *pretty) printStep(step *gherkin.Step, def *StepDef, c colors.ColorFunc) {
+	text := s(f.indent*2) + c(strings.TrimSpace(step.Keyword)) + " "
 	switch {
 	case def != nil:
-		if m := (def.Expr.FindStringSubmatchIndex(step.Text))[2:]; len(m) > 0 {
+		if m := def.Expr.FindStringSubmatchIndex(step.Text)[2:]; len(m) > 0 {
 			var pos, i int
 			for pos, i = 0, 0; i < len(m); i++ {
 				if math.Mod(float64(i), 2) == 0 {
-					text += cl(step.Text[pos:m[i]], c)
+					text += c(step.Text[pos:m[i]])
 				} else {
-					text += bcl(step.Text[pos:m[i]], c)
+					text += c(step.Text[pos:m[i]])
 				}
 				pos = m[i]
 			}
-			text += cl(step.Text[pos:len(step.Text)], c)
+			text += c(step.Text[pos:len(step.Text)])
 		} else {
-			text += cl(step.Text, c)
+			text += c(step.Text)
 		}
-		text += s(f.commentPos-f.length(step)+1) + cl(fmt.Sprintf("# %s", def.funcName()), black)
+		text += s(f.commentPos-f.length(step)+1) + black(fmt.Sprintf("# %s", def.definitionID()))
 	default:
-		text += cl(step.Text, c)
+		text += c(step.Text)
 	}
 
-	fmt.Println(text)
+	fmt.Fprintln(f.out, text)
 	switch t := step.Argument.(type) {
 	case *gherkin.DataTable:
 		f.printTable(t, c)
 	case *gherkin.DocString:
 		var ct string
 		if len(t.ContentType) > 0 {
-			ct = " " + cl(t.ContentType, c)
+			ct = " " + c(t.ContentType)
 		}
-		fmt.Println(s(f.indent*3) + cl(t.Delimitter, c) + ct)
+		fmt.Fprintln(f.out, s(f.indent*3)+c(t.Delimitter)+ct)
 		for _, ln := range strings.Split(t.Content, "\n") {
-			fmt.Println(s(f.indent*3) + cl(ln, c))
+			fmt.Fprintln(f.out, s(f.indent*3)+c(ln))
 		}
-		fmt.Println(s(f.indent*3) + cl(t.Delimitter, c))
+		fmt.Fprintln(f.out, s(f.indent*3)+c(t.Delimitter))
 	}
 }
 
@@ -249,7 +259,7 @@ func (f *pretty) printStepKind(res *stepResult) {
 	// first background step
 	case f.bgSteps > 0 && f.bgSteps == len(f.feature.Background.Steps):
 		f.commentPos = f.longestStep(f.feature.Background.Steps, f.length(f.feature.Background))
-		fmt.Println("\n" + s(f.indent) + bcl(f.feature.Background.Keyword+": "+f.feature.Background.Name, white))
+		fmt.Fprintln(f.out, "\n"+s(f.indent)+whiteb(f.feature.Background.Keyword+": "+f.feature.Background.Name))
 		f.bgSteps--
 	// subsequent background steps
 	case f.bgSteps > 0:
@@ -264,9 +274,9 @@ func (f *pretty) printStepKind(res *stepResult) {
 					f.commentPos = bgLen
 				}
 			}
-			text := s(f.indent) + bcl(f.scenario.Keyword+": ", white) + f.scenario.Name
+			text := s(f.indent) + whiteb(f.scenario.Keyword+": ") + f.scenario.Name
 			text += s(f.commentPos-f.length(f.scenario)+1) + f.line(f.scenario.Location)
-			fmt.Println("\n" + text)
+			fmt.Fprintln(f.out, "\n"+text)
 			f.scenarioKeyword = true
 		}
 		f.steps--
@@ -283,9 +293,9 @@ func (f *pretty) printStepKind(res *stepResult) {
 					f.commentPos = bgLen
 				}
 			}
-			text := s(f.indent) + bcl(f.outline.Keyword+": ", white) + f.outline.Name
+			text := s(f.indent) + whiteb(f.outline.Keyword+": ") + f.outline.Name
 			text += s(f.commentPos-f.length(f.outline)+1) + f.line(f.outline.Location)
-			fmt.Println("\n" + text)
+			fmt.Fprintln(f.out, "\n"+text)
 			f.scenarioKeyword = true
 		}
 		if len(f.outlineSteps) == len(f.outline.Steps)+f.bgSteps {
@@ -298,22 +308,22 @@ func (f *pretty) printStepKind(res *stepResult) {
 
 	f.printStep(res.step, res.def, res.typ.clr())
 	if res.err != nil {
-		fmt.Println(s(f.indent*2) + bcl(res.err, red))
+		fmt.Fprintln(f.out, s(f.indent*2)+redb(res.err))
 	}
 	if res.typ == pending {
-		fmt.Println(s(f.indent*3) + cl("TODO: write pending definition", yellow))
+		fmt.Fprintln(f.out, s(f.indent*3)+yellow("TODO: write pending definition"))
 	}
 }
 
 // print table with aligned table cells
-func (f *pretty) printTable(t *gherkin.DataTable, c color) {
+func (f *pretty) printTable(t *gherkin.DataTable, c colors.ColorFunc) {
 	var l = longest(t)
 	var cols = make([]string, len(t.Rows[0].Cells))
 	for _, row := range t.Rows {
 		for i, cell := range row.Cells {
 			cols[i] = cell.Value + s(l[i]-len(cell.Value))
 		}
-		fmt.Println(s(f.indent*3) + cl("| "+strings.Join(cols, " | ")+" |", c))
+		fmt.Fprintln(f.out, s(f.indent*3)+c("| "+strings.Join(cols, " | ")+" |"))
 	}
 }
 
@@ -377,7 +387,7 @@ func (f *pretty) longestStep(steps []*gherkin.Step, base int) int {
 
 // a line number representation in feature file
 func (f *pretty) line(loc *gherkin.Location) string {
-	return cl(fmt.Sprintf("# %s:%d", f.features[len(f.features)-1].Path, loc.Line), black)
+	return black(fmt.Sprintf("# %s:%d", f.features[len(f.features)-1].Path, loc.Line))
 }
 
 func (f *pretty) length(node interface{}) int {
