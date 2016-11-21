@@ -1,16 +1,20 @@
-hash: 904c102f7902fba8016ced368701ef66166b7a741bd9bd9ce54caa342333a443
-updated: 2016-10-30T15:55:50.086158756Z
+hash: f7275bcb2b62089c8cf2227cf9b3df41928e5006e4e527062c0617721301799d
+updated: 2016-10-31T14:40:49.479986128-04:00
 imports:
 - name: github.com/blendlabs/go-exception
   version: a2d44f35a0a226b5fe120e99ccd70ef1eca8fd36
 - name: github.com/cenkalti/backoff
   version: b02f2bbce11d7ea6b97f282ef1771b0fe2f65ef3
 - name: github.com/davecgh/go-spew
-  version: 346938d642f2ec3594ed81d874461961cd0faa76
+  version: 6d212800a42e8ab5c146b8ace3490ee17e5225f9
   subpackages:
   - spew
 - name: github.com/dgrijalva/jwt-go
   version: 24c63f56522a87ec5339cc3567883f1039378fdb
+- name: github.com/eapache/go-resiliency
+  version: 6800482f2c813e689c88b7ed3282262385011890
+  subpackages:
+  - deadline
 - name: github.com/fatih/color
   version: bf82308e8c8546dc2b945157173eb8a959ae9505
 - name: github.com/golang/freetype
@@ -31,14 +35,14 @@ imports:
 - name: github.com/gorilla/websocket
   version: 2aff870ef83507abb46472eae82449f7a4c464c5
 - name: github.com/hashicorp/consul
-  version: bfa0c3bc4c2ca577155218285cc321d4a0a4f8b6
+  version: 3be132863fcf28190330e78bc597dd0a5627b6b8
   subpackages:
   - api
   - watch
 - name: github.com/hashicorp/go-cleanhttp
   version: ad28ea4487f05916463e2423a55166280e8254b5
 - name: github.com/hashicorp/serf
-  version: 1d4fa605f6ff3ed628d7ae5eda7c0e56803e72a5
+  version: 4121fe5d41b39675e7767ca04485c326cd8b5c00
   subpackages:
   - coordinate
 - name: github.com/juju/ratelimit
@@ -107,13 +111,13 @@ imports:
 - name: github.com/pborman/uuid
   version: 3d4f2ba23642d3cfd06bd4b54cf03d99d95c0f1b
 - name: github.com/pmezard/go-difflib
-  version: 792786c7400a136282c1664665ae0a8db921c6c2
+  version: d8ed2627bdf02c080bf22230dbb337003b7aba2d
   subpackages:
   - difflib
 - name: github.com/satori/go.uuid
   version: b061729afc07e77a8aa4fad0a2fd840958f1942a
 - name: github.com/stretchr/objx
-  version: 1a9d0bb9f541897e62256577b352fdbc1fb4fd94
+  version: cbeaeb16a013161a98496fad62933b1d21786672
 - name: github.com/stretchr/testify
   version: 69483b4bd14f5845b5a1e55bca19e954e827f1d0
   subpackages:
@@ -124,7 +128,7 @@ imports:
   subpackages:
   - drawing
 - name: golang.org/x/crypto
-  version: b2fa06b6af4b7c9bfeb8569ab7b17f04550717bf
+  version: 9477e0b78b9ac3d0b03822fd95422e2fe07627cd
   subpackages:
   - ssh/terminal
 - name: golang.org/x/image
@@ -135,7 +139,7 @@ imports:
   - math/f64
   - math/fixed
 - name: golang.org/x/net
-  version: 76c1a11e06a6d0fcd17b3830b8e1b87a2ade4a9c
+  version: 541150ac4f433e755f5663eba5d888c2fa347343
   subpackages:
   - bpf
   - context
@@ -181,8 +185,9 @@ testImports:
 - name: github.com/alecthomas/repr
   version: d44565ca483f0ed23c2ac9cda62c966b116e77a3
 - name: github.com/DATA-DOG/godog
-  version: 6e3b3f764a57d37691c0dfd007e7e586d3e452dc
+  version: 623ff9946e5c72834c19a019a153b8e3a338a52c
   subpackages:
+  - colors
   - gherkin
 - name: github.com/sergi/go-diff
   version: f7fcaada5500405b458a8ef96415b148fcfeacd5
