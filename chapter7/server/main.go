@@ -62,10 +62,11 @@ func createLogger(address string) (*logrus.Logger, error) {
 
 	// Retry connection to logstash incase the server has not yet come up
 	for ; retryCount < 10; retryCount++ {
-		hook, err := logstash.NewHookWithFields("tcp", address, "kittenserver",
-			logrus.Fields{
-				"hostname": hostname,
-			},
+		hook, err := logstash.NewHookWithFields(
+			"tcp",
+			address,
+			"kittenserver",
+			logrus.Fields{"hostname": hostname},
 		)
 
 		if err == nil {
