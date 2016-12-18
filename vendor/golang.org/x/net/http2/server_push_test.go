@@ -14,6 +14,7 @@ import (
 	"net/http"
 	"reflect"
 	"strconv"
+	"sync"
 	"testing"
 	"time"
 )
@@ -380,4 +381,90 @@ func TestServer_Push_RejectForbiddenHeader(t *testing.T) {
 			}
 			return nil
 		})
+}
+
+func TestServer_Push_StateTransitions(t *testing.T) {
+	const body = "foo"
+
+	startedPromise := make(chan bool)
+	finishedPush := make(chan bool)
+	st := newServerTester(t, func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.RequestURI() {
+		case "/":
+			if err := w.(http.Pusher).Push("/pushed", nil); err != nil {
+				t.Errorf("Push error: %v", err)
+			}
+			close(startedPromise)
+			// Don't finish this request until the push finishes so we don't
+			// nondeterministically interleave output frames with the push.
+			<-finishedPush
+		}
+		w.Header().Set("Content-Type", "text/html")
+		w.Header().Set("Content-Length", strconv.Itoa(len(body)))
+		w.WriteHeader(200)
+		io.WriteString(w, body)
+	})
+	defer st.Close()
+
+	st.greet()
+	if st.stream(2) != nil {
+		t.Fatal("stream 2 should be empty")
+	}
+	if got, want := st.streamState(2), stateIdle; got != want {
+		t.Fatalf("streamState(2)=%v, want %v", got, want)
+	}
+	getSlash(st)
+	<-startedPromise
+	if got, want := st.streamState(2), stateHalfClosedRemote; got != want {
+		t.Fatalf("streamState(2)=%v, want %v", got, want)
+	}
+	st.wantPushPromise()
+	st.wantHeaders()
+	if df := st.wantData(); !df.StreamEnded() {
+		t.Fatal("expected END_STREAM flag on DATA")
+	}
+	if got, want := st.streamState(2), stateClosed; got != want {
+		t.Fatalf("streamState(2)=%v, want %v", got, want)
+	}
+	close(finishedPush)
+}
+
+func TestServer_Push_RejectAfterGoAway(t *testing.T) {
+	var readyOnce sync.Once
+	ready := make(chan struct{})
+	errc := make(chan error, 2)
+	st := newServerTester(t, func(w http.ResponseWriter, r *http.Request) {
+		select {
+		case <-ready:
+		case <-time.After(5 * time.Second):
+			errc <- fmt.Errorf("timeout waiting for GOAWAY to be processed")
+		}
+		if got, want := w.(http.Pusher).Push("https://"+r.Host+"/pushed", nil), http.ErrNotSupported; got != want {
+			errc <- fmt.Errorf("Push()=%v, want %v", got, want)
+		}
+		errc <- nil
+	})
+	defer st.Close()
+	st.greet()
+	getSlash(st)
+
+	// Send GOAWAY and wait for it to be processed.
+	st.fr.WriteGoAway(1, ErrCodeNo, nil)
+	go func() {
+		for {
+			select {
+			case <-ready:
+				return
+			default:
+			}
+			st.sc.testHookCh <- func(loopNum int) {
+				if !st.sc.pushEnabled {
+					readyOnce.Do(func() { close(ready) })
+				}
+			}
+		}
+	}()
+	if err := <-errc; err != nil {
+		t.Error(err)
+	}
 }

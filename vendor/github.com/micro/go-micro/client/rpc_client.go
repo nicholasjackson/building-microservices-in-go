@@ -124,7 +124,7 @@ func (r *rpcClient) call(ctx context.Context, address string, req Request, resp 
 		return err
 	case <-ctx.Done():
 		grr = ctx.Err()
-		return errors.New("go.micro.client", fmt.Sprintf("%v", ctx.Err()), 408)
+		return errors.New("go.micro.client", fmt.Sprintf("request timeout: %v", ctx.Err()), 408)
 	}
 }
 
@@ -176,7 +176,7 @@ func (r *rpcClient) stream(ctx context.Context, address string, req Request, opt
 	case err := <-ch:
 		grr = err
 	case <-ctx.Done():
-		grr = errors.New("go.micro.client", fmt.Sprintf("%v", ctx.Err()), 408)
+		grr = errors.New("go.micro.client", fmt.Sprintf("request timeout: %v", ctx.Err()), 408)
 	}
 
 	if grr != nil {
@@ -250,6 +250,14 @@ func (r *rpcClient) Call(ctx context.Context, request Request, response interfac
 	default:
 	}
 
+	// make copy of call method
+	rcall := r.call
+
+	// wrap the call in reverse
+	for i := len(callOpts.CallWrappers); i > 0; i-- {
+		rcall = callOpts.CallWrappers[i-1](rcall)
+	}
+
 	// return errors.New("go.micro.client", "request timeout", 408)
 	call := func(i int) error {
 		// call backoff first. Someone may want an initial start delay
@@ -278,7 +286,7 @@ func (r *rpcClient) Call(ctx context.Context, request Request, response interfac
 		}
 
 		// make the call
-		err = r.call(ctx, address, request, response, callOpts)
+		err = rcall(ctx, address, request, response, callOpts)
 		r.opts.Selector.Mark(request.Service(), node, err)
 		return err
 	}
@@ -293,12 +301,22 @@ func (r *rpcClient) Call(ctx context.Context, request Request, response interfac
 
 		select {
 		case <-ctx.Done():
-			return errors.New("go.micro.client", fmt.Sprintf("%v", ctx.Err()), 408)
+			return errors.New("go.micro.client", fmt.Sprintf("call timeout: %v", ctx.Err()), 408)
 		case err := <-ch:
 			// if the call succeeded lets bail early
 			if err == nil {
 				return nil
 			}
+
+			retry, rerr := callOpts.Retry(ctx, request, i, err)
+			if rerr != nil {
+				return rerr
+			}
+
+			if !retry {
+				return err
+			}
+
 			gerr = err
 		}
 	}
@@ -394,12 +412,22 @@ func (r *rpcClient) Stream(ctx context.Context, request Request, opts ...CallOpt
 
 		select {
 		case <-ctx.Done():
-			return nil, errors.New("go.micro.client", fmt.Sprintf("%v", ctx.Err()), 408)
+			return nil, errors.New("go.micro.client", fmt.Sprintf("call timeout: %v", ctx.Err()), 408)
 		case rsp := <-ch:
 			// if the call succeeded lets bail early
 			if rsp.err == nil {
 				return rsp.stream, nil
 			}
+
+			retry, rerr := callOpts.Retry(ctx, request, i, rsp.err)
+			if rerr != nil {
+				return nil, rerr
+			}
+
+			if !retry {
+				return nil, rsp.err
+			}
+
 			grr = rsp.err
 		}
 	}

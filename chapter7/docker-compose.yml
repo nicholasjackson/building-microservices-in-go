@@ -1,0 +1,55 @@
+version: '2'
+
+services:
+  kittenserver:
+    build: ./
+    image: kittenserver:logging
+    command: sh -c '/kittenserver'
+    ports:
+      - 8091:8091
+    environment:
+      - "STATSD=statsd:9125"
+      - "LOGSTASH=logstash:5000"
+    links:
+      - statsd
+      - logstash
+  prometheus:
+    image: prom/prometheus
+    links:
+      - statsd
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+  statsd:
+    image: prom/statsd-exporter
+  graphana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    links:
+      - prometheus
+  elasticsearch:
+    image: elasticsearch:2.4.2
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+  kibana:
+    image: kibana:4.6.3
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    links:
+      - elasticsearch
+  logstash:
+    image: logstash
+    command: -f /etc/logstash/conf.d/
+    ports:
+      - 5000:5000
+    volumes:
+      - ./logstash.conf:/etc/logstash/conf.d/logstash.conf
+    links:
+      - elasticsearch

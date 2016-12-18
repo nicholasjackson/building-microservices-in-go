@@ -16,6 +16,7 @@ import (
 
 	"github.com/hashicorp/consul/consul"
 	"github.com/hashicorp/consul/consul/structs"
+	"github.com/hashicorp/consul/logger"
 	"github.com/hashicorp/consul/testutil"
 	"github.com/hashicorp/raft"
 )
@@ -79,14 +80,14 @@ func nextConfig() *Config {
 	return conf
 }
 
-func makeAgentLog(t *testing.T, conf *Config, l io.Writer) (string, *Agent) {
+func makeAgentLog(t *testing.T, conf *Config, l io.Writer, writer *logger.LogWriter) (string, *Agent) {
 	dir, err := ioutil.TempDir("", "agent")
 	if err != nil {
 		t.Fatalf(fmt.Sprintf("err: %v", err))
 	}
 
 	conf.DataDir = dir
-	agent, err := Create(conf, l)
+	agent, err := Create(conf, l, writer, nil)
 	if err != nil {
 		os.RemoveAll(dir)
 		t.Fatalf(fmt.Sprintf("err: %v", err))
@@ -112,7 +113,7 @@ func makeAgentKeyring(t *testing.T, conf *Config, key string) (string, *Agent) {
 		t.Fatalf("err: %s", err)
 	}
 
-	agent, err := Create(conf, nil)
+	agent, err := Create(conf, nil, nil, nil)
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}
@@ -121,7 +122,22 @@ func makeAgentKeyring(t *testing.T, conf *Config, key string) (string, *Agent) {
 }
 
 func makeAgent(t *testing.T, conf *Config) (string, *Agent) {
-	return makeAgentLog(t, conf, nil)
+	return makeAgentLog(t, conf, nil, nil)
+}
+
+func externalIP() (string, error) {
+	addrs, err := net.InterfaceAddrs()
+	if err != nil {
+		return "", fmt.Errorf("Unable to lookup network interfaces: %v", err)
+	}
+	for _, a := range addrs {
+		if ipnet, ok := a.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if ipnet.IP.To4() != nil {
+				return ipnet.IP.String(), nil
+			}
+		}
+	}
+	return "", fmt.Errorf("Unable to find a non-loopback interface")
 }
 
 func TestAgentStartStop(t *testing.T) {
@@ -154,6 +170,28 @@ func TestAgent_RPCPing(t *testing.T) {
 	}
 }
 
+func TestAgent_CheckSerfBindAddrsSettings(t *testing.T) {
+	c := nextConfig()
+	ip, err := externalIP()
+	if err != nil {
+		t.Fatalf("Unable to get a non-loopback IP: %v", err)
+	}
+	c.SerfLanBindAddr = ip
+	c.SerfWanBindAddr = ip
+	dir, agent := makeAgent(t, c)
+	defer os.RemoveAll(dir)
+	defer agent.Shutdown()
+
+	serfWanBind := agent.consulConfig().SerfWANConfig.MemberlistConfig.BindAddr
+	if serfWanBind != ip {
+		t.Fatalf("SerfWanBindAddr is should be a non-loopback IP not %s", serfWanBind)
+	}
+
+	serfLanBind := agent.consulConfig().SerfLANConfig.MemberlistConfig.BindAddr
+	if serfLanBind != ip {
+		t.Fatalf("SerfLanBindAddr is should be a non-loopback IP not %s", serfWanBind)
+	}
+}
 func TestAgent_CheckAdvertiseAddrsSettings(t *testing.T) {
 	c := nextConfig()
 	c.AdvertiseAddrs.SerfLan, _ = net.ResolveTCPAddr("tcp", "127.0.0.42:1233")
@@ -808,7 +846,7 @@ func TestAgent_PersistService(t *testing.T) {
 	agent.Shutdown()
 
 	// Should load it back during later start
-	agent2, err := Create(config, nil)
+	agent2, err := Create(config, nil, nil, nil)
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}
@@ -898,6 +936,11 @@ func TestAgent_PurgeService(t *testing.T) {
 		t.Fatalf("err: %s", err)
 	}
 
+	// Re-add the service
+	if err := agent.AddService(svc, nil, true, ""); err != nil {
+		t.Fatalf("err: %v", err)
+	}
+
 	// Removed
 	if err := agent.RemoveService(svc.ID, true); err != nil {
 		t.Fatalf("err: %s", err)
@@ -937,7 +980,7 @@ func TestAgent_PurgeServiceOnDuplicate(t *testing.T) {
 	}
 
 	config.Services = []*ServiceDefinition{svc2}
-	agent2, err := Create(config, nil)
+	agent2, err := Create(config, nil, nil, nil)
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}
@@ -1030,7 +1073,7 @@ func TestAgent_PersistCheck(t *testing.T) {
 	agent.Shutdown()
 
 	// Should load it back during later start
-	agent2, err := Create(config, nil)
+	agent2, err := Create(config, nil, nil, nil)
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}
@@ -1123,7 +1166,7 @@ func TestAgent_PurgeCheckOnDuplicate(t *testing.T) {
 	}
 
 	config.Checks = []*CheckDefinition{check2}
-	agent2, err := Create(config, nil)
+	agent2, err := Create(config, nil, nil, nil)
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}
@@ -1534,13 +1577,13 @@ func TestAgent_NodeMaintenanceMode(t *testing.T) {
 	agent.EnableNodeMaintenance("broken", "mytoken")
 
 	// Make sure the critical health check was added
-	check, ok := agent.state.Checks()[nodeMaintCheckID]
+	check, ok := agent.state.Checks()[structs.NodeMaint]
 	if !ok {
 		t.Fatalf("should have registered critical node check")
 	}
 
 	// Check that the token was used to register the check
-	if token := agent.state.CheckToken(nodeMaintCheckID); token != "mytoken" {
+	if token := agent.state.CheckToken(structs.NodeMaint); token != "mytoken" {
 		t.Fatalf("expected 'mytoken', got: '%s'", token)
 	}
 
@@ -1553,7 +1596,7 @@ func TestAgent_NodeMaintenanceMode(t *testing.T) {
 	agent.DisableNodeMaintenance()
 
 	// Ensure the check was deregistered
-	if _, ok := agent.state.Checks()[nodeMaintCheckID]; ok {
+	if _, ok := agent.state.Checks()[structs.NodeMaint]; ok {
 		t.Fatalf("should have deregistered critical node check")
 	}
 
@@ -1561,7 +1604,7 @@ func TestAgent_NodeMaintenanceMode(t *testing.T) {
 	agent.EnableNodeMaintenance("", "")
 
 	// Make sure the check was registered with the default note
-	check, ok = agent.state.Checks()[nodeMaintCheckID]
+	check, ok = agent.state.Checks()[structs.NodeMaint]
 	if !ok {
 		t.Fatalf("should have registered critical node check")
 	}

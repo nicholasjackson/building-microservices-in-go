@@ -1,22 +1,27 @@
-hash: f7275bcb2b62089c8cf2227cf9b3df41928e5006e4e527062c0617721301799d
-updated: 2016-10-31T14:40:49.479986128-04:00
+hash: e0a61822f8f60139514164fe12d6142935292aa37e51884bd2a4021da744136c
+updated: 2016-12-04T19:03:52.683444916Z
 imports:
+- name: github.com/alexcesaro/statsd
+  version: 7fea3f0d2fab1ad973e641e51dba45443a311a90
 - name: github.com/blendlabs/go-exception
   version: a2d44f35a0a226b5fe120e99ccd70ef1eca8fd36
+- name: github.com/bshuster-repo/logrus-logstash-hook
+  version: 544f72d23cd2536636193deff26b6190c47e10bb
 - name: github.com/cenkalti/backoff
   version: b02f2bbce11d7ea6b97f282ef1771b0fe2f65ef3
 - name: github.com/davecgh/go-spew
-  version: 6d212800a42e8ab5c146b8ace3490ee17e5225f9
+  version: 346938d642f2ec3594ed81d874461961cd0faa76
   subpackages:
   - spew
 - name: github.com/dgrijalva/jwt-go
-  version: 24c63f56522a87ec5339cc3567883f1039378fdb
+  version: 9ed569b5d1ac936e6494082958d63a6aa4fff99a
 - name: github.com/eapache/go-resiliency
   version: 6800482f2c813e689c88b7ed3282262385011890
   subpackages:
+  - breaker
   - deadline
 - name: github.com/fatih/color
-  version: bf82308e8c8546dc2b945157173eb8a959ae9505
+  version: dea9d3a26a087187530244679c1cfb3a42937794
 - name: github.com/golang/freetype
   version: 38b4c392adc5eed94207994c4848fff99f4ac234
   subpackages:
@@ -25,7 +30,7 @@ imports:
 - name: github.com/golang/glog
   version: 23def4e6c14b4da8ac2ed8007337bc5eb5007998
 - name: github.com/golang/protobuf
-  version: 98fa357170587e470c5f27d3c3ea0947b71eb455
+  version: 8ee79997227bf9b34611aee7946ae64735e6fd93
   subpackages:
   - proto
 - name: github.com/gorilla/context
@@ -33,16 +38,16 @@ imports:
 - name: github.com/gorilla/mux
   version: 757bef944d0f21880861c2dd9c871ca543023cba
 - name: github.com/gorilla/websocket
-  version: 2aff870ef83507abb46472eae82449f7a4c464c5
+  version: e8f0f8aaa98dfb6586cbdf2978d511e3199a960a
 - name: github.com/hashicorp/consul
-  version: 3be132863fcf28190330e78bc597dd0a5627b6b8
+  version: 4efa1a72fac53d0939368e7f47e30b3c56799ea9
   subpackages:
   - api
   - watch
 - name: github.com/hashicorp/go-cleanhttp
   version: ad28ea4487f05916463e2423a55166280e8254b5
 - name: github.com/hashicorp/serf
-  version: 4121fe5d41b39675e7767ca04485c326cd8b5c00
+  version: f679d7594a349263f6118db40d87122d3a474e7d
   subpackages:
   - coordinate
 - name: github.com/juju/ratelimit
@@ -50,7 +55,7 @@ imports:
 - name: github.com/koding/cache
   version: 83d3cbbc2f6014304cdb6622f727e429a0e5d07c
 - name: github.com/koding/kite
-  version: e6e5416f3d96e6cefcb2cdac16fee37d7f9a88de
+  version: 077dc6df5fcfc0419e399f68445dc633f8cfc853
   subpackages:
   - config
   - dnode
@@ -62,13 +67,13 @@ imports:
 - name: github.com/koding/logging
   version: 8b5a689ed69b1c7cd1e3595276fc2a352d7818e0
 - name: github.com/mattn/go-colorable
-  version: 6c903ff4aa50920ca86087a280590b36b3152b9c
+  version: d228849504861217f796da67fae4f6e347643f15
 - name: github.com/mattn/go-isatty
   version: 66b8e73f3f5cda9f96b69efd03dd3d7fc4a5cdb8
 - name: github.com/micro/cli
   version: 3d2263bb092286dde294a31049c92665f8373820
 - name: github.com/micro/go-micro
-  version: 1b1fb71e44d0e192c1c1645f6d2c9c3df6f64a6a
+  version: bee9f03e11ed7ec001829384b2adae00b0906682
   subpackages:
   - broker
   - broker/http
@@ -97,7 +102,7 @@ imports:
   subpackages:
   - lib/tls
 - name: github.com/miekg/dns
-  version: 58f52c57ce9df13460ac68200cef30a008b9c468
+  version: f4d2b086946a624202dc59e6a43f72e8f3f02bc1
 - name: github.com/mitchellh/hashstructure
   version: b098c52ef6beab8cd82bc4a32422cf54b890e8fa
 - name: github.com/nicholasjackson/bench
@@ -111,13 +116,15 @@ imports:
 - name: github.com/pborman/uuid
   version: 3d4f2ba23642d3cfd06bd4b54cf03d99d95c0f1b
 - name: github.com/pmezard/go-difflib
-  version: d8ed2627bdf02c080bf22230dbb337003b7aba2d
+  version: 792786c7400a136282c1664665ae0a8db921c6c2
   subpackages:
   - difflib
 - name: github.com/satori/go.uuid
   version: b061729afc07e77a8aa4fad0a2fd840958f1942a
+- name: github.com/Sirupsen/logrus
+  version: d26492970760ca5d33129d2d799e34be5c4782eb
 - name: github.com/stretchr/objx
-  version: cbeaeb16a013161a98496fad62933b1d21786672
+  version: 1a9d0bb9f541897e62256577b352fdbc1fb4fd94
 - name: github.com/stretchr/testify
   version: 69483b4bd14f5845b5a1e55bca19e954e827f1d0
   subpackages:
@@ -132,14 +139,14 @@ imports:
   subpackages:
   - ssh/terminal
 - name: golang.org/x/image
-  version: c78039e8ce1e427880f400175cb7cddd6cce7248
+  version: 5286ed5c2aec7fc7d08323e7e4423b171caf84cb
   subpackages:
   - draw
   - font
   - math/f64
   - math/fixed
 - name: golang.org/x/net
-  version: 541150ac4f433e755f5663eba5d888c2fa347343
+  version: 0e2717dc3cc05907dc23096ef3a9086ea93f567f
   subpackages:
   - bpf
   - context
@@ -154,11 +161,11 @@ imports:
   - lex/httplex
   - trace
 - name: golang.org/x/sys
-  version: c200b10b5d5e122be351b67af224adc6128af5bf
+  version: b699b7032584f0953262cb2788a0ca19bb494703
   subpackages:
   - unix
 - name: google.golang.org/grpc
-  version: b7f1379d3cbbbeb2ca3405852012e237aa05459e
+  version: 777daa17ff9b5daef1cfdf915088a2ada3332bf0
   subpackages:
   - codes
   - credentials
@@ -168,8 +175,10 @@ imports:
   - naming
   - peer
   - transport
+- name: gopkg.in/alexcesaro/statsd.v2
+  version: 7fea3f0d2fab1ad973e641e51dba45443a311a90
 - name: gopkg.in/igm/sockjs-go.v2
-  version: 1e8c8f7f3832bd1fadc93ea672f82d22d45c1c34
+  version: d276e9ffe5cc5c271b81198cc77a2adf6c4482d2
   subpackages:
   - sockjs
 - name: labix.org/v2/mgo
@@ -185,11 +194,11 @@ testImports:
 - name: github.com/alecthomas/repr
   version: d44565ca483f0ed23c2ac9cda62c966b116e77a3
 - name: github.com/DATA-DOG/godog
-  version: 623ff9946e5c72834c19a019a153b8e3a338a52c
+  version: 2e189ad0f9dee046e42bb5f04a7ec5e91ec0700e
   subpackages:
   - colors
   - gherkin
 - name: github.com/sergi/go-diff
-  version: f7fcaada5500405b458a8ef96415b148fcfeacd5
+  version: 552b4e9bbdca9e5adafd95ee98c822fdd11b330b
   subpackages:
   - diffmatchpatch

@@ -1,6 +1,7 @@
 package agent
 
 import (
+	"crypto/tls"
 	"fmt"
 	"io"
 	"log"
@@ -47,6 +48,7 @@ type CheckType struct {
 	Interval          time.Duration
 	DockerContainerID string
 	Shell             string
+	TLSSkipVerify     bool
 
 	Timeout time.Duration
 	TTL     time.Duration
@@ -108,7 +110,6 @@ type CheckMonitor struct {
 	Interval time.Duration
 	Timeout  time.Duration
 	Logger   *log.Logger
-	ReapLock *sync.RWMutex
 
 	stop     bool
 	stopCh   chan struct{}
@@ -154,12 +155,6 @@ func (c *CheckMonitor) run() {
 
 // check is invoked periodically to perform the script check
 func (c *CheckMonitor) check() {
-	// Disable child process reaping so that we can get this command's
-	// return value. Note that we take the read lock here since we are
-	// waiting on a specific PID and don't need to serialize all waits.
-	c.ReapLock.RLock()
-	defer c.ReapLock.RUnlock()
-
 	// Create the command
 	cmd, err := ExecScript(c.Script)
 	if err != nil {
@@ -340,12 +335,13 @@ type persistedCheckState struct {
 // The check is critical if the response code is anything else
 // or if the request returns an error
 type CheckHTTP struct {
-	Notify   CheckNotifier
-	CheckID  types.CheckID
-	HTTP     string
-	Interval time.Duration
-	Timeout  time.Duration
-	Logger   *log.Logger
+	Notify        CheckNotifier
+	CheckID       types.CheckID
+	HTTP          string
+	Interval      time.Duration
+	Timeout       time.Duration
+	Logger        *log.Logger
+	TLSSkipVerify bool
 
 	httpClient *http.Client
 	stop       bool
@@ -364,6 +360,15 @@ func (c *CheckHTTP) Start() {
 		// failing checks due to the keepalive interval.
 		trans := cleanhttp.DefaultTransport()
 		trans.DisableKeepAlives = true
+
+		// Skip SSL certificate verification if TLSSkipVerify is true
+		if trans.TLSClientConfig == nil {
+			trans.TLSClientConfig = &tls.Config{
+				InsecureSkipVerify: c.TLSSkipVerify,
+			}
+		} else {
+			trans.TLSClientConfig.InsecureSkipVerify = c.TLSSkipVerify
+		}
 
 		// Create the HTTP client.
 		c.httpClient = &http.Client{

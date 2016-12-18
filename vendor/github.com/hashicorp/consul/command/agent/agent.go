@@ -2,6 +2,7 @@ package agent
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -12,6 +13,7 @@ import (
 	"reflect"
 	"regexp"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -19,7 +21,10 @@ import (
 	"github.com/hashicorp/consul/consul/state"
 	"github.com/hashicorp/consul/consul/structs"
 	"github.com/hashicorp/consul/lib"
+	"github.com/hashicorp/consul/logger"
 	"github.com/hashicorp/consul/types"
+	"github.com/hashicorp/go-sockaddr/template"
+	"github.com/hashicorp/go-uuid"
 	"github.com/hashicorp/serf/coordinate"
 	"github.com/hashicorp/serf/serf"
 )
@@ -31,10 +36,6 @@ const (
 	// Path to save local agent checks
 	checksDir     = "checks"
 	checkStateDir = "checks/state"
-
-	// The ID of the faux health checks for maintenance mode
-	serviceMaintCheckPrefix = "_service_maintenance"
-	nodeMaintCheckID        = "_node_maintenance"
 
 	// Default reasons for node/service maintenance mode
 	defaultNodeMaintReason = "Maintenance mode is enabled for this node, " +
@@ -64,6 +65,9 @@ type Agent struct {
 
 	// Output sink for logs
 	logOutput io.Writer
+
+	// Used for streaming logs to
+	logWriter *logger.LogWriter
 
 	// We have one of a client or a server, depending
 	// on our configuration
@@ -108,6 +112,8 @@ type Agent struct {
 	eventLock   sync.RWMutex
 	eventNotify state.NotifyGroup
 
+	reloadCh chan chan error
+
 	shutdown     bool
 	shutdownCh   chan struct{}
 	shutdownLock sync.Mutex
@@ -120,7 +126,8 @@ type Agent struct {
 
 // Create is used to create a new Agent. Returns
 // the agent or potentially an error.
-func Create(config *Config, logOutput io.Writer) (*Agent, error) {
+func Create(config *Config, logOutput io.Writer, logWriter *logger.LogWriter,
+	reloadCh chan chan error) (*Agent, error) {
 	// Ensure we have a log sink
 	if logOutput == nil {
 		logOutput = os.Stderr
@@ -136,6 +143,12 @@ func Create(config *Config, logOutput io.Writer) (*Agent, error) {
 
 	// Try to get an advertise address
 	if config.AdvertiseAddr != "" {
+		ipStr, err := parseSingleIPTemplate(config.AdvertiseAddr)
+		if err != nil {
+			return nil, fmt.Errorf("Advertise address resolution failed: %v", err)
+		}
+		config.AdvertiseAddr = ipStr
+
 		if ip := net.ParseIP(config.AdvertiseAddr); ip == nil {
 			return nil, fmt.Errorf("Failed to parse advertise address: %v", config.AdvertiseAddr)
 		}
@@ -157,6 +170,12 @@ func Create(config *Config, logOutput io.Writer) (*Agent, error) {
 
 	// Try to get an advertise address for the wan
 	if config.AdvertiseAddrWan != "" {
+		ipStr, err := parseSingleIPTemplate(config.AdvertiseAddrWan)
+		if err != nil {
+			return nil, fmt.Errorf("Advertise WAN address resolution failed: %v", err)
+		}
+		config.AdvertiseAddrWan = ipStr
+
 		if ip := net.ParseIP(config.AdvertiseAddrWan); ip == nil {
 			return nil, fmt.Errorf("Failed to parse advertise address for wan: %v", config.AdvertiseAddrWan)
 		}
@@ -174,6 +193,7 @@ func Create(config *Config, logOutput io.Writer) (*Agent, error) {
 		config:         config,
 		logger:         log.New(logOutput, "", log.LstdFlags),
 		logOutput:      logOutput,
+		logWriter:      logWriter,
 		checkReapAfter: make(map[types.CheckID]time.Duration),
 		checkMonitors:  make(map[types.CheckID]*CheckMonitor),
 		checkTTLs:      make(map[types.CheckID]*CheckTTL),
@@ -182,8 +202,13 @@ func Create(config *Config, logOutput io.Writer) (*Agent, error) {
 		checkDockers:   make(map[types.CheckID]*CheckDocker),
 		eventCh:        make(chan serf.UserEvent, 1024),
 		eventBuf:       make([]*UserEvent, 256),
+		reloadCh:       reloadCh,
 		shutdownCh:     make(chan struct{}),
 		endpoints:      make(map[string]string),
+	}
+
+	if err := agent.resolveTmplAddrs(); err != nil {
+		return nil, err
 	}
 
 	// Initialize the local state.
@@ -268,10 +293,6 @@ func (a *Agent) consulConfig() *consul.Config {
 	if a.config.NodeName != "" {
 		base.NodeName = a.config.NodeName
 	}
-	if a.config.BindAddr != "" {
-		base.SerfLANConfig.MemberlistConfig.BindAddr = a.config.BindAddr
-		base.SerfWANConfig.MemberlistConfig.BindAddr = a.config.BindAddr
-	}
 	if a.config.Ports.SerfLan != 0 {
 		base.SerfLANConfig.MemberlistConfig.BindPort = a.config.Ports.SerfLan
 		base.SerfLANConfig.MemberlistConfig.AdvertisePort = a.config.Ports.SerfLan
@@ -286,6 +307,17 @@ func (a *Agent) consulConfig() *consul.Config {
 			Port: a.config.Ports.Server,
 		}
 		base.RPCAddr = bindAddr
+
+		// Set the Serf configs using the old default behavior, we may
+		// override these in the code right below.
+		base.SerfLANConfig.MemberlistConfig.BindAddr = a.config.BindAddr
+		base.SerfWANConfig.MemberlistConfig.BindAddr = a.config.BindAddr
+	}
+	if a.config.SerfLanBindAddr != "" {
+		base.SerfLANConfig.MemberlistConfig.BindAddr = a.config.SerfLanBindAddr
+	}
+	if a.config.SerfWanBindAddr != "" {
+		base.SerfWANConfig.MemberlistConfig.BindAddr = a.config.SerfWanBindAddr
 	}
 	if a.config.AdvertiseAddr != "" {
 		base.SerfLANConfig.MemberlistConfig.AdvertiseAddr = a.config.AdvertiseAddr
@@ -385,6 +417,121 @@ func (a *Agent) consulConfig() *consul.Config {
 	// Setup the loggers
 	base.LogOutput = a.logOutput
 	return base
+}
+
+// parseSingleIPTemplate is used as a helper function to parse out a single IP
+// address from a config parameter.
+func parseSingleIPTemplate(ipTmpl string) (string, error) {
+	out, err := template.Parse(ipTmpl)
+	if err != nil {
+		return "", fmt.Errorf("Unable to parse address template %q: %v", ipTmpl, err)
+	}
+
+	ips := strings.Split(out, " ")
+	switch len(ips) {
+	case 0:
+		return "", errors.New("No addresses found, please configure one.")
+	case 1:
+		return ips[0], nil
+	default:
+		return "", fmt.Errorf("Multiple addresses found (%q), please configure one.", out)
+	}
+}
+
+// resolveTmplAddrs iterates over the myriad of addresses in the agent's config
+// and performs go-sockaddr/template Parse on each known address in case the
+// user specified a template config for any of their values.
+func (a *Agent) resolveTmplAddrs() error {
+	if a.config.AdvertiseAddr != "" {
+		ipStr, err := parseSingleIPTemplate(a.config.AdvertiseAddr)
+		if err != nil {
+			return fmt.Errorf("Advertise address resolution failed: %v", err)
+		}
+		a.config.AdvertiseAddr = ipStr
+	}
+
+	if a.config.Addresses.DNS != "" {
+		ipStr, err := parseSingleIPTemplate(a.config.Addresses.DNS)
+		if err != nil {
+			return fmt.Errorf("DNS address resolution failed: %v", err)
+		}
+		a.config.Addresses.DNS = ipStr
+	}
+
+	if a.config.Addresses.HTTP != "" {
+		ipStr, err := parseSingleIPTemplate(a.config.Addresses.HTTP)
+		if err != nil {
+			return fmt.Errorf("HTTP address resolution failed: %v", err)
+		}
+		a.config.Addresses.HTTP = ipStr
+	}
+
+	if a.config.Addresses.HTTPS != "" {
+		ipStr, err := parseSingleIPTemplate(a.config.Addresses.HTTPS)
+		if err != nil {
+			return fmt.Errorf("HTTPS address resolution failed: %v", err)
+		}
+		a.config.Addresses.HTTPS = ipStr
+	}
+
+	if a.config.Addresses.RPC != "" {
+		ipStr, err := parseSingleIPTemplate(a.config.Addresses.RPC)
+		if err != nil {
+			return fmt.Errorf("RPC address resolution failed: %v", err)
+		}
+		a.config.Addresses.RPC = ipStr
+	}
+
+	if a.config.AdvertiseAddrWan != "" {
+		ipStr, err := parseSingleIPTemplate(a.config.AdvertiseAddrWan)
+		if err != nil {
+			return fmt.Errorf("Advertise WAN address resolution failed: %v", err)
+		}
+		a.config.AdvertiseAddrWan = ipStr
+	}
+
+	if a.config.BindAddr != "" {
+		ipStr, err := parseSingleIPTemplate(a.config.BindAddr)
+		if err != nil {
+			return fmt.Errorf("Bind address resolution failed: %v", err)
+		}
+		a.config.BindAddr = ipStr
+	}
+
+	if a.config.ClientAddr != "" {
+		ipStr, err := parseSingleIPTemplate(a.config.ClientAddr)
+		if err != nil {
+			return fmt.Errorf("Client address resolution failed: %v", err)
+		}
+		a.config.ClientAddr = ipStr
+	}
+
+	if a.config.SerfLanBindAddr != "" {
+		ipStr, err := parseSingleIPTemplate(a.config.SerfLanBindAddr)
+		if err != nil {
+			return fmt.Errorf("Serf LAN Address resolution failed: %v", err)
+		}
+		a.config.SerfLanBindAddr = ipStr
+	}
+
+	if a.config.SerfWanBindAddr != "" {
+		ipStr, err := parseSingleIPTemplate(a.config.SerfWanBindAddr)
+		if err != nil {
+			return fmt.Errorf("Serf WAN Address resolution failed: %v", err)
+		}
+		a.config.SerfWanBindAddr = ipStr
+	}
+
+	// Parse all tagged addresses
+	for k, v := range a.config.TaggedAddresses {
+		ipStr, err := parseSingleIPTemplate(v)
+		if err != nil {
+			return fmt.Errorf("%s address resolution failed: %v", k, err)
+		}
+		a.config.TaggedAddresses[k] = ipStr
+	}
+
+	return nil
 }
 
 // setupServer is used to initialize the Consul server
@@ -734,6 +881,7 @@ func (a *Agent) reapServices() {
 // persistService saves a service definition to a JSON file in the data dir
 func (a *Agent) persistService(service *structs.NodeService) error {
 	svcPath := filepath.Join(a.config.DataDir, servicesDir, stringHash(service.ID))
+
 	wrapped := persistedService{
 		Token:   a.state.ServiceToken(service.ID),
 		Service: service,
@@ -742,18 +890,8 @@ func (a *Agent) persistService(service *structs.NodeService) error {
 	if err != nil {
 		return err
 	}
-	if err := os.MkdirAll(filepath.Dir(svcPath), 0700); err != nil {
-		return err
-	}
-	fh, err := os.OpenFile(svcPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0600)
-	if err != nil {
-		return err
-	}
-	defer fh.Close()
-	if _, err := fh.Write(encoded); err != nil {
-		return err
-	}
-	return nil
+
+	return writeFileAtomic(svcPath, encoded)
 }
 
 // purgeService removes a persisted service definition file from the data dir
@@ -780,18 +918,8 @@ func (a *Agent) persistCheck(check *structs.HealthCheck, chkType *CheckType) err
 	if err != nil {
 		return err
 	}
-	if err := os.MkdirAll(filepath.Dir(checkPath), 0700); err != nil {
-		return err
-	}
-	fh, err := os.OpenFile(checkPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0600)
-	if err != nil {
-		return err
-	}
-	defer fh.Close()
-	if _, err := fh.Write(encoded); err != nil {
-		return err
-	}
-	return nil
+
+	return writeFileAtomic(checkPath, encoded)
 }
 
 // purgeCheck removes a persisted check definition file from the data dir
@@ -801,6 +929,34 @@ func (a *Agent) purgeCheck(checkID types.CheckID) error {
 		return os.Remove(checkPath)
 	}
 	return nil
+}
+
+// writeFileAtomic writes the given contents to a temporary file in the same
+// directory, does an fsync and then renames the file to its real path
+func writeFileAtomic(path string, contents []byte) error {
+	uuid, err := uuid.GenerateUUID()
+	if err != nil {
+		return err
+	}
+	tempPath := fmt.Sprintf("%s-%s.tmp", path, uuid)
+
+	if err := os.MkdirAll(filepath.Dir(path), 0700); err != nil {
+		return err
+	}
+	fh, err := os.OpenFile(tempPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0600)
+	if err != nil {
+		return err
+	}
+	if _, err := fh.Write(contents); err != nil {
+		return err
+	}
+	if err := fh.Sync(); err != nil {
+		return err
+	}
+	if err := fh.Close(); err != nil {
+		return err
+	}
+	return os.Rename(tempPath, path)
 }
 
 // AddService is used to add a service entry.
@@ -895,7 +1051,14 @@ func (a *Agent) RemoveService(serviceID string, persist bool) error {
 	}
 
 	// Remove service immediately
-	a.state.RemoveService(serviceID)
+	err := a.state.RemoveService(serviceID)
+
+	// TODO: Return the error instead of just logging here in Consul 0.8
+	// For now, keep the current idempotent behavior on deleting a nonexistent service
+	if err != nil {
+		a.logger.Printf("[WARN] agent: Failed to deregister service %q: %s", serviceID, err)
+		return nil
+	}
 
 	// Remove the service from the data dir
 	if persist {
@@ -975,12 +1138,13 @@ func (a *Agent) AddCheck(check *structs.HealthCheck, chkType *CheckType, persist
 			}
 
 			http := &CheckHTTP{
-				Notify:   &a.state,
-				CheckID:  check.CheckID,
-				HTTP:     chkType.HTTP,
-				Interval: chkType.Interval,
-				Timeout:  chkType.Timeout,
-				Logger:   a.logger,
+				Notify:        &a.state,
+				CheckID:       check.CheckID,
+				HTTP:          chkType.HTTP,
+				Interval:      chkType.Interval,
+				Timeout:       chkType.Timeout,
+				Logger:        a.logger,
+				TLSSkipVerify: chkType.TLSSkipVerify,
 			}
 			http.Start()
 			a.checkHTTPs[check.CheckID] = http
@@ -1176,8 +1340,16 @@ func (a *Agent) persistCheckState(check *CheckTTL, status, output string) error 
 
 	// Write the state to the file
 	file := filepath.Join(dir, checkIDHash(check.CheckID))
-	if err := ioutil.WriteFile(file, buf, 0600); err != nil {
-		return fmt.Errorf("failed writing file %q: %s", file, err)
+
+	// Create temp file in same dir, to make more likely atomic
+	tempFile := file + ".tmp"
+
+	// persistCheckState is called frequently, so don't use writeFileAtomic to avoid calling fsync here
+	if err := ioutil.WriteFile(tempFile, buf, 0600); err != nil {
+		return fmt.Errorf("failed writing temp file %q: %s", tempFile, err)
+	}
+	if err := os.Rename(tempFile, file); err != nil {
+		return fmt.Errorf("failed to rename temp file from %q to %q: %s", tempFile, file, err)
 	}
 
 	return nil
@@ -1198,7 +1370,8 @@ func (a *Agent) loadCheckState(check *structs.HealthCheck) error {
 	// Decode the state data
 	var p persistedCheckState
 	if err := json.Unmarshal(buf, &p); err != nil {
-		return fmt.Errorf("failed decoding check state: %s", err)
+		a.logger.Printf("[ERROR] agent: failed decoding check state: %s", err)
+		return a.purgeCheckState(check.CheckID)
 	}
 
 	// Check if the state has expired
@@ -1493,7 +1666,7 @@ func (a *Agent) restoreCheckState(snap map[types.CheckID]*structs.HealthCheck) {
 
 // serviceMaintCheckID returns the ID of a given service's maintenance check
 func serviceMaintCheckID(serviceID string) types.CheckID {
-	return types.CheckID(fmt.Sprintf("%s:%s", serviceMaintCheckPrefix, serviceID))
+	return types.CheckID(structs.ServiceMaintPrefix + serviceID)
 }
 
 // EnableServiceMaintenance will register a false health check against the given
@@ -1554,7 +1727,7 @@ func (a *Agent) DisableServiceMaintenance(serviceID string) error {
 // EnableNodeMaintenance places a node into maintenance mode.
 func (a *Agent) EnableNodeMaintenance(reason, token string) {
 	// Ensure node maintenance is not already enabled
-	if _, ok := a.state.Checks()[nodeMaintCheckID]; ok {
+	if _, ok := a.state.Checks()[structs.NodeMaint]; ok {
 		return
 	}
 
@@ -1566,7 +1739,7 @@ func (a *Agent) EnableNodeMaintenance(reason, token string) {
 	// Create and register the node maintenance check
 	check := &structs.HealthCheck{
 		Node:    a.config.NodeName,
-		CheckID: nodeMaintCheckID,
+		CheckID: structs.NodeMaint,
 		Name:    "Node Maintenance Mode",
 		Notes:   reason,
 		Status:  structs.HealthCritical,
@@ -1577,10 +1750,10 @@ func (a *Agent) EnableNodeMaintenance(reason, token string) {
 
 // DisableNodeMaintenance removes a node from maintenance mode
 func (a *Agent) DisableNodeMaintenance() {
-	if _, ok := a.state.Checks()[nodeMaintCheckID]; !ok {
+	if _, ok := a.state.Checks()[structs.NodeMaint]; !ok {
 		return
 	}
-	a.RemoveCheck(nodeMaintCheckID, true)
+	a.RemoveCheck(structs.NodeMaint, true)
 	a.logger.Printf("[INFO] agent: Node left maintenance mode")
 }
 

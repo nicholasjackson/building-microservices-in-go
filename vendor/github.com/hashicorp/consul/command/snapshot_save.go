@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/consul/api"
-	"github.com/hashicorp/consul/consul/snapshot"
+	"github.com/hashicorp/consul/snapshot"
 	"github.com/mitchellh/cli"
 )
 
@@ -72,6 +72,7 @@ func (c *SnapshotSaveCommand) Run(args []string) int {
 
 	// Create and test the HTTP client
 	conf := api.DefaultConfig()
+	conf.Datacenter = *datacenter
 	conf.Address = *httpAddr
 	conf.Token = *token
 	client, err := api.NewClient(conf)
@@ -82,7 +83,6 @@ func (c *SnapshotSaveCommand) Run(args []string) int {
 
 	// Take the snapshot.
 	snap, qm, err := client.Snapshot().Save(&api.QueryOptions{
-		Datacenter: *datacenter,
 		AllowStale: *stale,
 	})
 	if err != nil {
@@ -113,7 +113,7 @@ func (c *SnapshotSaveCommand) Run(args []string) int {
 		c.Ui.Error(fmt.Sprintf("Error opening snapshot file for verify: %s", err))
 		return 1
 	}
-	if err := snapshot.Verify(f); err != nil {
+	if _, err := snapshot.Verify(f); err != nil {
 		f.Close()
 		c.Ui.Error(fmt.Sprintf("Error verifying snapshot file: %s", err))
 		return 1

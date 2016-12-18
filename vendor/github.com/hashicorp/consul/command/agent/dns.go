@@ -24,6 +24,9 @@ const (
 	// times.
 	maxUDPAnswerLimit = 8
 	maxRecurseRecords = 5
+
+	// Increment a counter when requests staler than this are served
+	staleCounterThreshold = 5 * time.Second
 )
 
 // DNSServer is used to wrap an Agent and expose various
@@ -437,10 +440,14 @@ RPC:
 	}
 
 	// Verify that request is not too stale, redo the request
-	if args.AllowStale && out.LastContact > d.config.MaxStale {
-		args.AllowStale = false
-		d.logger.Printf("[WARN] dns: Query results too stale, re-requesting")
-		goto RPC
+	if args.AllowStale {
+		if out.LastContact > d.config.MaxStale {
+			args.AllowStale = false
+			d.logger.Printf("[WARN] dns: Query results too stale, re-requesting")
+			goto RPC
+		} else if out.LastContact > staleCounterThreshold {
+			metrics.IncrCounter([]string{"consul", "dns", "stale_queries"}, 1)
+		}
 	}
 
 	// If we have no address, return not found!
@@ -637,10 +644,14 @@ RPC:
 	}
 
 	// Verify that request is not too stale, redo the request
-	if args.AllowStale && out.LastContact > d.config.MaxStale {
-		args.AllowStale = false
-		d.logger.Printf("[WARN] dns: Query results too stale, re-requesting")
-		goto RPC
+	if args.AllowStale {
+		if out.LastContact > d.config.MaxStale {
+			args.AllowStale = false
+			d.logger.Printf("[WARN] dns: Query results too stale, re-requesting")
+			goto RPC
+		} else if out.LastContact > staleCounterThreshold {
+			metrics.IncrCounter([]string{"consul", "dns", "stale_queries"}, 1)
+		}
 	}
 
 	// Determine the TTL
@@ -739,10 +750,14 @@ RPC:
 	}
 
 	// Verify that request is not too stale, redo the request.
-	if args.AllowStale && out.LastContact > d.config.MaxStale {
-		args.AllowStale = false
-		d.logger.Printf("[WARN] dns: Query results too stale, re-requesting")
-		goto RPC
+	if args.AllowStale {
+		if out.LastContact > d.config.MaxStale {
+			args.AllowStale = false
+			d.logger.Printf("[WARN] dns: Query results too stale, re-requesting")
+			goto RPC
+		} else if out.LastContact > staleCounterThreshold {
+			metrics.IncrCounter([]string{"consul", "dns", "stale_queries"}, 1)
+		}
 	}
 
 	// Determine the TTL. The parse should never fail since we vet it when
@@ -913,7 +928,7 @@ func (d *DNSServer) handleRecurse(resp dns.ResponseWriter, req *dns.Msg) {
 	var err error
 	for _, recursor := range d.recursors {
 		r, rtt, err = c.Exchange(req, recursor)
-		if err == nil {
+		if err == nil || err == dns.ErrTruncated {
 			// Compress the response; we don't know if the incoming
 			// response was compressed or not, so by not compressing
 			// we might generate an invalid packet on the way out.

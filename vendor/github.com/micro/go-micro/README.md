@@ -43,18 +43,34 @@ Join us to discuss, learn and contribute:
 
 This is a quick getting started guide with the greeter service example.
 
-### Prerequisites
+### Prerequisites: Service Discovery
 
 There's just one prerequisite. We need a service discovery system to resolve service names to their address. 
 The default discovery mechanism used in go-micro is Consul. Discovery is however pluggable so you can used 
-etcd, kubernetes, zookeeper, etc. Other implementations can be found in [go-plugins](https://github.com/micro/go-plugins).
+etcd, kubernetes, zookeeper, etc. Plugins can be found in [micro/go-plugins](https://github.com/micro/go-plugins).
 
-Alternatively we can use multicast DNS with the built in MDNS registry for a zero dependency configuration. Just pass `--registry=mdns` to the below commands.
+### Zero Dependency Discovery
 
-### Install Consul
-[https://www.consul.io/intro/getting-started/install.html](https://www.consul.io/intro/getting-started/install.html)
+We can use multicast DNS with the built in MDNS registry for a zero dependency configuration. 
 
-### Run Consul
+Just pass `--registry=mdns` to any command
+```
+$ go run main.go --registry=mdns
+```
+
+### Consul Discovery
+
+Alternatively we can use the default discovery system which is Consul.
+
+**Install on OS X**
+
+```
+brew install consul
+```
+
+[Further installation instructions](https://www.consul.io/intro/getting-started/install.html)
+
+**Run Consul**
 ```
 $ consul agent -dev -advertise=127.0.0.1
 ```
@@ -69,7 +85,7 @@ $ go run examples/service/main.go
 
 ### Test Service
 ```
-$ go run examples/service/main.go --client
+$ go run examples/service/main.go --run_client
 Hello John
 ```
 
@@ -111,8 +127,9 @@ There's still a need for proto compiler to generate Go stub code from our proto 
 
 ### Compile the protobuf file
 
-```
-`protoc -I$GOPATH/src --go_out=plugins=micro:$GOPATH/src $GOPATH/src/github.com/micro/go-micro/examples/service/proto/greeter.proto`
+```shell
+protoc -I$GOPATH/src --go_out=plugins=micro:$GOPATH/src \
+	$GOPATH/src/github.com/micro/go-micro/examples/service/proto/greeter.proto
 ```
 
 ### Define the service
@@ -278,14 +295,14 @@ By default go-micro only provides a few implementation of each interface at the 
 
 ## Sponsors
 
-<a href="https://www.sixt.com"><img src="https://micro.mu/sixt_logo.png" width=150px height="auto" /></a>
+<a href="https://blog.micro.mu/2016/04/25/announcing-sixt-sponsorship.html"><img src="https://micro.mu/sixt_logo.png" width=150px height="auto" /></a>
 
 ## Next steps
 
 - [Examples Directory](https://github.com/micro/go-micro/tree/master/examples)
 - [Example Services](https://github.com/micro/go-micro#example-services)
 - [Micro Toolkit](https://github.com/micro/micro)
-- Join the [Slack](https://micro-services.slack.com)! - [Invite Here](http://micro-invites.herokuapp.com/)
+- Join the [Slack](https://micro-services.slack.com)! - [Invite Here](http://slack.micro.mu/)
 
 
 ## Contributing

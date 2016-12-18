@@ -34,8 +34,7 @@ func GoMicroRequest() error {
 
 	data, _ := json.Marshal(request)
 
-	req, err := http.NewRequest("POST", "http://consul.acet.io:8091/helloworld", bytes.NewBuffer(data))
-	req.Header.Set("Content-Type", "application/json")
+	req, err := http.NewRequest("GET", "http://www.public.b.prod-eu-west-1.noths.com", bytes.NewBuffer(data))
 
 	client := &http.Client{
 		Transport: &http.Transport{

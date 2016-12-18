@@ -69,6 +69,7 @@ func (c *SnapshotRestoreCommand) Run(args []string) int {
 
 	// Create and test the HTTP client
 	conf := api.DefaultConfig()
+	conf.Datacenter = *datacenter
 	conf.Address = *httpAddr
 	conf.Token = *token
 	client, err := api.NewClient(conf)
@@ -86,9 +87,7 @@ func (c *SnapshotRestoreCommand) Run(args []string) int {
 	defer f.Close()
 
 	// Restore the snapshot.
-	err = client.Snapshot().Restore(&api.WriteOptions{
-		Datacenter: *datacenter,
-	}, f)
+	err = client.Snapshot().Restore(nil, f)
 	if err != nil {
 		c.Ui.Error(fmt.Sprintf("Error restoring snapshot: %s", err))
 		return 1

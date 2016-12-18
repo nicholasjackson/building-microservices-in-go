@@ -32,6 +32,11 @@ import:
   version: ^1.0.0
   subpackages:
   - deadline
+- package: gopkg.in/alexcesaro/statsd.v2
+  version: ^2.0.0
+- package: github.com/Sirupsen/logrus
+  version: ^0.11.0
+- package: github.com/bshuster-repo/logrus-logstash-hook
 testImport:
 - package: github.com/DATA-DOG/godog
   version: ^0.5.4

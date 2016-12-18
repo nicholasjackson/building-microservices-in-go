@@ -798,7 +798,7 @@ func (dmp *DiffMatchPatch) diffHalfMatch(text1, text2 []rune) [][]rune {
 	return [][]rune{hm[2], hm[3], hm[0], hm[1], hm[4]}
 }
 
-// diffHalfMatchI checks if a substring of shorttext exist within longtext such that the substring  is at least half the length of longtext?
+// diffHalfMatchI checks if a substring of shorttext exist within longtext such that the substring is at least half the length of longtext?
 // @param {string} longtext Longer string.
 // @param {string} shorttext Shorter string.
 // @param {number} i Start index of quarter length substring within longtext.
@@ -806,59 +806,55 @@ func (dmp *DiffMatchPatch) diffHalfMatch(text1, text2 []rune) [][]rune {
 //     longtext, the suffix of longtext, the prefix of shorttext, the suffix
 //     of shorttext and the common middle.  Or null if there was no match.
 func (dmp *DiffMatchPatch) diffHalfMatchI(l, s []rune, i int) [][]rune {
+	var bestCommonA []rune
+	var bestCommonB []rune
+	var bestCommonLen int
+	var bestLongtextA []rune
+	var bestLongtextB []rune
+	var bestShorttextA []rune
+	var bestShorttextB []rune
+
 	// Start with a 1/4 length substring at position i as a seed.
 	seed := l[i : i+len(l)/4]
-	j := -1
-	bestCommon := []rune{}
-	bestLongtextA := []rune{}
-	bestLongtextB := []rune{}
-	bestShorttextA := []rune{}
-	bestShorttextB := []rune{}
 
-	if j < len(s) {
-		j = runesIndexOf(s, seed, j+1)
-		for {
-			if j == -1 {
-				break
-			}
+	for j := runesIndexOf(s, seed, 0); j != -1; j = runesIndexOf(s, seed, j+1) {
+		prefixLength := commonPrefixLength(l[i:], s[j:])
+		suffixLength := commonSuffixLength(l[:i], s[:j])
 
-			prefixLength := commonPrefixLength(l[i:], s[j:])
-			suffixLength := commonSuffixLength(l[:i], s[:j])
-			if len(bestCommon) < suffixLength+prefixLength {
-				bestCommon = concat(s[j-suffixLength:j], s[j:j+prefixLength])
-				bestLongtextA = l[:i-suffixLength]
-				bestLongtextB = l[i+prefixLength:]
-				bestShorttextA = s[:j-suffixLength]
-				bestShorttextB = s[j+prefixLength:]
-			}
-			j = runesIndexOf(s, seed, j+1)
+		if bestCommonLen < suffixLength+prefixLength {
+			bestCommonA = s[j-suffixLength : j]
+			bestCommonB = s[j : j+prefixLength]
+			bestCommonLen = len(bestCommonA) + len(bestCommonB)
+			bestLongtextA = l[:i-suffixLength]
+			bestLongtextB = l[i+prefixLength:]
+			bestShorttextA = s[:j-suffixLength]
+			bestShorttextB = s[j+prefixLength:]
 		}
 	}
 
-	if len(bestCommon)*2 >= len(l) {
-		return [][]rune{
-			bestLongtextA,
-			bestLongtextB,
-			bestShorttextA,
-			bestShorttextB,
-			bestCommon,
-		}
+	if bestCommonLen*2 < len(l) {
+		return nil
 	}
-	return nil
-}
 
-func concat(r1, r2 []rune) []rune {
-	result := make([]rune, len(r1)+len(r2))
-	copy(result, r1)
-	copy(result[len(r1):], r2)
-	return result
+	return [][]rune{
+		bestLongtextA,
+		bestLongtextB,
+		bestShorttextA,
+		bestShorttextB,
+		append(bestCommonA, bestCommonB...),
+	}
 }
 
 // DiffCleanupSemantic reduces the number of edits by eliminating
 // semantically trivial equalities.
 func (dmp *DiffMatchPatch) DiffCleanupSemantic(diffs []Diff) []Diff {
 	changes := false
-	equalities := new(Stack) // Stack of indices where equalities are found.
+	// Stack of indices where equalities are found.
+	type equality struct {
+		data int
+		next *equality
+	}
+	var equalities *equality
 
 	var lastequality string
 	// Always equal to diffs[equalities[equalitiesLength - 1]][1]
@@ -870,7 +866,10 @@ func (dmp *DiffMatchPatch) DiffCleanupSemantic(diffs []Diff) []Diff {
 
 	for pointer < len(diffs) {
 		if diffs[pointer].Type == DiffEqual { // Equality found.
-			equalities.Push(pointer)
+			equalities = &equality{
+				data: pointer,
+				next: equalities,
+			}
 			lengthInsertions1 = lengthInsertions2
 			lengthDeletions1 = lengthDeletions2
 			lengthInsertions2 = 0
@@ -890,7 +889,7 @@ func (dmp *DiffMatchPatch) DiffCleanupSemantic(diffs []Diff) []Diff {
 				(len(lastequality) <= difference1) &&
 				(len(lastequality) <= difference2) {
 				// Duplicate record.
-				insPoint := equalities.Peek().(int)
+				insPoint := equalities.data
 				diffs = append(
 					diffs[:insPoint],
 					append([]Diff{Diff{DiffDelete, lastequality}}, diffs[insPoint:]...)...)
@@ -898,11 +897,13 @@ func (dmp *DiffMatchPatch) DiffCleanupSemantic(diffs []Diff) []Diff {
 				// Change second copy to insert.
 				diffs[insPoint+1].Type = DiffInsert
 				// Throw away the equality we just deleted.
-				equalities.Pop()
+				equalities = equalities.next
 
-				if equalities.Len() > 0 {
-					equalities.Pop()
-					pointer = equalities.Peek().(int)
+				if equalities != nil {
+					equalities = equalities.next
+				}
+				if equalities != nil {
+					pointer = equalities.data
 				} else {
 					pointer = -1
 				}
@@ -1115,7 +1116,11 @@ func (dmp *DiffMatchPatch) DiffCleanupSemanticLossless(diffs []Diff) []Diff {
 func (dmp *DiffMatchPatch) DiffCleanupEfficiency(diffs []Diff) []Diff {
 	changes := false
 	// Stack of indices where equalities are found.
-	equalities := new(Stack)
+	type equality struct {
+		data int
+		next *equality
+	}
+	var equalities *equality
 	// Always equal to equalities[equalitiesLength-1][1]
 	lastequality := ""
 	pointer := 0 // Index of current position.
@@ -1132,13 +1137,16 @@ func (dmp *DiffMatchPatch) DiffCleanupEfficiency(diffs []Diff) []Diff {
 			if len(diffs[pointer].Text) < dmp.DiffEditCost &&
 				(postIns || postDel) {
 				// Candidate found.
-				equalities.Push(pointer)
+				equalities = &equality{
+					data: pointer,
+					next: equalities,
+				}
 				preIns = postIns
 				preDel = postDel
 				lastequality = diffs[pointer].Text
 			} else {
 				// Not a candidate, and can never become one.
-				equalities.Clear()
+				equalities = nil
 				lastequality = ""
 			}
 			postIns = false
@@ -1174,24 +1182,29 @@ func (dmp *DiffMatchPatch) DiffCleanupEfficiency(diffs []Diff) []Diff {
 				((preIns && preDel && postIns && postDel) ||
 					((len(lastequality) < dmp.DiffEditCost/2) && sumPres == 3)) {
 
+				insPoint := equalities.data
+
 				// Duplicate record.
-				diffs = append(diffs[:equalities.Peek().(int)],
-					append([]Diff{Diff{DiffDelete, lastequality}}, diffs[equalities.Peek().(int):]...)...)
+				diffs = append(diffs[:insPoint],
+					append([]Diff{Diff{DiffDelete, lastequality}}, diffs[insPoint:]...)...)
 
 				// Change second copy to insert.
-				diffs[equalities.Peek().(int)+1].Type = DiffInsert
-				equalities.Pop() // Throw away the equality we just deleted.
+				diffs[insPoint+1].Type = DiffInsert
+				// Throw away the equality we just deleted.
+				equalities = equalities.next
 				lastequality = ""
 
 				if preIns && preDel {
 					// No changes made which could affect previous entry, keep going.
 					postIns = true
 					postDel = true
-					equalities.Clear()
+					equalities = nil
 				} else {
-					if equalities.Len() > 0 {
-						equalities.Pop()
-						pointer = equalities.Peek().(int)
+					if equalities != nil {
+						equalities = equalities.next
+					}
+					if equalities != nil {
+						pointer = equalities.data
 					} else {
 						pointer = -1
 					}

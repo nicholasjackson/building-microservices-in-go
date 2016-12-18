@@ -43,12 +43,17 @@ type CallOptions struct {
 
 	// Backoff func
 	Backoff BackoffFunc
+	// Check if retriable func
+	Retry RetryFunc
 	// Transport Dial Timeout
 	DialTimeout time.Duration
 	// Number of Call attempts
 	Retries int
 	// Request/Response timeout
 	RequestTimeout time.Duration
+
+	// Middleware for low level call func
+	CallWrappers []CallWrapper
 
 	// Other options for implementations of the interface
 	// can be stored in a context
@@ -74,6 +79,7 @@ func newOptions(options ...Option) Options {
 		Codecs: make(map[string]codec.NewCodec),
 		CallOptions: CallOptions{
 			Backoff:        DefaultBackoff,
+			Retry:          DefaultRetry,
 			Retries:        DefaultRetries,
 			RequestTimeout: DefaultRequestTimeout,
 			DialTimeout:    transport.DefaultDialTimeout,
@@ -174,6 +180,13 @@ func Wrap(w Wrapper) Option {
 	}
 }
 
+// Adds a Wrapper to the list of CallFunc wrappers
+func WrapCall(cw ...CallWrapper) Option {
+	return func(o *Options) {
+		o.CallOptions.CallWrappers = append(o.CallOptions.CallWrappers, cw...)
+	}
+}
+
 // Backoff is used to set the backoff function used
 // when retrying Calls
 func Backoff(fn BackoffFunc) Option {
@@ -213,11 +226,26 @@ func WithSelectOption(so ...selector.SelectOption) CallOption {
 	}
 }
 
+// WithCallWrapper is a CallOption which adds to the existing CallFunc wrappers
+func WithCallWrapper(cw ...CallWrapper) CallOption {
+	return func(o *CallOptions) {
+		o.CallWrappers = append(o.CallWrappers, cw...)
+	}
+}
+
 // WithBackoff is a CallOption which overrides that which
 // set in Options.CallOptions
 func WithBackoff(fn BackoffFunc) CallOption {
 	return func(o *CallOptions) {
 		o.Backoff = fn
+	}
+}
+
+// WithRetry is a CallOption which overrides that which
+// set in Options.CallOptions
+func WithRetry(fn RetryFunc) CallOption {
+	return func(o *CallOptions) {
+		o.Retry = fn
 	}
 }
 

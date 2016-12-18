@@ -378,7 +378,8 @@ var (
 	unixTLSEnv    = env{name: "unix-tls", network: "unix", security: "tls", balancer: true}
 	handlerEnv    = env{name: "handler-tls", network: "tcp", security: "tls", httpHandler: true, balancer: true}
 	noBalancerEnv = env{name: "no-balancer", network: "tcp", security: "tls", balancer: false}
-	allEnv        = []env{tcpClearEnv, tcpTLSEnv, unixClearEnv, unixTLSEnv, handlerEnv, noBalancerEnv}
+	// TODO add handlerEnv back when ServeHTTP is stable.
+	allEnv = []env{tcpClearEnv, tcpTLSEnv, unixClearEnv, unixTLSEnv /*handlerEnv,*/, noBalancerEnv}
 )
 
 var onlyEnv = flag.String("only_env", "", "If non-empty, one of 'tcp-clear', 'tcp-tls', 'unix-clear', 'unix-tls', or 'handler-tls' to only run the tests for that environment. Empty means all.")
@@ -2503,8 +2504,7 @@ func testStreamsQuotaRecovery(t *testing.T, e env) {
 
 	cc := te.clientConn()
 	tc := testpb.NewTestServiceClient(cc)
-	ctx, cancel := context.WithCancel(context.Background())
-	if _, err := tc.StreamingInputCall(ctx); err != nil {
+	if _, err := tc.StreamingInputCall(context.Background()); err != nil {
 		t.Fatalf("%v.StreamingInputCall(_) = _, %v, want _, <nil>", tc, err)
 	}
 	// Loop until the new max stream setting is effective.
@@ -2521,18 +2521,26 @@ func testStreamsQuotaRecovery(t *testing.T, e env) {
 		}
 		t.Fatalf("%v.StreamingInputCall(_) = _, %v, want _, %s", tc, err, codes.DeadlineExceeded)
 	}
-	cancel()
 
 	var wg sync.WaitGroup
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 10; i++ {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			ctx, cancel := context.WithCancel(context.Background())
-			if _, err := tc.StreamingInputCall(ctx); err != nil {
-				t.Errorf("%v.StreamingInputCall(_) = _, %v, want _, <nil>", tc, err)
+			payload, err := newPayload(testpb.PayloadType_COMPRESSABLE, 314)
+			if err != nil {
+				t.Fatal(err)
 			}
-			cancel()
+			req := &testpb.SimpleRequest{
+				ResponseType: testpb.PayloadType_COMPRESSABLE.Enum(),
+				ResponseSize: proto.Int32(1592),
+				Payload:      payload,
+			}
+			// No rpc should go through due to the max streams limit.
+			ctx, _ := context.WithTimeout(context.Background(), 10*time.Millisecond)
+			if _, err := tc.UnaryCall(ctx, req, grpc.FailFast(false)); grpc.Code(err) != codes.DeadlineExceeded {
+				t.Errorf("TestService/UnaryCall(_, _) = _, %v, want _, %s", err, codes.DeadlineExceeded)
+			}
 		}()
 	}
 	wg.Wait()

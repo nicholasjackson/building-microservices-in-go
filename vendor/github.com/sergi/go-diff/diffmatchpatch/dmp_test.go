@@ -1270,6 +1270,10 @@ func Test_patch_make(t *testing.T) {
 	diffs = dmp2.DiffMain(text1, text2, true)
 	patches = dmp2.PatchMake(text1, diffs)
 	assert.Equal(t, "@@ -1,14 +1,16 @@\n Lorem \n+a \n ipsum do\n@@ -148,13 +148,12 @@\n m libero\n- \n vel.\n", dmp2.PatchToText(patches), "patch_make: Corner case of #28 wrong patch with timeout of 0")
+
+	// Additional check that the diff texts are equal to the originals even if we are using DiffMain with checklines=true #29
+	assert.Equal(t, text1, dmp2.DiffText1(diffs))
+	assert.Equal(t, text2, dmp2.DiffText2(diffs))
 }
 
 func Test_PatchSplitMax(t *testing.T) {
@@ -1545,6 +1549,31 @@ func Benchmark_DiffMainLargeLines(b *testing.B) {
 		text1, text2, linearray := dmp.DiffLinesToRunes(s1, s2)
 		diffs := dmp.DiffMainRunes(text1, text2, false)
 		diffs = dmp.DiffCharsToLines(diffs, linearray)
+	}
+}
+
+func Benchmark_DiffHalfMatch(b *testing.B) {
+	s1 := readFile("speedtest1.txt", b)
+	s2 := readFile("speedtest2.txt", b)
+	dmp := New()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		dmp.DiffHalfMatch(s1, s2)
+	}
+}
+
+func Benchmark_DiffCleanupSemantic(b *testing.B) {
+	s1 := readFile("speedtest1.txt", b)
+	s2 := readFile("speedtest2.txt", b)
+
+	dmp := New()
+
+	diffs := dmp.DiffMain(s1, s2, false)
+
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		dmp.DiffCleanupSemantic(diffs)
 	}
 }
 
