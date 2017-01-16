@@ -37,6 +37,10 @@ import:
 - package: github.com/Sirupsen/logrus
   version: ^0.11.0
 - package: github.com/bshuster-repo/logrus-logstash-hook
+- package: gopkg.in/go-playground/validator.v9
+  version: ^9.3.2
+- package: github.com/go-playground/universal-translator
+  version: ^0.14.0
 testImport:
 - package: github.com/DATA-DOG/godog
   version: ^0.5.4

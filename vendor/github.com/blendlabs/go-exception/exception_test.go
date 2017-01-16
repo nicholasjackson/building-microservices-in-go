@@ -108,6 +108,67 @@ func TestWrapWithReturnedNil(t *testing.T) {
 	a.True(shouldAlsoBeNil == nil)
 }
 
+func TestWrapPrefixWithError(t *testing.T) {
+	a := assert.New(t)
+
+	err := errors.New("This is an error")
+
+	wrappedErr := WrapPrefix(err, "This is a prefix")
+	a.NotNil(wrappedErr)
+	typedWrapped := AsException(wrappedErr)
+	a.NotNil(typedWrapped)
+	a.Equal("This is a prefix: This is an error", typedWrapped.Message())
+}
+
+func TestWrapPrefixWithException(t *testing.T) {
+	a := assert.New(t)
+	ex := New("This is an exception")
+	wrappedEx := WrapPrefix(ex, "This is a prefix")
+	a.NotNil(wrappedEx)
+	typedWrappedEx := AsException(wrappedEx)
+	a.Equal("This is a prefix: This is an exception", typedWrappedEx.Message())
+}
+
+func TestWrapPrefixWithNil(t *testing.T) {
+	a := assert.New(t)
+
+	shouldBeNil := WrapPrefix(nil, "This is a prefix")
+	a.Nil(shouldBeNil)
+	a.Equal(nil, shouldBeNil)
+}
+
+func TestWrapPrefixWithTypedNil(t *testing.T) {
+	a := assert.New(t)
+
+	var nilError error
+	a.Nil(nilError)
+	a.Equal(nil, nilError)
+
+	shouldBeNil := WrapPrefix(nilError, "This is a prefix")
+	a.Nil(shouldBeNil)
+	a.True(shouldBeNil == nil)
+}
+
+func TestWrapPrefixWithReturnedNil(t *testing.T) {
+	a := assert.New(t)
+
+	returnsNil := func() error {
+		return nil
+	}
+
+	shouldBeNil := WrapPrefix(returnsNil(), "This is a prefix")
+	a.Nil(shouldBeNil)
+	a.True(shouldBeNil == nil)
+
+	returnsTypedNil := func() error {
+		return Wrap(nil)
+	}
+
+	shouldAlsoBeNil := returnsTypedNil()
+	a.Nil(shouldAlsoBeNil)
+	a.True(shouldAlsoBeNil == nil)
+}
+
 func TestWrapMany(t *testing.T) {
 	a := assert.New(t)
 

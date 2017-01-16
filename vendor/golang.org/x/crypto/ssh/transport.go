@@ -11,9 +11,8 @@ import (
 )
 
 const (
-	gcmCipherID    = "aes128-gcm@openssh.com"
-	aes128cbcID    = "aes128-cbc"
-	tripledescbcID = "3des-cbc"
+	gcmCipherID = "aes128-gcm@openssh.com"
+	aes128cbcID = "aes128-cbc"
 )
 
 // packetConn represents a transport that implements packet based
@@ -218,10 +217,6 @@ func newPacketCipher(d direction, algs directionAlgorithms, kex *kexResult) (pac
 
 	if algs.Cipher == aes128cbcID {
 		return newAESCBCCipher(iv, key, macKey, algs)
-	}
-
-	if algs.Cipher == tripledescbcID {
-		return newTripleDESCBCCipher(iv, key, macKey, algs)
 	}
 
 	c := &streamPacketCipher{

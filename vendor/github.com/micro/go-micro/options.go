@@ -28,6 +28,8 @@ type Options struct {
 
 	// Before and After funcs
 	BeforeStart []func() error
+	BeforeStop  []func() error
+	AfterStart  []func() error
 	AfterStop   []func() error
 
 	// Other options for implementations of the interface
@@ -43,6 +45,7 @@ func newOptions(opts ...Option) Options {
 		Server:    server.DefaultServer,
 		Registry:  registry.DefaultRegistry,
 		Transport: transport.DefaultTransport,
+		Context:   context.Background(),
 	}
 
 	for _, o := range opts {
@@ -70,6 +73,15 @@ func Cmd(c cmd.Cmd) Option {
 func Client(c client.Client) Option {
 	return func(o *Options) {
 		o.Client = c
+	}
+}
+
+// Context specifies a context for the service.
+// Can be used to signal shutdown of the service.
+// Can be used for extra option values.
+func Context(ctx context.Context) Option {
+	return func(o *Options) {
+		o.Context = ctx
 	}
 }
 
@@ -138,12 +150,14 @@ func Action(a func(*cli.Context)) Option {
 	}
 }
 
+// RegisterTTL specifies the TTL to use when registering the service
 func RegisterTTL(t time.Duration) Option {
 	return func(o *Options) {
 		o.Server.Init(server.RegisterTTL(t))
 	}
 }
 
+// RegisterInterval specifies the interval on which to re-register
 func RegisterInterval(t time.Duration) Option {
 	return func(o *Options) {
 		o.RegisterInterval = t
@@ -158,6 +172,13 @@ func WrapClient(w ...client.Wrapper) Option {
 		for i := len(w); i > 0; i-- {
 			o.Client = w[i-1](o.Client)
 		}
+	}
+}
+
+// WrapCall is a convenience method for wrapping a Client CallFunc
+func WrapCall(w ...client.CallWrapper) Option {
+	return func(o *Options) {
+		o.Client.Init(client.WrapCall(w...))
 	}
 }
 
@@ -194,6 +215,18 @@ func WrapSubscriber(w ...server.SubscriberWrapper) Option {
 func BeforeStart(fn func() error) Option {
 	return func(o *Options) {
 		o.BeforeStart = append(o.BeforeStart, fn)
+	}
+}
+
+func BeforeStop(fn func() error) Option {
+	return func(o *Options) {
+		o.BeforeStop = append(o.BeforeStop, fn)
+	}
+}
+
+func AfterStart(fn func() error) Option {
+	return func(o *Options) {
+		o.AfterStart = append(o.AfterStart, fn)
 	}
 }
 

@@ -10,5 +10,5 @@
 //     ShardedTTL  : provides a thread safe, expiring in-memory sharded cache system, built on top of ShardedNoTS over MemoryNoTS
 //     LFUNoTS     : provides a non-thread safe, fixed size in-memory caching system, built on top of MemoryNoTS cache
 //     LFU         : provides a thread safe, fixed size in-memory caching system, built on top of LFUNoTS cache
-
+//
 package cache

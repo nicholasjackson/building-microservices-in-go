@@ -101,6 +101,23 @@ func Wrap(err error) error {
 	return WrapError(err)
 }
 
+// WrapPrefix wraps an exception and allows user to add a custom message to the error.
+// This is useful when we want to retain the original stack trace but also add customized
+// message at the same time. Will return error-typed `nil` if the exception is nil.
+func WrapPrefix(err error, prefix string) error {
+	if err == nil {
+		return nil
+	}
+
+	typedEx := Wrap(err).(*Exception)
+	newMessage := fmt.Sprintf("%s: %s", prefix, typedEx.message)
+
+	return &Exception{
+		message:    newMessage,
+		stackTrace: typedEx.stackTrace,
+	}
+}
+
 // WrapMany is vestigal and is an API compatability shim for `Nest(...)`.
 func WrapMany(err ...error) error {
 	return Nest(err...)

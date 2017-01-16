@@ -2,6 +2,7 @@ package cache
 
 import "sync"
 
+// LFU holds the Least frequently used cache values
 type LFU struct {
 	// Mutex is used for handling the concurrent
 	// read/write requests for cache
@@ -11,7 +12,7 @@ type LFU struct {
 	cache Cache
 }
 
-// NewLRU creates a thread-safe LRU cache
+// NewLFU creates a thread-safe LFU cache
 func NewLFU(size int) Cache {
 	return &LRU{
 		cache: NewLFUNoTS(size),

@@ -3,7 +3,6 @@ package broker
 import (
 	"bytes"
 	"crypto/tls"
-	"encoding/json"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -18,8 +17,11 @@ import (
 	"sync"
 	"time"
 
+	"github.com/micro/go-micro/broker/codec/json"
 	"github.com/micro/go-micro/errors"
 	"github.com/micro/go-micro/registry"
+	maddr "github.com/micro/misc/lib/addr"
+	mnet "github.com/micro/misc/lib/net"
 	mls "github.com/micro/misc/lib/tls"
 	"github.com/pborman/uuid"
 
@@ -96,6 +98,7 @@ func newTransport(config *tls.Config) *http.Transport {
 
 func newHttpBroker(opts ...Option) Broker {
 	options := Options{
+		Codec:   json.NewCodec(),
 		Context: context.TODO(),
 	}
 
@@ -209,16 +212,37 @@ func (h *httpBroker) start() error {
 
 	if h.opts.Secure || h.opts.TLSConfig != nil {
 		config := h.opts.TLSConfig
-		if config == nil {
-			cert, err := mls.Certificate(h.address)
-			if err != nil {
-				return err
+
+		fn := func(addr string) (net.Listener, error) {
+			if config == nil {
+				hosts := []string{addr}
+
+				// check if its a valid host:port
+				if host, _, err := net.SplitHostPort(addr); err == nil {
+					if len(host) == 0 {
+						hosts = maddr.IPs()
+					} else {
+						hosts = []string{host}
+					}
+				}
+
+				// generate a certificate
+				cert, err := mls.Certificate(hosts...)
+				if err != nil {
+					return nil, err
+				}
+				config = &tls.Config{Certificates: []tls.Certificate{cert}}
 			}
-			config = &tls.Config{Certificates: []tls.Certificate{cert}}
+			return tls.Listen("tcp", addr, config)
 		}
-		l, err = tls.Listen("tcp", h.address, config)
+
+		l, err = mnet.Listen(h.address, fn)
 	} else {
-		l, err = net.Listen("tcp", h.address)
+		fn := func(addr string) (net.Listener, error) {
+			return net.Listen("tcp", addr)
+		}
+
+		l, err = mnet.Listen(h.address, fn)
 	}
 
 	if err != nil {
@@ -269,7 +293,7 @@ func (h *httpBroker) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}
 
 	var m *Message
-	if err = json.Unmarshal(b, &m); err != nil {
+	if err = h.opts.Codec.Unmarshal(b, &m); err != nil {
 		errr := errors.InternalServerError("go.micro.broker", fmt.Sprintf("Error parsing request body: %v", err))
 		w.WriteHeader(500)
 		w.Write([]byte(errr.Error()))
@@ -352,7 +376,7 @@ func (h *httpBroker) Publish(topic string, msg *Message, opts ...PublishOption) 
 
 	m.Header[":topic"] = topic
 
-	b, err := json.Marshal(m)
+	b, err := h.opts.Codec.Marshal(m)
 	if err != nil {
 		return err
 	}
@@ -410,7 +434,7 @@ func (h *httpBroker) Subscribe(topic string, handler Handler, opts ...SubscribeO
 	host := strings.Join(parts[:len(parts)-1], ":")
 	port, _ := strconv.Atoi(parts[len(parts)-1])
 
-	addr, err := extractAddress(host)
+	addr, err := maddr.Extract(host)
 	if err != nil {
 		return nil, err
 	}

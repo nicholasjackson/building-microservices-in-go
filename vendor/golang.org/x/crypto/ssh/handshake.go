@@ -174,7 +174,15 @@ func (t *handshakeTransport) readOnePacket() ([]byte, error) {
 
 	t.mu.Lock()
 
-	firstKex := t.sessionID == nil
+	// By default, a key exchange is hidden from higher layers by
+	// translating it into msgIgnore.
+	successPacket := []byte{msgIgnore}
+	if t.sessionID == nil {
+		// sendKexInit() for the first kex waits for
+		// msgNewKeys so the authentication process is
+		// guaranteed to happen over an encrypted transport.
+		successPacket = []byte{msgNewKeys}
+	}
 
 	err = t.enterKeyExchangeLocked(p)
 	if err != nil {
@@ -184,7 +192,7 @@ func (t *handshakeTransport) readOnePacket() ([]byte, error) {
 	}
 
 	if debugHandshake {
-		log.Printf("%s exited key exchange (first %v), err %v", t.id(), firstKex, err)
+		log.Printf("%s exited key exchange, err %v", t.id(), err)
 	}
 
 	// Unblock writers.
@@ -199,17 +207,6 @@ func (t *handshakeTransport) readOnePacket() ([]byte, error) {
 	}
 
 	t.readSinceKex = 0
-
-	// By default, a key exchange is hidden from higher layers by
-	// translating it into msgIgnore.
-	successPacket := []byte{msgIgnore}
-	if firstKex {
-		// sendKexInit() for the first kex waits for
-		// msgNewKeys so the authentication process is
-		// guaranteed to happen over an encrypted transport.
-		successPacket = []byte{msgNewKeys}
-	}
-
 	return successPacket, nil
 }
 
@@ -228,15 +225,16 @@ const (
 // close the underlying transport. This function is safe for
 // concurrent use by multiple goroutines.
 func (t *handshakeTransport) sendKexInit(isFirst keyChangeCategory) error {
-	var err error
-
 	t.mu.Lock()
 	// If this is the initial key change, but we already have a sessionID,
 	// then do nothing because the key exchange has already completed
 	// asynchronously.
-	if !isFirst || t.sessionID == nil {
-		_, _, err = t.sendKexInitLocked(isFirst)
+	if isFirst && t.sessionID != nil {
+		t.mu.Unlock()
+		return nil
 	}
+
+	_, _, err := t.sendKexInitLocked(isFirst)
 	t.mu.Unlock()
 	if err != nil {
 		return err
@@ -371,16 +369,7 @@ func (t *handshakeTransport) enterKeyExchangeLocked(otherInitPacket []byte) erro
 	}
 
 	// We don't send FirstKexFollows, but we handle receiving it.
-	//
-	// RFC 4253 section 7 defines the kex and the agreement method for
-	// first_kex_packet_follows. It states that the guessed packet
-	// should be ignored if the "kex algorithm and/or the host
-	// key algorithm is guessed wrong (server and client have
-	// different preferred algorithm), or if any of the other
-	// algorithms cannot be agreed upon". The other algorithms have
-	// already been checked above so the kex algorithm and host key
-	// algorithm are checked here.
-	if otherInit.FirstKexFollows && (clientInit.KexAlgos[0] != serverInit.KexAlgos[0] || clientInit.ServerHostKeyAlgos[0] != serverInit.ServerHostKeyAlgos[0]) {
+	if otherInit.FirstKexFollows && algs.kex != otherInit.KexAlgos[0] {
 		// other side sent a kex message for the wrong algorithm,
 		// which we have to ignore.
 		if _, err := t.conn.readPacket(); err != nil {

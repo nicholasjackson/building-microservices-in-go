@@ -8,6 +8,7 @@ import (
 func TestMemoryCacheGetSet(t *testing.T) {
 	cache := NewMemoryWithTTL(2 * time.Second)
 	cache.StartGC(time.Millisecond * 10)
+	defer cache.StopGC()
 	cache.Set("test_key", "test_data")
 	data, err := cache.Get("test_key")
 	if err != nil {

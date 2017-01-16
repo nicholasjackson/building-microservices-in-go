@@ -19,11 +19,11 @@ func TestLFUNoTSUsageWithSet(t *testing.T) {
 	// test_key3 is used 3 times
 	// test_key2 is used 2 times
 	// test_key1 is used 1 times
-	data, err := cache.Get("test_key1")
+	_, err := cache.Get("test_key1")
 	if err != ErrNotFound {
 		t.Fatal("test_key1 should not be in the cache")
 	}
-	data, err = cache.Get("test_key2")
+	data, err := cache.Get("test_key2")
 	if err != nil {
 		t.Fatal("test_key2 should be in the cache")
 	}
@@ -74,7 +74,7 @@ func TestLFUNoTSUsageWithSetAndGet(t *testing.T) {
 	}
 	// set test_key4 into cache list
 	// test_key1 should not be in cache list
-	if err := cache.Set("test_key4", "test_data4"); err != nil {
+	if err = cache.Set("test_key4", "test_data4"); err != nil {
 		t.Fatal("test_key4 should be set")
 	}
 
@@ -110,7 +110,7 @@ func TestLFUNoTSDelete(t *testing.T) {
 	if err != nil {
 		t.Fatal("test_key3 should be in the cache")
 	}
-	if err := cache.Delete("test_key1"); err != nil {
+	if err = cache.Delete("test_key1"); err != nil {
 		t.Fatal("test_key1 should be deleted")
 	}
 

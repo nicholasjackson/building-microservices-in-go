@@ -53,6 +53,9 @@ The options below are all specified on the command-line.
   address when being accessed from a remote datacenter if the remote datacenter is configured
   with <a href="#translate_wan_addrs">`translate_wan_addrs`</a>.
 
+~> **Notice:** The hosted version of Consul Enterprise will be deprecated on
+  March 7th, 2017. For details, see https://atlas.hashicorp.com/help/consul/alternatives
+
 * <a name="_atlas"></a><a href="#_atlas">`-atlas`</a> - This flag
   enables [Atlas](https://atlas.hashicorp.com) integration.
   It is used to provide the Atlas infrastructure name and the SCADA connection. The format of
@@ -212,6 +215,37 @@ will exit with an error at startup.
    will use the local instance's [EC2 metadata endpoint](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-identity-documents.html)
    to discover the region.
 
+* <a name="_retry_join_gce_tag_value"></a><a href="#_retry_join_gce_tag_value">`-retry-join-gce-tag-value`
+  </a> - A Google Compute Engine instance tag to filter on. Much like the
+  `-retry-join-ec2-*` options, this gives Consul the option of doing server
+  discovery on [Google Compute Engine](https://cloud.google.com/compute/) by
+  searching the tags assigned to any particular instance.
+
+* <a name="_retry_join_gce_project_name"></a><a href="#_retry_join_gce_project_name">`-retry-join-gce-project-name`
+  </a> - The project to search in for the tag supplied by
+  [`-retry-join-gce-tag-value`](#_retry_join_gce_tag_value). If this is run
+  from within a GCE instance, the default is the project the instance is
+  located in.
+
+* <a name="_retry_join_gce_zone_pattern"></a><a href="#_retry_join_gce_zone_pattern">`-retry-join-gce-zone-pattern`
+  </a> - A regular expression that indicates the zones the tag should be
+  searched in. For example, while `us-west1-a` would only search in
+  `us-west1-a`, `us-west1-.*` would search in `us-west1-a` and `us-west1-b`.
+  The default is to search globally.
+
+* <a name="_retry_join_gce_credentials_file"></a><a href="#_retry_join_gce_credentials_file">`-retry-join-gce-credentials-file`
+  </a> - The path to the JSON credentials file of the [GCE Service
+  Account](https://cloud.google.com/compute/docs/access/service-accounts) that
+  will be used to search for instances. Note that this can also reside in the
+  following locations:
+   - A path supplied by the `GOOGLE_APPLICATION_CREDENTIALS` environment
+     variable
+   - The `%APPDATA%/gcloud/application_default_credentials.json` file (Windows)
+     or `$HOME/.config/gcloud/application_default_credentials.json` (Linux and
+     other systems)
+   - If none of these exist and discovery is being run from a GCE instance, the
+     instance's configured service account will be used.
+
 * <a name="_retry_interval"></a><a href="#_retry_interval">`-retry-interval`</a> - Time
   to wait between join attempts. Defaults to 30s.
 
@@ -247,6 +281,15 @@ will exit with an error at startup.
 
 * <a name="_node"></a><a href="#_node">`-node`</a> - The name of this node in the cluster.
   This must be unique within the cluster. By default this is the hostname of the machine.
+
+* <a name="_node_meta"></a><a href="#_node_meta">`-node-meta`</a> - Available in Consul 0.7.3 and later,
+  this specifies an arbitrary metadata key/value pair to associate with the node, of the form `key:value`.
+  This can be specified multiple times. Node metadata pairs have the following restrictions:
+  - A maximum of 64 key/value pairs can be registered per node.
+  - Metadata keys must be between 1 and 128 characters (inclusive) in length
+  - Metadata keys must contain only alphanumeric, `-`, and `_` characters.
+  - Metadata keys must not begin with the `consul-` prefix; that is reserved for internal use by Consul.
+  - Metadata values must be between 0 and 512 (inclusive) characters in length.
 
 * <a name="_pid_file"></a><a href="#_pid_file">`-pid-file`</a> - This flag provides the file
   path for the agent to store its PID. This is useful for sending signals (for example, `SIGINT`
@@ -376,6 +419,28 @@ Consul will not enable TLS for the HTTP API unless the `https` port has been ass
   node, the down policy is applied. In "allow" mode, all actions are permitted, "deny" restricts
   all operations, and "extend-cache" allows any cached ACLs to be used, ignoring their TTL
   values. If a non-cached ACL is used, "extend-cache" acts like "deny".
+
+* <a name="acl_agent_master_token"></a><a href="#acl_agent_master_token">`acl_agent_master_token`</a> -
+  Used to access <a href="/docs/agent/http/agent.html">agent endpoints</a> that require agent read
+  or write privileges even if Consul servers aren't present to validate any tokens. This should only
+  be used by operators during outages, regular ACL tokens should normally be used by applications.
+  This was added in Consul 0.7.2 and is only used when <a href="#acl_enforce_version_8">`acl_enforce_version_8`</a>
+  is set to true.
+
+* <a name="acl_agent_token"></a><a href="#acl_agent_token">`acl_agent_token`</a> - Used for clients
+  and servers to perform internal operations to the service catalog. If this isn't specified, then
+  the <a href="#acl_token">`acl_token`</a> will be used. This was added in Consul 0.7.2.
+  <br><br>
+  For clients, this token must at least have write access to the node name it will register as. For
+  servers, this must have write access to all nodes that are expected to join the cluster, as well
+  as write access to the "consul" service, which will be registered automatically on its behalf.
+
+* <a name="acl_enforce_version_8"></a><a href="#acl_enforce_version_8">`acl_enforce_version_8`</a> -
+  Used for clients and servers to determine if enforcement should occur for new ACL policies being
+  previewed before Consul 0.8. Added in Consul 0.7.2, this will default to false in versions of
+  Consul prior to 0.8, and will default to true in Consul 0.8 and later. This helps ease the
+  transition to the new ACL features by allowing policies to be in place before enforcement begins.
+  Please see the [ACL internals guide](/docs/internals/acl.html) for more details.
 
 * <a name="acl_master_token"></a><a href="#acl_master_token">`acl_master_token`</a> - Only used
   for servers in the [`acl_datacenter`](#acl_datacenter). This token will be created with management-level
@@ -633,6 +698,19 @@ Consul will not enable TLS for the HTTP API unless the `https` port has been ass
 * <a name="node_name"></a><a href="#node_name">`node_name`</a> Equivalent to the
   [`-node` command-line flag](#_node).
 
+* <a name="node_meta"></a><a href="#node_meta">`node_meta`</a> Available in Consul 0.7.3 and later,
+  This object allows associating arbitrary metadata key/value pairs with the local node, which can
+  then be used for filtering results from certain catalog endpoints. See the
+  [`-node-meta` command-line flag](#_node_meta) for more information.
+
+    ```javascript
+      {
+        "node_meta": {
+            "instance_type": "t2.medium"
+        }
+      }
+    ```
+
 * <a name="performance"></a><a href="#performance">`performance`</a> Available in Consul 0.7 and
   later, this is a nested object that allows tuning the performance of different subsystems in
   Consul. See the [Server Performance](/docs/guides/performance.html) guide for more details. The
@@ -716,6 +794,25 @@ Consul will not enable TLS for the HTTP API unless the `https` port has been ass
     [`-retry-join-ec2-tag-value` command-line flag](#_retry_join_ec2_tag_value).
   * `access_key_id` - The AWS access key ID to use for authentication.
   * `secret_access_key` - The AWS secret access key to use for authentication.
+
+* <a name="retry_join_gce"></a><a href="#retry_join_gce">`retry_join_gce`</a> - This is a nested object
+  that allows the setting of GCE-related [`-retry-join`](#_retry_join) options.
+  <br><br>
+  The following keys are valid:
+  * `project_name` - The GCE project name. Equivalent to the<br>
+    [`-retry-join-gce-project-name` command-line
+    flag](#_retry_join_gce_project_name).
+  * `zone_pattern` - The regular expression indicating the zones to search in.
+    Equivalent to the <br>
+    [`-retry-join-gce-zone-pattern` command-line
+    flag](#_retry_join_gce_zone_pattern).
+  * `tag_value` - The GCE instance tag value to filter on. Equivalent to the <br>
+    [`-retry-join-gce-tag-value` command-line
+    flag](#_retry_join_gce_tag_value).
+  * `credentials_file` - The path to the GCE service account credentials file.
+    Equivalent to the <br>
+    [`-retry-join-gce-credentials-file` command-line
+    flag](#_retry_join_gce_credentials_file).
 
 * <a name="retry_interval"></a><a href="#retry_interval">`retry_interval`</a> Equivalent to the
   [`-retry-interval` command-line flag](#_retry_interval).
@@ -819,7 +916,7 @@ Consul will not enable TLS for the HTTP API unless the `https` port has been ass
   * <a name="telemetry-circonus_check_display_name"</a><a href="#telemetry-circonus_check_display_name">`circonus_check_display_name`</a>
     Specifies a name to give a check when it is created. This name is displayed in the Circonus UI Checks list. Available in Consul 0.7.2 and later.
 
-  * <a name="telemetry-circonus_check_tags"</a><a href="telemetry-circonus_check_tags">`circonus_check_tags`</a>
+  * <a name="telemetry-circonus_check_tags"</a><a href="#telemetry-circonus_check_tags">`circonus_check_tags`</a>
     Comma separated list of additional tags to add to a check when it is created. Available in Consul 0.7.2 and later.
 
   * <a name="telemetry-circonus_broker_id"></a><a href="#telemetry-circonus_broker_id">`circonus_broker_id`</a>

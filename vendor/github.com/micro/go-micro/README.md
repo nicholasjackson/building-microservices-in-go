@@ -1,43 +1,32 @@
 # Go Micro [![License](https://img.shields.io/:license-apache-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![GoDoc](https://godoc.org/github.com/micro/go-micro?status.svg)](https://godoc.org/github.com/micro/go-micro) [![Travis CI](https://api.travis-ci.org/micro/go-micro.svg?branch=master)](https://travis-ci.org/micro/go-micro) [![Go Report Card](https://goreportcard.com/badge/micro/go-micro)](https://goreportcard.com/report/github.com/micro/go-micro)
 
-Go Micro is a pluggable RPC framework for **microservices**. It provides the fundamental building blocks for writing distributed systems. It is part of [Micro](https://github.com/micro/micro), the microservice toolkit.
+Go Micro is a pluggable RPC framework for **microservices**. It is part of the [Micro](https://github.com/micro/micro) toolkit.
 
 The **Micro** philosophy is sane defaults with a pluggable architecture. We provide defaults to get you started quickly but everything can be easily swapped out. It comes with built in support for {json,proto}-rpc encoding, consul or multicast dns for service discovery, http for communication and random hashed client side load balancing.
 
 Everything in go-micro is **pluggable**. You can find and contribute to plugins at [github.com/micro/go-plugins](https://github.com/micro/go-plugins).
 
-## The Features
+Follow us on Twitter at [@MicroHQ](https://twitter.com/microhq), join the [Slack](https://micro-services.slack.com) community [here](http://slack.micro.mu/) or 
+check out the [Mailing List](https://groups.google.com/forum/#!forum/microhq).
 
-Go Micro abstracts way the details of distributed systems and makes building microservices simple. Beneath the covers it provides a number of features.
+## Features
 
-**Service Discovery** - Applications are automatically registered with service discovery so they can locate each other.
+Go Micro abstracts way the details of distributed systems. Here are the main features.
 
-**Load Balancing** - Smart client side load balancing is used to balance requests between instances of a service.
-
-**Synchronous Communication** - Request-response is provided as a bidirectional streaming transport layer.
-
-**Asynchronous Communication** - Microservices should promote an event driven architecture. Publish and Subscribe semantics are built in.
-
-**Message Encoding** - Micro services can encode requests in a number of encoding formats and seamlessly decode based on the Content-Type header.
-
-**RPC Client/Server** - The client and server leverage the above features and provide a clean simple interface for building microservices.
+- **Service Discovery** - Applications are automatically registered with service discovery so they can find each other.
+- **Load Balancing** - Smart client side load balancing is used to balance requests between instances of a service.
+- **Synchronous Communication** - Request-response is provided as a bidirectional streaming transport layer.
+- **Asynchronous Communication** - Microservices should promote an event driven architecture. Publish and Subscribe semantics are built in.
+- **Message Encoding** - Micro services can encode requests in a number of encoding formats and seamlessly decode based on the Content-Type header.
+- **RPC Client/Server** - The client and server leverage the above features and provide a clean simple interface for building microservices.
 
 ## Learn By Example
 
-An example service can be found in [**examples/service**](https://github.com/micro/go-micro/tree/master/examples/service). The [**examples**](https://github.com/micro/go-micro/tree/master/examples) directory contains many more examples for using things such as middleware/wrappers, selector filters, pub/sub and code generation. 
+An example service can be found in [**examples/service**](https://github.com/micro/examples/tree/master/service). The [**examples**](https://github.com/micro/examples) directory contains many more examples for using things such as middleware/wrappers, selector filters, pub/sub and code generation. 
 
-For the complete greeter example look at [**micro/examples/greeter**](https://github.com/micro/micro/tree/master/examples/greeter). Other examples can be found throughout the GitHub repository.
+For the complete greeter example look at [**examples/greeter**](https://github.com/micro/examples/tree/master/greeter). Other examples can be found throughout the GitHub repository.
 
 Check out the blog post to learn how to write go-micro services [https://blog.micro.mu/2016/03/28/go-micro.html](https://blog.micro.mu/2016/03/28/go-micro.html) or watch the talk from the [Golang UK Conf 2016](https://www.youtube.com/watch?v=xspaDovwk34).
-
-## Join The Community
-
-There's a growing community on Slack with hundreds of members and a mailing list for those that prefer the classic method of communication.
-
-Join us to discuss, learn and contribute:
-
-- [Mailing List](https://groups.google.com/forum/#!forum/microhq) 
-- [Slack](https://micro-services.slack.com) : [Invite](http://slack.micro.mu/)
 
 ## Getting Started
 
@@ -91,7 +80,7 @@ Hello John
 
 ## Writing a service
 
-### Create request/response proto
+### Create service proto
 
 One of the key requirements of microservices is strongly defined interfaces so we utilised protobuf to define the handler and request/response. 
 Here's a definition for the Greeter handler with the method Hello which takes a HelloRequest and HelloResponse both with one string arguments.
@@ -114,10 +103,10 @@ message HelloResponse {
 }
 ```
 
-### Install protobuf for code generation
+### Install protobuf
 
-We use a protobuf plugin for code generation. This is completely optional. Look at [examples/server](https://github.com/micro/go-micro/blob/master/examples/server/main.go) 
-and [examples/client](https://github.com/micro/go-micro/blob/master/examples/client/main.go) for examples without code generation.
+We use a protobuf plugin for code generation. This is completely optional. Look at [examples/server](https://github.com/micro/examples/blob/master/server/main.go) 
+and [examples/client](https://github.com/micro/examples/blob/master/client/main.go) for examples without code generation.
 
 ```shell
 go get github.com/micro/protobuf/{proto,protoc-gen-go}
@@ -125,11 +114,11 @@ go get github.com/micro/protobuf/{proto,protoc-gen-go}
 
 There's still a need for proto compiler to generate Go stub code from our proto file. You can either use the micro fork above or the official repo `github.com/golang/protobuf`.
 
-### Compile the protobuf file
+### Compile the proto
 
 ```shell
 protoc -I$GOPATH/src --go_out=plugins=micro:$GOPATH/src \
-	$GOPATH/src/github.com/micro/go-micro/examples/service/proto/greeter.proto
+	$GOPATH/src/github.com/micro/examples/service/proto/greeter.proto
 ```
 
 ### Define the service
@@ -146,7 +135,7 @@ import (
 	"fmt"
 
 	micro "github.com/micro/go-micro"
-	proto "github.com/micro/go-micro/examples/service/proto"
+	proto "github.com/micro/examples/service/proto"
 	"golang.org/x/net/context"
 )
 
@@ -204,7 +193,7 @@ import (
 	"fmt"
 
 	micro "github.com/micro/go-micro"
-	proto "github.com/micro/go-micro/examples/service/proto"
+	proto "github.com/micro/examples/service/proto"
 	"golang.org/x/net/context"
 )
 
@@ -289,25 +278,39 @@ messaging using the broker.
 
 The  above components are combined at the top-level of micro as a **Service**.
 
-## Community Plugins
+## Plugins
 
 By default go-micro only provides a few implementation of each interface at the core but it's completely pluggable. There's already dozens of plugins which are available at [github.com/micro/go-plugins](https://github.com/micro/go-plugins). Contributions are welcome!
 
+### Build with plugins
+
+If you want to integrate plugins simply link them in a separate file and rebuild
+
+Create a plugins.go file
+```go
+import (
+        // etcd v3 registry
+        _ "github.com/micro/go-plugins/registry/etcdv3"
+        // nats transport
+        _ "github.com/micro/go-plugins/transport/nats"
+        // kafka broker
+        _ "github.com/micro/go-plugins/broker/kafka"
+)
+```
+
+Build binary
+```shell
+// For local use
+go build -i -o service ./main.go ./plugins.go
+```
+
+Flag usage of plugins
+```shell
+service --registry=etcdv3 --transport=nats --broker=kafka
+```
+
 ## Sponsors
 
+Open source development of Micro is sponsored by Sixt
+
 <a href="https://blog.micro.mu/2016/04/25/announcing-sixt-sponsorship.html"><img src="https://micro.mu/sixt_logo.png" width=150px height="auto" /></a>
-
-## Next steps
-
-- [Examples Directory](https://github.com/micro/go-micro/tree/master/examples)
-- [Example Services](https://github.com/micro/go-micro#example-services)
-- [Micro Toolkit](https://github.com/micro/micro)
-- Join the [Slack](https://micro-services.slack.com)! - [Invite Here](http://slack.micro.mu/)
-
-
-## Contributing
-
-- Checkout the issues list [github.com/micro/go-micro/issues](https://github.com/micro/go-micro/issues)
-- Join the Slack to discuss the roadmap
-- PR plugins to [github.com/micro/go-plugins](https://github.com/micro/go-plugins)
-- Write example services for others to use
