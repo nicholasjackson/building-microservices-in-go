@@ -1,5 +1,5 @@
-hash: 0d3bbdb7093d8f7c399bd80cb08d924fba5adc0d67793a56c1486f857f9b6d59
-updated: 2017-01-16T05:48:02.592669461Z
+hash: d313a60e114f5d40e30ed996b25a1252dbdc1db59e33dc7dc19c72c0555fd8a8
+updated: 2017-01-17T09:14:28.93494562Z
 imports:
 - name: github.com/alexcesaro/statsd
   version: 7fea3f0d2fab1ad973e641e51dba45443a311a90
@@ -15,6 +15,11 @@ imports:
   - spew
 - name: github.com/dgrijalva/jwt-go
   version: 40bd0f3b4891a9d7f121bfb7b8e8b0525625e262
+- name: github.com/dvyukov/go-fuzz
+  version: bcf0d9a32e7d9d61f7a0623b158754f2e8d61e6d
+  subpackages:
+  - go-fuzz
+  - go-fuzz-build
 - name: github.com/eapache/go-resiliency
   version: 6800482f2c813e689c88b7ed3282262385011890
   subpackages:
@@ -22,6 +27,10 @@ imports:
   - deadline
 - name: github.com/fatih/color
   version: 34e4ee095d12986a2cef5ddb9aeb3b8cfcfea17c
+- name: github.com/go-playground/locales
+  version: 273913d3b2ff7127452603d55dd3f6f888e4f268
+  subpackages:
+  - currency
 - name: github.com/go-playground/universal-translator
   version: fc73d0c4bd37070e0d34e3647253565ff7847264
 - name: github.com/golang/freetype
@@ -216,10 +225,6 @@ testImports:
   subpackages:
   - colors
   - gherkin
-- name: github.com/go-playground/locales
-  version: 273913d3b2ff7127452603d55dd3f6f888e4f268
-  subpackages:
-  - currency
 - name: github.com/sergi/go-diff
   version: 552b4e9bbdca9e5adafd95ee98c822fdd11b330b
   subpackages:

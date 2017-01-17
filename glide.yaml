@@ -41,6 +41,10 @@ import:
   version: ^9.3.2
 - package: github.com/go-playground/universal-translator
   version: ^0.14.0
+- package: github.com/dvyukov/go-fuzz
+  subpackages:
+  - go-fuzz
+  - go-fuzz-build
 testImport:
 - package: github.com/DATA-DOG/godog
   version: ^0.5.4
