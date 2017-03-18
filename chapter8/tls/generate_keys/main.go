@@ -1,9 +1,8 @@
 package main
 
 import (
-	"crypto/ecdsa"
-	"crypto/elliptic"
 	"crypto/rand"
+	"crypto/rsa"
 	"crypto/sha1"
 	"crypto/x509"
 	"crypto/x509/pkix"
@@ -16,33 +15,97 @@ import (
 	"time"
 )
 
-func main() {
-	rootKey, rootCert := generateRootCA()
-	_ = generateIntermediateCert(rootCert, rootKey)
+const durationDecade = (time.Hour * 24 * 3650)
+const durationYear = (time.Hour * 24 * 365)
+const durationMonth = (time.Hour * 24 * 30)
+
+var rootTemplate = x509.Certificate{
+	Subject: pkix.Name{
+		Country:            []string{"UK"},
+		Organization:       []string{"Acme Co"},
+		OrganizationalUnit: []string{"Tech"},
+		CommonName:         "Root",
+	},
+
+	KeyUsage: x509.KeyUsageKeyEncipherment |
+		x509.KeyUsageDigitalSignature |
+		x509.KeyUsageCertSign |
+		x509.KeyUsageCRLSign,
+	BasicConstraintsValid: true,
+	IsCA: true,
 }
 
-func generateRootCA() (*ecdsa.PrivateKey, *x509.Certificate) {
-	priv, err := generatePrivateKey()
-	if err != nil {
-		log.Fatal("Unable to generate private key: ", err)
-	}
+var applicationTemplate = x509.Certificate{
+	Subject: pkix.Name{
+		Country:            []string{"UK"},
+		Organization:       []string{"Acme Co"},
+		OrganizationalUnit: []string{"Tech"},
+		CommonName:         "Application",
+	},
 
-	err = savePrivateKey(priv, "root_key.pem")
-	if err != nil {
-		log.Fatal("Unable to save private key: ", err)
-	}
+	KeyUsage: x509.KeyUsageKeyEncipherment |
+		x509.KeyUsageDigitalSignature |
+		x509.KeyUsageCertSign |
+		x509.KeyUsageCRLSign,
+	BasicConstraintsValid: true,
+	IsCA: true,
+}
 
-	data, err := generateRootX509Certificate(priv)
-	if err != nil {
-		log.Fatal("Unable to generate certificate: ", err)
-	}
+var instanceTemplate = x509.Certificate{
+	Subject: pkix.Name{
+		Country:            []string{"UK"},
+		Organization:       []string{"Acme Co"},
+		OrganizationalUnit: []string{"Tech"},
+		CommonName:         "Instance",
+	},
 
-	err = saveX509Certificate(data, "root_cert.pem")
-	if err != nil {
-		log.Fatal("Unable to save cert: ", err)
-	}
+	KeyUsage:              x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature,
+	ExtKeyUsage:           []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
+	BasicConstraintsValid: true,
+	DNSNames:              []string{"localhost"},
+}
 
-	cert, err := x509.ParseCertificate(data)
+func main() {
+	rootKey, rootCert := generateKeyAndCertificate(
+		&rootTemplate,
+		durationDecade,
+		"root_key.pem",
+		"root_cert.pem",
+		nil,
+		nil)
+
+	applicationKey, applicationCert := generateKeyAndCertificate(
+		&applicationTemplate,
+		durationYear,
+		"application_key.pem",
+		"application_cert.pem",
+		rootKey,
+		rootCert)
+
+	_, _ = generateKeyAndCertificate(
+		&instanceTemplate,
+		durationMonth,
+		"instance_key.pem",
+		"instance_cert.pem",
+		applicationKey,
+		applicationCert)
+}
+
+func generateKeyAndCertificate(
+	template *x509.Certificate,
+	duration time.Duration,
+	keyOutputLocation string,
+	certficateOutputLocation string,
+	parentKey *rsa.PrivateKey,
+	parentCert *x509.Certificate) (*rsa.PrivateKey, *x509.Certificate) {
+
+	priv := generatePrivateKey()
+	savePrivateKey(priv, keyOutputLocation)
+
+	certData := generateX509Certificate(priv, template, duration, parentKey, parentCert)
+	saveX509Certificate(certData, certficateOutputLocation)
+
+	cert, err := x509.ParseCertificate(certData)
 	if err != nil {
 		log.Fatal("Unable to parse certificiate: ", err)
 	}
@@ -50,50 +113,53 @@ func generateRootCA() (*ecdsa.PrivateKey, *x509.Certificate) {
 	return priv, cert
 }
 
-func generateIntermediateCert(parentCert *x509.Certificate, parentKey *ecdsa.PrivateKey) *ecdsa.PrivateKey {
-	priv, err := generatePrivateKey()
-	if err != nil {
-		log.Fatal("Unable to generate private key: ", err)
-	}
-
-	err = savePrivateKey(priv, "intermediate_key.pem")
-	if err != nil {
-		log.Fatal("Unable to save private key: ", err)
-	}
-
-	data, err := generateIntermediateX509Certificate(priv, parentCert, parentKey)
-	if err != nil {
-		log.Fatal("Unable to generate certificate: ", err)
-	}
-
-	err = saveX509Certificate(data, "intermediate_cert.pem")
-	if err != nil {
-		log.Fatal("Unable to save cert: ", err)
-	}
-	return priv
+func generatePrivateKey() *rsa.PrivateKey {
+	key, _ := rsa.GenerateKey(rand.Reader, 4096)
+	return key
 }
 
-func generatePrivateKey() (*ecdsa.PrivateKey, error) {
-	return ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
-}
+func generateX509Certificate(
+	key *rsa.PrivateKey,
+	template *x509.Certificate,
+	duration time.Duration,
+	parentKey *rsa.PrivateKey,
+	parentCert *x509.Certificate) []byte {
 
-func savePrivateKey(key *ecdsa.PrivateKey, path string) error {
-	b, err := x509.MarshalECPrivateKey(key)
+	notBefore := time.Now()
+	notAfter := notBefore.Add(duration)
+
+	template.NotBefore = notBefore
+	template.NotAfter = notAfter
+
+	serialNumberLimit := new(big.Int).Lsh(big.NewInt(1), 128)
+	serialNumber, err := rand.Int(rand.Reader, serialNumberLimit)
 	if err != nil {
-		return fmt.Errorf("Unable to marshal private key: %v", err)
+		panic(fmt.Errorf("failed to generate serial number: %s", err))
 	}
 
-	block := &pem.Block{Type: "EC PRIVATE KEY", Bytes: b}
+	template.SerialNumber = serialNumber
 
-	keyOut, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+	subjectKey, err := getSubjectKey(key)
 	if err != nil {
-		return fmt.Errorf("failed to open key.pem for writing: %v", err)
+		panic(fmt.Errorf("unable to get subject key: %s", err))
 	}
 
-	pem.Encode(keyOut, block)
-	keyOut.Close()
+	template.SubjectKeyId = subjectKey
 
-	return nil
+	if parentKey == nil {
+		parentKey = key
+	}
+
+	if parentCert == nil {
+		parentCert = template
+	}
+
+	cert, err := x509.CreateCertificate(rand.Reader, template, parentCert, &key.PublicKey, parentKey)
+	if err != nil {
+		panic(err)
+	}
+
+	return cert
 }
 
 type subjectPublicKeyInfo struct {
@@ -101,95 +167,7 @@ type subjectPublicKeyInfo struct {
 	SubjectPublicKey asn1.BitString
 }
 
-func generateRootX509Certificate(key *ecdsa.PrivateKey) ([]byte, error) {
-
-	notBefore := time.Now()
-	notAfter := notBefore.Add(365 * 24 * time.Hour)
-
-	serialNumberLimit := new(big.Int).Lsh(big.NewInt(1), 128)
-	serialNumber, err := rand.Int(rand.Reader, serialNumberLimit)
-	if err != nil {
-		return nil, fmt.Errorf("failed to generate serial number: %s", err)
-	}
-
-	subjectKey, err := getSubjectKey(key)
-	if err != nil {
-		return nil, fmt.Errorf("unable to get subject key: %s", err)
-	}
-
-	template := x509.Certificate{
-		SerialNumber: serialNumber,
-		Subject: pkix.Name{
-			Country:            []string{"UK"},
-			Organization:       []string{"Acme Co"},
-			OrganizationalUnit: []string{"Tech"},
-			CommonName:         "RootCert",
-		},
-		NotBefore: notBefore,
-		NotAfter:  notAfter,
-
-		IsCA:         true,
-		SubjectKeyId: subjectKey,
-
-		KeyUsage: x509.KeyUsageKeyEncipherment |
-			x509.KeyUsageDigitalSignature,
-		ExtKeyUsage:           []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
-		BasicConstraintsValid: true,
-	}
-
-	return x509.CreateCertificate(rand.Reader, &template, &template, &key.PublicKey, key)
-}
-
-func generateIntermediateX509Certificate(
-	key *ecdsa.PrivateKey,
-	parentCert *x509.Certificate,
-	parentKey *ecdsa.PrivateKey) ([]byte, error) {
-
-	notBefore := time.Now()
-	notAfter := notBefore.Add(365 * 24 * time.Hour)
-
-	serialNumberLimit := new(big.Int).Lsh(big.NewInt(1), 128)
-	serialNumber, err := rand.Int(rand.Reader, serialNumberLimit)
-	if err != nil {
-		return nil, fmt.Errorf("failed to generate serial number: %s", err)
-	}
-
-	subjectKey, err := getSubjectKey(key)
-	if err != nil {
-		return nil, fmt.Errorf("unable to get public subject key")
-	}
-
-	authKey, err := getSubjectKey(parentKey)
-	if err != nil {
-		return nil, fmt.Errorf("unable to get public subject key")
-	}
-
-	template := x509.Certificate{
-		SerialNumber: serialNumber,
-		Subject: pkix.Name{
-			Country:            []string{"UK"},
-			Organization:       []string{"Acme Co"},
-			OrganizationalUnit: []string{"Tech"},
-			CommonName:         "Intermediate",
-		},
-		NotBefore: notBefore,
-		NotAfter:  notAfter,
-
-		SubjectKeyId:   subjectKey,
-		AuthorityKeyId: authKey,
-
-		KeyUsage: x509.KeyUsageKeyEncipherment |
-			x509.KeyUsageDigitalSignature |
-			x509.KeyUsageCertSign |
-			x509.KeyUsageCRLSign,
-		ExtKeyUsage:           []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth},
-		BasicConstraintsValid: true,
-	}
-
-	return x509.CreateCertificate(rand.Reader, &template, parentCert, &key.PublicKey, parentKey)
-}
-
-func getSubjectKey(key *ecdsa.PrivateKey) ([]byte, error) {
+func getSubjectKey(key *rsa.PrivateKey) ([]byte, error) {
 	publicKey, err := x509.MarshalPKIXPublicKey(&key.PublicKey)
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal public key: %s", err)
@@ -201,13 +179,24 @@ func getSubjectKey(key *ecdsa.PrivateKey) ([]byte, error) {
 		return nil, fmt.Errorf("failed to unmarshal public key: %s", err)
 	}
 
-	return bigIntHash(subPKI.SubjectPublicKey.Bytes), nil
+	h := sha1.New()
+	h.Write(subPKI.SubjectPublicKey.Bytes)
+	return h.Sum(nil), nil
 }
 
-func bigIntHash(n []byte) []byte {
-	h := sha1.New()
-	h.Write(n)
-	return h.Sum(nil)
+func savePrivateKey(key *rsa.PrivateKey, path string) error {
+	b := x509.MarshalPKCS1PrivateKey(key)
+	block := &pem.Block{Type: "RSA PRIVATE KEY", Bytes: b}
+
+	keyOut, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0600)
+	if err != nil {
+		return fmt.Errorf("failed to open key.pem for writing: %v", err)
+	}
+
+	pem.Encode(keyOut, block)
+	keyOut.Close()
+
+	return nil
 }
 
 func saveX509Certificate(data []byte, path string) error {

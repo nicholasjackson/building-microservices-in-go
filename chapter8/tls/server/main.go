@@ -18,7 +18,7 @@ func main() {
 		fmt.Fprint(rw, "Hello World")
 	})
 
-	err := http.ListenAndServeTLS(":8433", "../certs/3_application/certs/www.example.com.cert.pem", "../certs/3_application/private/www.example.com.key.pem", nil)
+	err := http.ListenAndServeTLS(":8433", "../generate_keys/instance_cert.pem", "../generate_keys/instance_key.pem", nil)
 
 	log.Fatal(err)
 }
