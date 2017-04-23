@@ -1,16 +1,14 @@
 package asymetric
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
-	"io"
 	"log"
 
+	"github.com/nicholasjackson/building-microservices-in-go/chapter8/symetric"
 	"github.com/nicholasjackson/building-microservices-in-go/chapter8/utils"
 )
 
@@ -49,7 +47,7 @@ func EncryptMessageWithPublicKey(message string) (string, error) {
 	maxLength := modulus - (hashLength * 2) - 2
 
 	if len(message) > maxLength {
-		return "", fmt.Errorf("The maximum message size must not exceed ", maxLength)
+		return "", fmt.Errorf("The maximum message size must not exceed: %d", maxLength)
 	}
 
 	data, err := EncryptDataWithPublicKey([]byte(message))
@@ -74,30 +72,17 @@ func DecryptMessageWithPrivateKey(message string) (string, error) {
 // used to encypt the message which is encrypted with the public key
 func EncryptLargeMessageWithPublicKey(message string) (ciphertext string, cipherkey string, err error) {
 	key := utils.GenerateRandomString(16) // 16, 24, 32 keysize, random string is 2 bytes per char so 16 chars returns 32 bytes
-
-	c, err := aes.NewCipher([]byte(key))
+	cipherData, err := symetric.EncryptData([]byte(message), []byte(key))
 	if err != nil {
 		return "", "", err
 	}
 
-	gcm, err := cipher.NewGCM(c)
+	cipherkey, err = EncryptMessageWithPublicKey(key)
 	if err != nil {
 		return "", "", err
 	}
 
-	nonce := make([]byte, gcm.NonceSize())
-	if _, err = io.ReadFull(rand.Reader, nonce); err != nil {
-		return "", "", err
-	}
-
-	keyData, err := EncryptMessageWithPublicKey(key)
-	if err != nil {
-		return "", "", err
-	}
-
-	cipherData := gcm.Seal(nonce, nonce, []byte(message), nil)
-
-	return base64.StdEncoding.EncodeToString(cipherData), string(keyData), nil
+	return base64.StdEncoding.EncodeToString(cipherData), cipherkey, nil
 }
 
 // DecryptLargeMessageWithPrivateKey decrypts the given base64 encoded message by
@@ -109,28 +94,12 @@ func DecryptLargeMessageWithPrivateKey(message, key string) (string, error) {
 		return "", fmt.Errorf("Unable to decrypt key with private key: %s", err)
 	}
 
-	c, err := aes.NewCipher([]byte(keystring))
-	if err != nil {
-		return "", err
-	}
-
-	gcm, err := cipher.NewGCM(c)
-	if err != nil {
-		return "", err
-	}
-
 	messageData, err := base64.StdEncoding.DecodeString(message)
 	if err != nil {
 		return "", err
 	}
 
-	nonceSize := gcm.NonceSize()
-	if len(messageData) < nonceSize {
-		return "", fmt.Errorf("ciphertext too short")
-	}
+	data, err := symetric.DecryptData(messageData, []byte(keystring))
 
-	nonce, ciphertext := messageData[:nonceSize], messageData[nonceSize:]
-	decrypted, err := gcm.Open(nil, nonce, ciphertext, nil)
-
-	return string(decrypted), err
+	return string(data), err
 }
