@@ -4,8 +4,9 @@ import (
 	"crypto/rand"
 	"crypto/sha512"
 	"fmt"
-	"io"
 	"math/big"
+
+	"github.com/nicholasjackson/building-microservices-in-go/chapter8/utils"
 )
 
 // Hash is a structure which is capable of generating and comparing sha512
@@ -57,12 +58,7 @@ func (h *Hash) Compare(input string, salt string, withPepper bool, hash string) 
 
 // GenerateRandomSalt generates a random string 32 bytes in length
 func GenerateRandomSalt() string {
-	k := make([]byte, 32)
-	if _, err := io.ReadFull(rand.Reader, k); err != nil {
-		return ""
-	}
-
-	return fmt.Sprintf("%x", k)
+	return utils.GenerateRandomString(32)
 }
 
 func (h *Hash) createHash(input string, salt string, pepper string) string {

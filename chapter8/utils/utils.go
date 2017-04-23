@@ -1,10 +1,12 @@
 package utils
 
 import (
+	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 )
@@ -67,4 +69,14 @@ func readFileToBlock(file string, blockType string) (*pem.Block, error) {
 	}
 
 	return block, nil
+}
+
+// GenerateRandomString with crypto/rand
+func GenerateRandomString(length int) string {
+	k := make([]byte, length)
+	if _, err := io.ReadFull(rand.Reader, k); err != nil {
+		return ""
+	}
+
+	return fmt.Sprintf("%x", k)
 }
