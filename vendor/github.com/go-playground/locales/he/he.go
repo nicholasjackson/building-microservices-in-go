@@ -55,7 +55,7 @@ func New() locales.Translator {
 		perMille:               "‰",
 		timeSeparator:          ":",
 		inifinity:              "∞",
-		currencies:             []string{"ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON", "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "A$", "AWG", "AZM", "AZN", "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN", "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC", "BRE", "R$", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYR", "BZD", "CA$", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNX", "CN¥", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP", "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN", "ESA", "ESB", "ESP", "ETB", "€", "FIM", "FJD", "FKP", "FRF", "£", "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE", "GWP", "GYD", "HK$", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ל״י", "ILR", "₪", "₹", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "JP¥", "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "₩", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "LVL", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN", "MLF", "MMK", "MNT", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK", "MX$", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC", "NIO", "NLG", "NOK", "NPR", "NZ$", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "PHP", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB", "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD", "SHP", "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "SUR", "SVC", "SYP", "SZL", "฿", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "TRY", "TTD", "NT$", "TZS", "UAH", "UAK", "UGS", "UGX", "$", "USN", "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "₫", "VNN", "VUV", "WST", "FCFA", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "EC$", "XDR", "XEU", "XFO", "XFU", "CFA", "XPD", "CFPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL", "ZWR"},
+		currencies:             []string{"ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON", "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "A$", "AWG", "AZM", "AZN", "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN", "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC", "BRE", "R$", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYN", "BYR", "BZD", "CA$", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNX", "\u200eCN¥\u200e", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP", "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN", "ESA", "ESB", "ESP", "ETB", "€", "FIM", "FJD", "FKP", "FRF", "£", "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE", "GWP", "GYD", "HK$", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ל״י", "ILR", "₪", "₹", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "¥", "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "₩", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "LVL", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN", "MLF", "MMK", "MNT", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK", "MX$", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC", "NIO", "NLG", "NOK", "NPR", "NZ$", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "PHP", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB", "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD", "SHP", "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "SUR", "SVC", "SYP", "SZL", "฿", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "TRY", "TTD", "NT$", "TZS", "UAH", "UAK", "UGS", "UGX", "$", "USN", "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "₫", "VNN", "VUV", "WST", "FCFA", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "EC$", "XDR", "XEU", "XFO", "XFU", "CFA", "XPD", "CFPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL", "ZWR"},
 		currencyPositiveSuffix: " ",
 		currencyNegativeSuffix: " ",
 		monthsAbbreviated:      []string{"", "ינו׳", "פבר׳", "מרץ", "אפר׳", "מאי", "יוני", "יולי", "אוג׳", "ספט׳", "אוק׳", "נוב׳", "דצמ׳"},
@@ -66,11 +66,12 @@ func New() locales.Translator {
 		daysShort:              []string{"א׳", "ב׳", "ג׳", "ד׳", "ה׳", "ו׳", "ש׳"},
 		daysWide:               []string{"יום ראשון", "יום שני", "יום שלישי", "יום רביעי", "יום חמישי", "יום שישי", "יום שבת"},
 		periodsAbbreviated:     []string{"לפנה״צ", "אחה״צ"},
+		periodsNarrow:          []string{"", ""},
 		periodsWide:            []string{"לפנה״צ", "אחה״צ"},
 		erasAbbreviated:        []string{"לפנה״ס", "לספירה"},
 		erasNarrow:             []string{"", ""},
 		erasWide:               []string{"", ""},
-		timezones:              map[string]string{"AKST": "שעון אלסקה (חורף)", "WITA": "שעון מרכז אינדונזיה", "NZDT": "שעון ניו זילנד (קיץ)", "CAT": "שעון מרכז אפריקה", "CLST": "שעון צ׳ילה (קיץ)", "LHST": "שעון אי הלורד האו (חורף)", "MESZ": "שעון מרכז אירופה (קיץ)", "ACWST": "שעון מרכז-מערב אוסטרליה (חורף)", "ACWDT": "שעון מרכז-מערב אוסטרליה (קיץ)", "IST": "שעון הודו", "EDT": "שעון החוף המזרחי (קיץ)", "UYST": "שעון אורוגוואי (קיץ)", "OEZ": "שעון מזרח אירופה (חורף)", "AST": "שעון האוקיינוס האטלנטי (חורף)", "TMT": "שעון טורקמניסטן (חורף)", "MDT": "שעון אזור ההרים בארה״ב (קיץ)", "MYT": "שעון מלזיה", "ChST": "שעון צ׳אמורו", "AWDT": "שעון מערב אוסטרליה (קיץ)", "JST": "שעון יפן (חורף)", "ACST": "שעון מרכז אוסטרליה (חורף)", "EAT": "שעון מזרח אפריקה", "CHADT": "שעון צ׳טהאם (קיץ)", "WART": "שעון מערב ארגנטינה (חורף)", "HNT": "שעון ניופאונדלנד (חורף)", "GFT": "שעון גיאנה הצרפתית", "COT": "שעון קולומביה (חורף)", "VET": "שעון ונצואלה", "WARST": "שעון מערב ארגנטינה (קיץ)", "BT": "שעון בהוטן", "JDT": "שעון יפן (קיץ)", "WESZ": "שעון מערב אירופה (קיץ)", "ACDT": "שעון מרכז אוסטרליה (קיץ)", "AEDT": "שעון מזרח אוסטרליה (קיץ)", "AKDT": "שעון אלסקה (קיץ)", "EST": "שעון החוף המזרחי (חורף)", "TMST": "שעון טורקמניסטן (קיץ)", "SGT": "שעון סינגפור", "COST": "שעון קולומביה (קיץ)", "HAST": "שעון רגיל האיים האלאוטיים הוואי", "SAST": "שעון דרום אפריקה", "WAST": "שעון מערב אפריקה (קיץ)", "CST": "שעון מרכז ארה״ב (חורף)", "BOT": "שעון בוליביה", "SRT": "שעון סורינאם", "HADT": "שעון קיץ האיים האלאוטיים הוואי", "ARST": "שעון ארגנטינה (קיץ)", "PDT": "שעון קיץ, מערב ארה״ב (לוס אנג׳לס)", "GYT": "שעון גויאנה", "CHAST": "שעון צ׳טהאם (חורף)", "WAT": "שעון מערב אפריקה (חורף)", "MST": "שעון אזור ההרים בארה״ב (חורף)", "HKST": "שעון הונג קונג (קיץ)", "MEZ": "שעון מרכז אירופה (חורף)", "WIT": "שעון מזרח אינדונזיה", "LHDT": "שעון אי הלורד האו (קיץ)", "ECT": "שעון אקוודור", "AEST": "שעון מזרח אוסטרליה (חורף)", "UYT": "שעון אורוגוואי (חורף)", "HKT": "שעון הונג קונג (חורף)", "PST": "שעון רגיל האוקיינוס השקט", "∅∅∅": "שעון פרו (קיץ)", "NZST": "שעון ניו זילנד (חורף)", "WIB": "שעון מערב אינדונזיה", "ADT": "שעון האוקיינוס האטלנטי (קיץ)", "CDT": "שעון מרכז ארה״ב (קיץ)", "AWST": "שעון מערב אוסטרליה (חורף)", "HAT": "שעון ניופאונדלנד (קיץ)", "ART": "שעון ארגנטינה (חורף)", "CLT": "שעון צ׳ילה (חורף)", "GMT": "שעון גריניץ׳\u200f", "OESZ": "שעון מזרח אירופה (קיץ)", "WEZ": "שעון מערב אירופה (חורף)"},
+		timezones:              map[string]string{"∅∅∅": "שעון אמזונס (קיץ)", "EST": "שעון החוף המזרחי (חורף)", "GFT": "שעון גיאנה הצרפתית", "AWDT": "שעון מערב אוסטרליה (קיץ)", "SGT": "שעון סינגפור", "NZST": "שעון ניו זילנד (חורף)", "TMST": "שעון טורקמניסטן (קיץ)", "HKST": "שעון הונג קונג (קיץ)", "HEPM": "שעון סנט פייר ומיקלון (קיץ)", "PDT": "שעון מערב ארה״ב (קיץ)", "HNOG": "שעון מערב גרינלנד (חורף)", "CLT": "שעון צ׳ילה (חורף)", "CLST": "שעון צ׳ילה (קיץ)", "WEZ": "שעון מערב אירופה (חורף)", "MDT": "שעון קיץ מקאו", "AEST": "שעון מזרח אוסטרליה (חורף)", "ChST": "שעון צ׳אמורו", "CAT": "שעון מרכז אפריקה", "ACWDT": "שעון מרכז-מערב אוסטרליה (קיץ)", "TMT": "שעון טורקמניסטן (חורף)", "AKDT": "שעון אלסקה (קיץ)", "HNCU": "שעון קובה (חורף)", "WIB": "שעון מערב אינדונזיה", "CHAST": "שעון צ׳טהאם (חורף)", "OEZ": "שעון מזרח אירופה (חורף)", "LHST": "שעון אי הלורד האו (חורף)", "EAT": "שעון מזרח אפריקה", "ACST": "שעון מרכז אוסטרליה (חורף)", "HAT": "שעון ניופאונדלנד (קיץ)", "WARST": "שעון מערב ארגנטינה (קיץ)", "WAT": "שעון מערב אפריקה (חורף)", "HNEG": "שעון מזרח גרינלנד (חורף)", "WIT": "שעון מזרח אינדונזיה", "CHADT": "שעון צ׳טהאם (קיץ)", "ADT": "שעון האוקיינוס האטלנטי (קיץ)", "COT": "שעון קולומביה (חורף)", "UYT": "שעון אורוגוואי (חורף)", "ACWST": "שעון מרכז-מערב אוסטרליה (חורף)", "VET": "שעון ונצואלה", "AWST": "שעון מערב אוסטרליה (חורף)", "ART": "שעון ארגנטינה (חורף)", "UYST": "שעון אורוגוואי (קיץ)", "WART": "שעון מערב ארגנטינה (חורף)", "ARST": "שעון ארגנטינה (קיץ)", "EDT": "שעון החוף המזרחי (קיץ)", "ACDT": "שעון מרכז אוסטרליה (קיץ)", "HNNOMX": "שעון צפון-מערב מקסיקו (חורף)", "SAST": "שעון דרום אפריקה", "NZDT": "שעון ניו זילנד (קיץ)", "AST": "שעון האוקיינוס האטלנטי (חורף)", "MST": "שעון חורף מקאו", "SRT": "שעון סורינאם", "GYT": "שעון גיאנה", "CST": "שעון מרכז ארה״ב (חורף)", "CDT": "שעון מרכז ארה״ב (קיץ)", "ECT": "שעון אקוודור", "IST": "שעון הודו", "OESZ": "שעון מזרח אירופה (קיץ)", "HNT": "שעון ניופאונדלנד (חורף)", "HEEG": "שעון מזרח גרינלנד (קיץ)", "MEZ": "שעון מרכז אירופה (חורף)", "JDT": "שעון יפן (קיץ)", "HKT": "שעון הונג קונג (חורף)", "MESZ": "שעון מרכז אירופה (קיץ)", "JST": "שעון יפן (חורף)", "HENOMX": "שעון צפון-מערב מקסיקו (קיץ)", "HNPM": "שעון סנט פייר ומיקלון (חורף)", "HEPMX": "שעון מערב מקסיקו (קיץ)", "HEOG": "שעון מערב גרינלנד (קיץ)", "MYT": "שעון מלזיה", "WITA": "שעון מרכז אינדונזיה", "COST": "שעון קולומביה (קיץ)", "BT": "שעון בהוטן", "AEDT": "שעון מזרח אוסטרליה (קיץ)", "HADT": "שעון האיים האלאוטיים הוואי (קיץ)", "GMT": "שעון גריניץ׳\u200f", "HAST": "שעון האיים האלאוטיים הוואי (חורף)", "WESZ": "שעון מערב אירופה (קיץ)", "WAST": "שעון מערב אפריקה (קיץ)", "AKST": "שעון אלסקה (חורף)", "LHDT": "שעון אי הלורד האו (קיץ)", "HNPMX": "שעון מערב מקסיקו (חורף)", "BOT": "שעון בוליביה", "PST": "שעון מערב ארה״ב (חורף)", "HECU": "שעון קובה (קיץ)"},
 	}
 }
 
@@ -430,7 +431,12 @@ func (he *he) FmtDateShort(t time.Time) string {
 	b = append(b, []byte{0x2e}...)
 	b = strconv.AppendInt(b, int64(t.Month()), 10)
 	b = append(b, []byte{0x2e}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -444,7 +450,12 @@ func (he *he) FmtDateMedium(t time.Time) string {
 	b = append(b, []byte{0x20, 0xd7, 0x91}...)
 	b = append(b, he.monthsAbbreviated[t.Month()]...)
 	b = append(b, []byte{0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -458,7 +469,12 @@ func (he *he) FmtDateLong(t time.Time) string {
 	b = append(b, []byte{0x20, 0xd7, 0x91}...)
 	b = append(b, he.monthsWide[t.Month()]...)
 	b = append(b, []byte{0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -474,7 +490,12 @@ func (he *he) FmtDateFull(t time.Time) string {
 	b = append(b, []byte{0x20, 0xd7, 0x91}...)
 	b = append(b, he.monthsWide[t.Month()]...)
 	b = append(b, []byte{0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }

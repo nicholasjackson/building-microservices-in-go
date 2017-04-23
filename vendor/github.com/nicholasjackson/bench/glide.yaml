@@ -1,0 +1,14 @@
+package: github.com/nicholasjackson/bench
+import:
+- package: github.com/fatih/color
+  version: ^1.2.0
+- package: github.com/wcharczuk/go-chart
+  version: ^2.0.0
+  subpackages:
+  - drawing
+testImport:
+- package: github.com/alecthomas/assert
+- package: github.com/stretchr/testify
+  version: ^1.1.4
+  subpackages:
+  - assert

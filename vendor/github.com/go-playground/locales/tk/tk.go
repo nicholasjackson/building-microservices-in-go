@@ -56,7 +56,7 @@ func New() locales.Translator {
 		perMille:               "‰",
 		timeSeparator:          ":",
 		inifinity:              "∞",
-		currencies:             []string{"ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON", "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "A$", "AWG", "AZM", "AZN", "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN", "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC", "BRE", "R$", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYR", "BZD", "CA$", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNX", "CN¥", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP", "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN", "ESA", "ESB", "ESP", "ETB", "EUR", "FIM", "FJD", "FKP", "FRF", "GBP", "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE", "GWP", "GYD", "HK$", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ILP", "ILR", "₪", "₹", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "JP¥", "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "₩", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "LVL", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN", "MLF", "MMK", "MNT", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK", "MX$", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC", "NIO", "NLG", "NOK", "NPR", "NZ$", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "PHP", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB", "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD", "SHP", "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "SUR", "SVC", "SYP", "SZL", "THB", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "TRY", "TTD", "NT$", "TZS", "UAH", "UAK", "UGS", "UGX", "US$", "USN", "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "₫", "VNN", "VUV", "WST", "FCFA", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "EC$", "XDR", "XEU", "XFO", "XFU", "CFA", "XPD", "CFPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL", "ZWR"},
+		currencies:             []string{"ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON", "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "A$", "AWG", "AZM", "AZN", "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN", "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC", "BRE", "R$", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYN", "BYR", "BZD", "CA$", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNX", "CN¥", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP", "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN", "ESA", "ESB", "ESP", "ETB", "EUR", "FIM", "FJD", "FKP", "FRF", "GBP", "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE", "GWP", "GYD", "HK$", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ILP", "ILR", "₪", "₹", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "JP¥", "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "₩", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "LVL", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN", "MLF", "MMK", "MNT", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK", "MX$", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC", "NIO", "NLG", "NOK", "NPR", "NZ$", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "PHP", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB", "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD", "SHP", "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "SUR", "SVC", "SYP", "SZL", "THB", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "TRY", "TTD", "NT$", "TZS", "UAH", "UAK", "UGS", "UGX", "US$", "USN", "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "₫", "VNN", "VUV", "WST", "FCFA", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "EC$", "XDR", "XEU", "XFO", "XFU", "CFA", "XPD", "CFPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL", "ZWR"},
 		percentSuffix:          " ",
 		currencyPositiveSuffix: " ",
 		currencyNegativeSuffix: " ",
@@ -66,7 +66,7 @@ func New() locales.Translator {
 		daysAbbreviated:        []string{"ýb", "db", "sb", "çb", "pb", "an", "şb"},
 		daysNarrow:             []string{"Ý", "D", "S", "Ç", "P", "A", "Ş"},
 		daysWide:               []string{"ýekşenbe", "duşenbe", "sişenbe", "çarşenbe", "penşenbe", "anna", "şenbe"},
-		timezones:              map[string]string{"ECT": "Ekwador", "WAST": "Günbatar Afrika, tomusky wagt", "OEZ": "Gündogar Ýewropa, standart wagt", "ARST": "Argentina, tomusky wagt", "MEZ": "Merkezi Ýewropa, standart wagt", "PST": "Ýuwaş umman, standart wagt", "HAT": "Nýufaundlend, tomusky wagt", "GMT": "Grinwiç boýunça orta wagt", "HKST": "Gonkong, tomusky wagt", "WIT": "Gündogar Indoneziýa", "SRT": "Surinam", "COST": "Kolumbiýa, tomusky wagt", "AST": "Atlantika, standart wagt", "ADT": "Atlantika, tomusky wagt", "SAST": "Günorta Afrika, standart wagt", "MDT": "Daglyk ýeri, tomusky wagt (ABŞ)", "CHAST": "Çatem, standart wagt", "CHADT": "Çatem, tomusky wagt", "VET": "Wenesuela", "CDT": "Merkezi Amerika, tomusky wagt", "LHST": "Lord-Hau, standart wagt", "ACDT": "Merkezi Awstraliýa, tomusky wagt", "JST": "Ýaponiýa, standart wagt", "WEZ": "Günbatar Ýewropa, standart wagt", "WESZ": "Günbatar Ýewropa, tomusky wagt", "WIB": "Günbatar Indoneziýa", "AKDT": "Alýaska, tomusky wagt", "TMT": "Türkmenistan, standart wagt", "NZDT": "Täze Zelandiýa, tomusky wagt", "ChST": "Çamorro", "AWST": "Günbatar Awstraliýa, standart wagt", "GFT": "Fransuz Gwiana", "ACWST": "Merkezi Awstraliýa, günbatar tarap, standart wagt", "ART": "Argentina, standart wagt", "OESZ": "Gündogar Ýewropa, tomusky wagt", "HAST": "Gawaý-Aleut, standart wagt", "EST": "Günorta Amerika, standart wagt", "MYT": "Malaýziýa", "HNT": "Nýufaundlend, standart wagt", "UYST": "Urugwaý, tomusky wagt", "JDT": "Ýaponiýa, tomusky wagt", "WART": "Günbatar Argentina, standart wagt", "AEST": "Gündogar Awstraliýa, standart wagt", "EDT": "Günorta Amerika, tomusky wagt", "∅∅∅": "Azor adalary, tomusky wagt", "CLST": "Çili, tomusky wagt", "UYT": "Urugwaý, standart wagt", "MESZ": "Merkezi Ýewropa, tomusky wagt", "TMST": "Türkmenistan, tomusky wagt", "BOT": "Boliwiýa", "BT": "Butan", "AWDT": "Günbatar Awstraliýa, tomusky wagt", "EAT": "Gündogar Afrika", "WITA": "Merkezi Indoneziýa", "CST": "Merkezi Amerika, standart wagt", "ACWDT": "Merkezi Awstraliýa, günbatar tarap, tomusky wagt", "AKST": "Alýaska, standart wagt", "CAT": "Merkezi Afrika", "LHDT": "Lord-Hau, tomusky wagt", "COT": "Kolumbiýa, standart wagt", "SGT": "Singapur, standart wagt", "AEDT": "Gündogar Awstraliýa, tomusky wagt", "IST": "Hindistan", "GYT": "Gaýana", "NZST": "Täze Zelandiýa, standart wagt", "CLT": "Çili, standart wagt", "HADT": "Gawaý-Aleut, tomusky wagt", "PDT": "Ýuwaş umman, tomusky wagt", "WAT": "Günbatar Afrika, standart wagt", "MST": "Daglyk ýeri, standart wagt (ABŞ)", "ACST": "Merkezi Awstraliýa, standart wagt", "HKT": "Gonkong, standart wagt", "WARST": "Günbatar Argentina, tomusky wagt"},
+		timezones:              map[string]string{"BOT": "Boliwiýa", "HADT": "Gawaý-Aleut, tomusky wagt", "CLT": "Çili, standart wagt", "TMST": "Türkmenistan, tomusky wagt", "HKST": "Gonkong, tomusky wagt", "∅∅∅": "Peru, tomusky wagt", "GYT": "Gaýana", "AWDT": "Günbatar Awstraliýa, tomusky wagt", "VET": "Wenesuela", "CLST": "Çili, tomusky wagt", "ADT": "Atlantika, tomusky wagt", "OEZ": "Gündogar Ýewropa, standart wagt", "WAST": "Günbatar Afrika, tomusky wagt", "CST": "Merkezi Amerika, standart wagt", "WIT": "Gündogar Indoneziýa", "OESZ": "Gündogar Ýewropa, tomusky wagt", "GMT": "Grinwiç boýunça orta wagt", "AKST": "Alýaska, standart wagt", "HEPM": "Sen Pýer we Mikelon, tomusky wagt", "JST": "Ýaponiýa, standart wagt", "HEOG": "Günbatar Grenlandiýa, tomusky wagt", "MST": "MST", "ART": "Argentina, standart wagt", "ARST": "Argentina, tomusky wagt", "WEZ": "Günbatar Ýewropa, standart wagt", "HENOMX": "D.g.-G.b. Meksika, tomusky wagt", "HEPMX": "Meksikan Ýuwaş umman, tomusky wagt", "HNCU": "Kuba, standart wagt", "MDT": "MDT", "SAST": "Günorta Afrika, standart wagt", "HAST": "Gawaý-Aleut, standart wagt", "ECT": "Ekwador", "UYST": "Urugwaý, tomusky wagt", "AWST": "Günbatar Awstraliýa, standart wagt", "CHAST": "Çatem, standart wagt", "SGT": "Singapur, standart wagt", "WAT": "Günbatar Afrika, standart wagt", "UYT": "Urugwaý, standart wagt", "LHDT": "Lord-Hau, tomusky wagt", "EST": "Günorta Amerika, standart wagt", "WIB": "Günbatar Indoneziýa", "WART": "Günbatar Argentina, standart wagt", "ACST": "Merkezi Awstraliýa, standart wagt", "CHADT": "Çatem, tomusky wagt", "NZDT": "Täze Zelandiýa, tomusky wagt", "AEDT": "Gündogar Awstraliýa, tomusky wagt", "HNPMX": "Meksikan Ýuwaş umman, standart wagt", "CAT": "Merkezi Afrika", "MYT": "Malaýziýa", "EDT": "Günorta Amerika, tomusky wagt", "COT": "Kolumbiýa, standart wagt", "BT": "Butan", "MEZ": "Merkezi Ýewropa, standart wagt", "WARST": "Günbatar Argentina, tomusky wagt", "AST": "Atlantika, standart wagt", "WITA": "Merkezi Indoneziýa", "AKDT": "Alýaska, tomusky wagt", "LHST": "Lord-Hau, standart wagt", "SRT": "Surinam", "EAT": "Gündogar Afrika", "ACDT": "Merkezi Awstraliýa, tomusky wagt", "HAT": "Nýufaundlend, tomusky wagt", "HEEG": "Gündogar Grenlandiýa, tomusky wagt", "GFT": "Fransuz Gwiana", "ACWDT": "Merkezi Awstraliýa, günbatar tarap, tomusky wagt", "NZST": "Täze Zelandiýa, standart wagt", "HNNOMX": "D.g.-G.b. Meksika, standart wagt", "HNT": "Nýufaundlend, standart wagt", "HNEG": "Gündogar Grenlandiýa, standart wagt", "MESZ": "Merkezi Ýewropa, tomusky wagt", "JDT": "Ýaponiýa, tomusky wagt", "COST": "Kolumbiýa, tomusky wagt", "HNPM": "Sen Pýer we Mikelon, standart wagt", "PST": "Ýuwaş umman, standart wagt", "IST": "Hindistan", "ACWST": "Merkezi Awstraliýa, günbatar tarap, standart wagt", "WESZ": "Günbatar Ýewropa, tomusky wagt", "TMT": "Türkmenistan, standart wagt", "HKT": "Gonkong, standart wagt", "ChST": "Çamorro", "PDT": "Ýuwaş umman, tomusky wagt", "HNOG": "Günbatar Grenlandiýa, standart wagt", "AEST": "Gündogar Awstraliýa, standart wagt", "HECU": "Kuba, tomusky wagt", "CDT": "Merkezi Amerika, tomusky wagt"},
 	}
 }
 
@@ -403,7 +403,12 @@ func (tk *tk) FmtDateShort(t time.Time) string {
 	b = strconv.AppendInt(b, int64(t.Month()), 10)
 
 	b = append(b, []byte{0x2e}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -417,7 +422,12 @@ func (tk *tk) FmtDateMedium(t time.Time) string {
 	b = append(b, []byte{0x20}...)
 	b = append(b, tk.monthsAbbreviated[t.Month()]...)
 	b = append(b, []byte{0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -431,7 +441,12 @@ func (tk *tk) FmtDateLong(t time.Time) string {
 	b = append(b, []byte{0x20}...)
 	b = append(b, tk.monthsWide[t.Month()]...)
 	b = append(b, []byte{0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -445,7 +460,13 @@ func (tk *tk) FmtDateFull(t time.Time) string {
 	b = append(b, []byte{0x20}...)
 	b = append(b, tk.monthsWide[t.Month()]...)
 	b = append(b, []byte{0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
+
 	b = append(b, []byte{0x20}...)
 	b = append(b, tk.daysWide[t.Weekday()]...)
 

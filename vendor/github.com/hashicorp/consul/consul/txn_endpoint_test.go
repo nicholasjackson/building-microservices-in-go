@@ -55,7 +55,7 @@ func TestTxn_Apply(t *testing.T) {
 
 	// Verify the state store directly.
 	state := s1.fsm.State()
-	_, d, err := state.KVSGet("test")
+	_, d, err := state.KVSGet(nil, "test")
 	if err != nil {
 		t.Fatalf("err: %v", err)
 	}
@@ -251,7 +251,10 @@ func TestTxn_Apply_ACLDeny(t *testing.T) {
 			// These get filtered but won't result in an error.
 
 		default:
-			expected.Errors = append(expected.Errors, &structs.TxnError{i, permissionDeniedErr.Error()})
+			expected.Errors = append(expected.Errors, &structs.TxnError{
+				OpIndex: i,
+				What:    permissionDeniedErr.Error(),
+			})
 		}
 	}
 	if !reflect.DeepEqual(out, expected) {
@@ -509,7 +512,10 @@ func TestTxn_Read_ACLDeny(t *testing.T) {
 			// These get filtered but won't result in an error.
 
 		default:
-			expected.Errors = append(expected.Errors, &structs.TxnError{i, permissionDeniedErr.Error()})
+			expected.Errors = append(expected.Errors, &structs.TxnError{
+				OpIndex: i,
+				What:    permissionDeniedErr.Error(),
+			})
 		}
 	}
 	if !reflect.DeepEqual(out, expected) {

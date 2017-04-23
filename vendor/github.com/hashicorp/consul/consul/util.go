@@ -4,8 +4,6 @@ import (
 	"encoding/binary"
 	"fmt"
 	"net"
-	"os"
-	"path/filepath"
 	"runtime"
 	"strconv"
 
@@ -64,14 +62,6 @@ func init() {
 	privateBlocks[5] = block
 }
 
-// ensurePath is used to make sure a path exists
-func ensurePath(path string, dir bool) error {
-	if !dir {
-		path = filepath.Dir(path)
-	}
-	return os.MkdirAll(path, 0755)
-}
-
 // CanServersUnderstandProtocol checks to see if all the servers in the given
 // list understand the given protocol version. If there are no servers in the
 // list then this will return false.
@@ -99,6 +89,35 @@ func CanServersUnderstandProtocol(members []serf.Member, version uint8) (bool, e
 		}
 	}
 	return (numServers > 0) && (numWhoGrok == numServers), nil
+}
+
+// ServerMinRaftProtocol returns the lowest supported Raft protocol among alive servers
+func ServerMinRaftProtocol(members []serf.Member) (int, error) {
+	minVersion := -1
+	for _, m := range members {
+		if m.Tags["role"] != "consul" || m.Status != serf.StatusAlive {
+			continue
+		}
+
+		vsn, ok := m.Tags["raft_vsn"]
+		if !ok {
+			vsn = "1"
+		}
+		raftVsn, err := strconv.Atoi(vsn)
+		if err != nil {
+			return -1, err
+		}
+
+		if minVersion == -1 || raftVsn < minVersion {
+			minVersion = raftVsn
+		}
+	}
+
+	if minVersion == -1 {
+		return minVersion, fmt.Errorf("No servers found")
+	}
+
+	return minVersion, nil
 }
 
 // Returns if a member is a consul node. Returns a bool,

@@ -17,7 +17,8 @@ var (
 	// false or true based on the stdout's file descriptor referring to a terminal
 	// or not. This is a global option and affects all colors. For more control
 	// over each color block use the methods DisableColor() individually.
-	NoColor = !isatty.IsTerminal(os.Stdout.Fd()) || os.Getenv("TERM") == "dumb"
+	NoColor = os.Getenv("TERM") == "dumb" ||
+		(!isatty.IsTerminal(os.Stdout.Fd()) && !isatty.IsCygwinTerminal(os.Stdout.Fd()))
 
 	// Output defines the standard output of the print functions. By default
 	// os.Stdout is used.
@@ -247,6 +248,21 @@ func (c *Color) Println(a ...interface{}) (n int, err error) {
 	return fmt.Fprintln(Output, a...)
 }
 
+// Sprint is just like Print, but returns a string instead of printing it.
+func (c *Color) Sprint(a ...interface{}) string {
+	return c.wrap(fmt.Sprint(a...))
+}
+
+// Sprintln is just like Println, but returns a string instead of printing it.
+func (c *Color) Sprintln(a ...interface{}) string {
+	return c.wrap(fmt.Sprintln(a...))
+}
+
+// Sprintf is just like Printf, but returns a string instead of printing it.
+func (c *Color) Sprintf(format string, a ...interface{}) string {
+	return c.wrap(fmt.Sprintf(format, a...))
+}
+
 // FprintFunc returns a new function that prints the passed arguments as
 // colorized with color.Fprint().
 func (c *Color) FprintFunc() func(w io.Writer, a ...interface{}) {
@@ -297,7 +313,7 @@ func (c *Color) PrintlnFunc() func(a ...interface{}) {
 
 // SprintFunc returns a new function that returns colorized strings for the
 // given arguments with fmt.Sprint(). Useful to put into or mix into other
-// string. Windows users should use this in conjuction with color.Output, example:
+// string. Windows users should use this in conjunction with color.Output, example:
 //
 //	put := New(FgYellow).SprintFunc()
 //	fmt.Fprintf(color.Output, "This is a %s", put("warning"))
@@ -309,7 +325,7 @@ func (c *Color) SprintFunc() func(a ...interface{}) string {
 
 // SprintfFunc returns a new function that returns colorized strings for the
 // given arguments with fmt.Sprintf(). Useful to put into or mix into other
-// string. Windows users should use this in conjuction with color.Output.
+// string. Windows users should use this in conjunction with color.Output.
 func (c *Color) SprintfFunc() func(format string, a ...interface{}) string {
 	return func(format string, a ...interface{}) string {
 		return c.wrap(fmt.Sprintf(format, a...))
@@ -318,7 +334,7 @@ func (c *Color) SprintfFunc() func(format string, a ...interface{}) string {
 
 // SprintlnFunc returns a new function that returns colorized strings for the
 // given arguments with fmt.Sprintln(). Useful to put into or mix into other
-// string. Windows users should use this in conjuction with color.Output.
+// string. Windows users should use this in conjunction with color.Output.
 func (c *Color) SprintlnFunc() func(a ...interface{}) string {
 	return func(a ...interface{}) string {
 		return c.wrap(fmt.Sprintln(a...))
@@ -361,7 +377,7 @@ func (c *Color) DisableColor() {
 	c.noColor = boolPtr(true)
 }
 
-// EnableColor enables the color output. Use it in conjuction with
+// EnableColor enables the color output. Use it in conjunction with
 // DisableColor(). Otherwise this method has no side effects.
 func (c *Color) EnableColor() {
 	c.noColor = boolPtr(false)

@@ -82,6 +82,17 @@ func doRequest(r RequestFunc, timeout time.Duration, semaphore *semaphore.Semaph
 	complete := make(chan results.Result)
 
 	go func() {
+		defer func() {
+			if recover := recover(); r != nil {
+
+				complete <- results.Result{
+					Error:       fmt.Errorf("Panic: %v\n", recover),
+					RequestTime: time.Now().Sub(requestStart),
+					Timestamp:   time.Now(),
+					Threads:     semaphore.Capacity(),
+				}
+			}
+		}()
 
 		err := r()
 		complete <- results.Result{

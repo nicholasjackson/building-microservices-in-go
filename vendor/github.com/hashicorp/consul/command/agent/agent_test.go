@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strings"
 	"sync/atomic"
 	"testing"
 	"time"
@@ -18,8 +19,10 @@ import (
 	"github.com/hashicorp/consul/consul/structs"
 	"github.com/hashicorp/consul/logger"
 	"github.com/hashicorp/consul/testutil"
+	"github.com/hashicorp/consul/types"
+	"github.com/hashicorp/consul/version"
+	"github.com/hashicorp/go-uuid"
 	"github.com/hashicorp/raft"
-	"strings"
 )
 
 const (
@@ -27,7 +30,6 @@ const (
 
 	portOffsetDNS = iota
 	portOffsetHTTP
-	portOffsetRPC
 	portOffsetSerfLan
 	portOffsetSerfWan
 	portOffsetServer
@@ -36,22 +38,31 @@ const (
 	numPortsPerIndex
 )
 
+func init() {
+	version.Version = "0.8.0"
+}
+
 var offset uint64 = basePortNumber
 
 func nextConfig() *Config {
 	idx := int(atomic.AddUint64(&offset, numPortsPerIndex))
 	conf := DefaultConfig()
 
-	conf.Version = "a.b"
+	nodeID, err := uuid.GenerateUUID()
+	if err != nil {
+		panic(err)
+	}
+
+	conf.Version = version.Version
 	conf.VersionPrerelease = "c.d"
 	conf.AdvertiseAddr = "127.0.0.1"
 	conf.Bootstrap = true
 	conf.Datacenter = "dc1"
 	conf.NodeName = fmt.Sprintf("Node %d", idx)
+	conf.NodeID = types.NodeID(nodeID)
 	conf.BindAddr = "127.0.0.1"
 	conf.Ports.DNS = basePortNumber + idx + portOffsetDNS
 	conf.Ports.HTTP = basePortNumber + idx + portOffsetHTTP
-	conf.Ports.RPC = basePortNumber + idx + portOffsetRPC
 	conf.Ports.SerfLan = basePortNumber + idx + portOffsetSerfLan
 	conf.Ports.SerfWan = basePortNumber + idx + portOffsetSerfWan
 	conf.Ports.Server = basePortNumber + idx + portOffsetServer
@@ -77,7 +88,6 @@ func nextConfig() *Config {
 	cons.RaftConfig.HeartbeatTimeout = 40 * time.Millisecond
 	cons.RaftConfig.ElectionTimeout = 40 * time.Millisecond
 
-	cons.DisableCoordinates = false
 	cons.CoordinateUpdatePeriod = 100 * time.Millisecond
 	return conf
 }
@@ -306,6 +316,72 @@ func TestAgent_ReconnectConfigSettings(t *testing.T) {
 			t.Fatalf("bad: %s", wan.String())
 		}
 	}()
+}
+
+func TestAgent_NodeID(t *testing.T) {
+	c := nextConfig()
+	c.NodeID = ""
+	dir, agent := makeAgent(t, c)
+	defer os.RemoveAll(dir)
+	defer agent.Shutdown()
+
+	// The auto-assigned ID should be valid.
+	id := agent.consulConfig().NodeID
+	if _, err := uuid.ParseUUID(string(id)); err != nil {
+		t.Fatalf("err: %v", err)
+	}
+
+	// Running again should get the same ID (persisted in the file).
+	c.NodeID = ""
+	if err := agent.setupNodeID(c); err != nil {
+		t.Fatalf("err: %v", err)
+	}
+	if newID := agent.consulConfig().NodeID; id != newID {
+		t.Fatalf("bad: %q vs %q", id, newID)
+	}
+
+	// Set an invalid ID via config.
+	c.NodeID = types.NodeID("nope")
+	err := agent.setupNodeID(c)
+	if err == nil || !strings.Contains(err.Error(), "uuid string is wrong length") {
+		t.Fatalf("err: %v", err)
+	}
+
+	// Set a valid ID via config.
+	newID, err := uuid.GenerateUUID()
+	if err != nil {
+		t.Fatalf("err: %v", err)
+	}
+	c.NodeID = types.NodeID(strings.ToUpper(newID))
+	if err := agent.setupNodeID(c); err != nil {
+		t.Fatalf("err: %v", err)
+	}
+	if id := agent.consulConfig().NodeID; string(id) != newID {
+		t.Fatalf("bad: %q vs. %q", id, newID)
+	}
+
+	// Set an invalid ID via the file.
+	fileID := filepath.Join(c.DataDir, "node-id")
+	if err := ioutil.WriteFile(fileID, []byte("adf4238a!882b!9ddc!4a9d!5b6758e4159e"), 0600); err != nil {
+		t.Fatalf("err: %v", err)
+	}
+	c.NodeID = ""
+	err = agent.setupNodeID(c)
+	if err == nil || !strings.Contains(err.Error(), "uuid is improperly formatted") {
+		t.Fatalf("err: %v", err)
+	}
+
+	// Set a valid ID via the file.
+	if err := ioutil.WriteFile(fileID, []byte("ADF4238a-882b-9ddc-4a9d-5b6758e4159e"), 0600); err != nil {
+		t.Fatalf("err: %v", err)
+	}
+	c.NodeID = ""
+	if err := agent.setupNodeID(c); err != nil {
+		t.Fatalf("err: %v", err)
+	}
+	if id := agent.consulConfig().NodeID; string(id) != "adf4238a-882b-9ddc-4a9d-5b6758e4159e" {
+		t.Fatalf("bad: %q vs. %q", id, newID)
+	}
 }
 
 func TestAgent_AddService(t *testing.T) {
@@ -1849,69 +1925,6 @@ func TestAgent_purgeCheckState(t *testing.T) {
 	file := filepath.Join(agent.config.DataDir, checkStateDir, stringHash("check1"))
 	if _, err := os.Stat(file); !os.IsNotExist(err) {
 		t.Fatalf("should have removed file")
-	}
-}
-
-func TestAgent_metadata(t *testing.T) {
-	// Load a valid set of key/value pairs
-	meta := map[string]string{
-		"key1": "value1",
-		"key2": "value2",
-	}
-	// Should succeed
-	if err := validateMetadata(meta); err != nil {
-		t.Fatalf("err: %s", err)
-	}
-
-	// Should get error
-	meta = map[string]string{
-		"": "value1",
-	}
-	if err := validateMetadata(meta); !strings.Contains(err.Error(), "Couldn't load metadata pair") {
-		t.Fatalf("should have failed")
-	}
-
-	// Should get error
-	meta = make(map[string]string)
-	for i := 0; i < metaMaxKeyPairs+1; i++ {
-		meta[string(i)] = "value"
-	}
-	if err := validateMetadata(meta); !strings.Contains(err.Error(), "cannot contain more than") {
-		t.Fatalf("should have failed")
-	}
-}
-
-func TestAgent_validateMetaPair(t *testing.T) {
-	longKey := strings.Repeat("a", metaKeyMaxLength+1)
-	longValue := strings.Repeat("b", metaValueMaxLength+1)
-	pairs := []struct {
-		Key   string
-		Value string
-		Error string
-	}{
-		// valid pair
-		{"key", "value", ""},
-		// invalid, blank key
-		{"", "value", "cannot be blank"},
-		// allowed special chars in key name
-		{"k_e-y", "value", ""},
-		// disallowed special chars in key name
-		{"(%key&)", "value", "invalid characters"},
-		// key too long
-		{longKey, "value", "Key is too long"},
-		// reserved prefix
-		{metaKeyReservedPrefix + "key", "value", "reserved for internal use"},
-		// value too long
-		{"key", longValue, "Value is too long"},
-	}
-
-	for _, pair := range pairs {
-		err := validateMetaPair(pair.Key, pair.Value)
-		if pair.Error == "" && err != nil {
-			t.Fatalf("should have succeeded: %v, %v", pair, err)
-		} else if pair.Error != "" && !strings.Contains(err.Error(), pair.Error) {
-			t.Fatalf("should have failed: %v, %v", pair, err)
-		}
 	}
 }
 

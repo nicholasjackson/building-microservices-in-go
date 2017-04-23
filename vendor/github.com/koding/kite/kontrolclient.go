@@ -17,10 +17,6 @@ import (
 const (
 	kontrolRetryDuration = 10 * time.Second
 	proxyRetryDuration   = 10 * time.Second
-
-	// kontrolConnectTimeout is the timeout for connecting to Kontrol in
-	// TellKontrol-like methods.
-	kontrolConnectTimeout = 10 * time.Second
 )
 
 // Returned from GetKites when query matches no kites.
@@ -32,14 +28,14 @@ type kontrolClient struct {
 	sync.Mutex // protects Client
 
 	// used for synchronizing methods that needs to be called after
-	// successful connection or/and registiration to kontrol.
+	// successful connection or/and registration to kontrol.
 	onceConnected   sync.Once
 	onceRegistered  sync.Once
 	readyConnected  chan struct{}
 	readyRegistered chan struct{}
 
 	// lastRegisteredURL stores the Kite url what was send/registered
-	// succesfully to kontrol
+	// successfully to kontrol
 	lastRegisteredURL *url.URL
 
 	// registerChan registers the url's it receives from the channel to Kontrol
@@ -120,7 +116,7 @@ func (k *Kite) SetupKontrolClient() error {
 //   }
 //
 //   // If we want to only use the first result and discard the rest,
-//   // we need to close the rest explicitely.
+//   // we need to close the rest explicitly.
 //   defer kite.Close(clients[1:])
 //
 //   return clients[0]
@@ -146,7 +142,7 @@ func (k *Kite) GetKites(query *protocol.KontrolQuery) ([]*Client, error) {
 func (k *Kite) getKites(args protocol.GetKitesArgs) ([]*Client, error) {
 	<-k.kontrol.readyConnected
 
-	response, err := k.kontrol.TellWithTimeout("getKites", 4*time.Second, args)
+	response, err := k.kontrol.TellWithTimeout("getKites", k.Config.Timeout, args)
 	if err != nil {
 		return nil, err
 	}
@@ -184,7 +180,10 @@ func (k *Kite) getKites(args protocol.GetKitesArgs) ([]*Client, error) {
 	return clients, nil
 }
 
-// GetToken is used to get a new token for a single Kite.
+// GetToken is used to get a token for a single Kite.
+//
+// In case of calling GetToken multiple times, it usually
+// returns the same token until it expires on Kontrol side.
 func (k *Kite) GetToken(kite *protocol.Kite) (string, error) {
 	if err := k.SetupKontrolClient(); err != nil {
 		return "", err
@@ -192,7 +191,37 @@ func (k *Kite) GetToken(kite *protocol.Kite) (string, error) {
 
 	<-k.kontrol.readyConnected
 
-	result, err := k.kontrol.TellWithTimeout("getToken", 4*time.Second, kite)
+	result, err := k.kontrol.TellWithTimeout("getToken", k.Config.Timeout, kite)
+	if err != nil {
+		return "", err
+	}
+
+	var tkn string
+	err = result.Unmarshal(&tkn)
+	if err != nil {
+		return "", err
+	}
+
+	return tkn, nil
+}
+
+// GetTokenForce is used to obtain a new token for the given kite.
+//
+// It always returns a new token and forces a Kontrol to
+// forget about any previous ones.
+func (k *Kite) GetTokenForce(kite *protocol.Kite) (string, error) {
+	if err := k.SetupKontrolClient(); err != nil {
+		return "", err
+	}
+
+	<-k.kontrol.readyConnected
+
+	args := &protocol.GetTokenArgs{
+		KontrolQuery: *kite.Query(),
+		Force:        true,
+	}
+
+	result, err := k.kontrol.TellWithTimeout("getToken", k.Config.Timeout, args)
 	if err != nil {
 		return "", err
 	}
@@ -217,7 +246,7 @@ func (k *Kite) GetKey() (string, error) {
 
 	<-k.kontrol.readyConnected
 
-	result, err := k.kontrol.TellWithTimeout("getKey", 4*time.Second)
+	result, err := k.kontrol.TellWithTimeout("getKey", k.Config.Timeout)
 	if err != nil {
 		return "", err
 	}
@@ -238,7 +267,7 @@ func (k *Kite) GetKey() (string, error) {
 // NewKeyRenewer renews the internal key every given interval
 func (k *Kite) NewKeyRenewer(interval time.Duration) {
 	ticker := time.NewTicker(interval)
-	for _ = range ticker.C {
+	for range ticker.C {
 		_, err := k.GetKey()
 		if err != nil {
 			k.Log.Warning("Key renew failed: %s", err)
@@ -247,21 +276,21 @@ func (k *Kite) NewKeyRenewer(interval time.Duration) {
 }
 
 // KontrolReadyNotify returns a channel that is closed when a successful
-// registiration to kontrol is done.
+// registration to kontrol is done.
 func (k *Kite) KontrolReadyNotify() chan struct{} {
 	return k.kontrol.readyRegistered
 }
 
-// signalReady is an internal method to notify that a sucessful registiration
+// signalReady is an internal method to notify that a successful registration
 // is done.
 func (k *Kite) signalReady() {
 	k.kontrol.onceRegistered.Do(func() { close(k.kontrol.readyRegistered) })
 }
 
-// RegisterForever is equilavent to Register(), but it tries to re-register if
+// RegisterForever is equivalent to Register(), but it tries to re-register if
 // there is a disconnection. The returned error is for the first register
 // attempt. It returns nil if ReadNotify() is ready and it's registered
-// succesfull.
+// successful.
 func (k *Kite) RegisterForever(kiteURL *url.URL) error {
 	errs := make(chan error, 1)
 	go func() {
@@ -325,7 +354,7 @@ func (k *Kite) Register(kiteURL *url.URL) (*registerResult, error) {
 
 	k.Log.Info("Registering to kontrol with URL: %s", kiteURL.String())
 
-	response, err := k.kontrol.TellWithTimeout("register", 4*time.Second, args)
+	response, err := k.kontrol.TellWithTimeout("register", k.Config.Timeout, args)
 	if err != nil {
 		return nil, err
 	}
@@ -350,7 +379,7 @@ func (k *Kite) Register(kiteURL *url.URL) (*registerResult, error) {
 }
 
 // RegisterToTunnel finds a tunnel proxy kite by asking kontrol then registers
-// itselfs on proxy. On error, retries forever. On every successfull
+// itself on proxy. On error, retries forever. On every successful
 // registration, it sends the proxied URL to the registerChan channel. There is
 // no register URL needed because the Tunnel Proxy automatically gets the IP
 // from tunneling. This is a blocking function.
@@ -374,7 +403,7 @@ func (k *Kite) RegisterToProxy(registerURL *url.URL, query *protocol.KontrolQuer
 	for {
 		var proxyKite *Client
 
-		// The proxy kite to connect can be overriden with the
+		// The proxy kite to connect can be overridden with the
 		// environmental variable "KITE_PROXY_URL". If it is not set
 		// we will ask Kontrol for available Proxy kites.
 		// As an authentication informain kiteKey method will be used,
@@ -444,7 +473,7 @@ func (k *Kite) registerToProxyKite(c *Client, kiteURL *url.URL) (*url.URL, error
 
 	// this could be tunnelproxy or reverseproxy. Tunnelproxy doesn't need an
 	// URL however Reverseproxy needs one.
-	result, err := c.TellWithTimeout("register", 4*time.Second, kiteURL.String())
+	result, err := c.TellWithTimeout("register", k.Config.Timeout, kiteURL.String())
 	if err != nil {
 		k.Log.Error("Proxy register error: %s", err.Error())
 		return nil, err
@@ -475,12 +504,12 @@ func (k *Kite) TellKontrolWithTimeout(method string, timeout time.Duration, args
 
 	// Wait for readyConnect, or timeout
 	select {
-	case <-time.After(kontrolConnectTimeout):
+	case <-time.After(k.Config.Timeout):
 		return nil, &Error{
 			Type: "timeout",
 			Message: fmt.Sprintf(
 				"Timed out registering to kontrol for %s method after %s",
-				method, kontrolConnectTimeout,
+				method, k.Config.Timeout,
 			),
 		}
 	case <-k.kontrol.readyConnected:

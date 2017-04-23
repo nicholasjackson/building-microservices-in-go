@@ -55,7 +55,7 @@ func New() locales.Translator {
 		perMille:               "‰",
 		timeSeparator:          ":",
 		inifinity:              "∞",
-		currencies:             []string{"ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "Kz", "AOK", "AON", "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "AUD", "AWG", "AZM", "AZN", "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN", "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC", "BRE", "BRL", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYR", "BZD", "CAD", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNX", "CNY", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP", "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN", "ESA", "ESB", "ESP", "ETB", "EUR", "FIM", "FJD", "FKP", "FRF", "GBP", "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE", "GWP", "GYD", "HKD", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ILP", "ILR", "ILS", "INR", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "JPY", "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "KRW", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "LVL", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN", "MLF", "MMK", "MNT", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK", "MXN", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC", "NIO", "NLG", "NOK", "NPR", "NZD", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "PHP", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB", "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD", "SHP", "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "SUR", "SVC", "SYP", "SZL", "THB", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "TRY", "TTD", "TWD", "TZS", "UAH", "UAK", "UGS", "UGX", "USD", "USN", "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "VND", "VNN", "VUV", "WST", "XAF", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "XCD", "XDR", "XEU", "XFO", "XFU", "XOF", "XPD", "XPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL", "ZWR"},
+		currencies:             []string{"ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "Kz", "AOK", "AON", "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "AUD", "AWG", "AZM", "AZN", "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN", "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC", "BRE", "BRL", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYN", "BYR", "BZD", "CAD", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNX", "CNY", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP", "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN", "ESA", "ESB", "ESP", "ETB", "EUR", "FIM", "FJD", "FKP", "FRF", "GBP", "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE", "GWP", "GYD", "HKD", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ILP", "ILR", "ILS", "INR", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "JPY", "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "KRW", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "LVL", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN", "MLF", "MMK", "MNT", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK", "MXN", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC", "NIO", "NLG", "NOK", "NPR", "NZD", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "PHP", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB", "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD", "SHP", "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "SUR", "SVC", "SYP", "SZL", "THB", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "TRY", "TTD", "TWD", "TZS", "UAH", "UAK", "UGS", "UGX", "USD", "USN", "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "VND", "VNN", "VUV", "WST", "XAF", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "XCD", "XDR", "XEU", "XFO", "XFU", "XOF", "XPD", "XPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL", "ZWR"},
 		currencyPositiveSuffix: " ",
 		currencyNegativeSuffix: " ",
 		monthsAbbreviated:      []string{"", "yan", "fbl", "msi", "apl", "mai", "yun", "yul", "agt", "stb", "ɔtb", "nvb", "dsb"},
@@ -69,7 +69,7 @@ func New() locales.Translator {
 		erasAbbreviated:        []string{"libóso ya", "nsima ya Y"},
 		erasNarrow:             []string{"", ""},
 		erasWide:               []string{"Yambo ya Yézu Krís", "Nsima ya Yézu Krís"},
-		timezones:              map[string]string{"PDT": "PDT", "JST": "JST", "COT": "COT", "CLST": "CLST", "HKST": "HKST", "ART": "ART", "WARST": "WARST", "WITA": "WITA", "HAT": "HAT", "GMT": "Ntángo ya Londoni", "AEDT": "AEDT", "SAST": "Ntángo ya Afríka ya Sidi", "PST": "PST", "CST": "CST", "ACST": "ACST", "ACDT": "ACDT", "ACWST": "ACWST", "IST": "IST", "LHST": "LHST", "UYT": "UYT", "OEZ": "OEZ", "ECT": "ECT", "MYT": "MYT", "AKDT": "AKDT", "TMST": "TMST", "NZST": "NZST", "WAST": "WAST", "EST": "EST", "WIT": "WIT", "WEZ": "WEZ", "CHADT": "CHADT", "AST": "AST", "BOT": "BOT", "LHDT": "LHDT", "WESZ": "WESZ", "GFT": "GFT", "AKST": "AKST", "TMT": "TMT", "BT": "BT", "AWDT": "AWDT", "OESZ": "OESZ", "HKT": "HKT", "HADT": "HADT", "EAT": "Ntángo ya Afríka ya Ɛ́sita", "WAT": "WAT", "ChST": "ChST", "MST": "MST", "HNT": "HNT", "CHAST": "CHAST", "SGT": "SGT", "COST": "COST", "VET": "VET", "ACWDT": "ACWDT", "GYT": "GYT", "∅∅∅": "∅∅∅", "MEZ": "MEZ", "WIB": "WIB", "ARST": "ARST", "AWST": "AWST", "CLT": "CLT", "JDT": "JDT", "MDT": "MDT", "CAT": "Ntángo ya Lubumbashi", "UYST": "UYST", "SRT": "SRT", "MESZ": "MESZ", "AEST": "AEST", "WART": "WART", "CDT": "CDT", "HAST": "HAST", "EDT": "EDT", "ADT": "ADT", "NZDT": "NZDT"},
+		timezones:              map[string]string{"SAST": "Ntángo ya Afríka ya Sidi", "HNOG": "HNOG", "CHAST": "CHAST", "MESZ": "MESZ", "CLST": "CLST", "WARST": "WARST", "AST": "AST", "OESZ": "OESZ", "MDT": "MDT", "AWDT": "AWDT", "VET": "VET", "WART": "WART", "CLT": "CLT", "HKT": "HKT", "∅∅∅": "∅∅∅", "HNPM": "HNPM", "WIT": "WIT", "CHADT": "CHADT", "BOT": "BOT", "MYT": "MYT", "HNT": "HNT", "UYT": "UYT", "EAT": "Ntángo ya Afríka ya Ɛ́sita", "ACDT": "ACDT", "HEPM": "HEPM", "HNPMX": "HNPMX", "UYST": "UYST", "WESZ": "WESZ", "ARST": "ARST", "COST": "COST", "HNNOMX": "HNNOMX", "HENOMX": "HENOMX", "HEPMX": "HEPMX", "GYT": "GYT", "OEZ": "OEZ", "ACWST": "ACWST", "ECT": "ECT", "MST": "MST", "GFT": "GFT", "WITA": "WITA", "AKST": "AKST", "ChST": "ChST", "SGT": "SGT", "JDT": "JDT", "GMT": "Ntángo ya Londoni", "HKST": "HKST", "HAT": "HAT", "PDT": "PDT", "HADT": "HADT", "ADT": "ADT", "WAT": "WAT", "SRT": "SRT", "HNCU": "HNCU", "CST": "CST", "PST": "PST", "HEOG": "HEOG", "ACST": "ACST", "BT": "BT", "WIB": "WIB", "AWST": "AWST", "HAST": "HAST", "WEZ": "WEZ", "COT": "COT", "AEST": "AEST", "NZST": "NZST", "TMT": "TMT", "AEDT": "AEDT", "HECU": "HECU", "NZDT": "NZDT", "HNEG": "HNEG", "WAST": "WAST", "EDT": "EDT", "AKDT": "AKDT", "CDT": "CDT", "IST": "IST", "JST": "JST", "TMST": "TMST", "CAT": "Ntángo ya Lubumbashi", "LHDT": "LHDT", "EST": "EST", "HEEG": "HEEG", "LHST": "LHST", "ACWDT": "ACWDT", "MEZ": "MEZ", "ART": "ART"},
 	}
 }
 
@@ -363,7 +363,12 @@ func (ln *ln_AO) FmtDateShort(t time.Time) string {
 	b = append(b, []byte{0x2f}...)
 	b = strconv.AppendInt(b, int64(t.Month()), 10)
 	b = append(b, []byte{0x2f}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -377,7 +382,12 @@ func (ln *ln_AO) FmtDateMedium(t time.Time) string {
 	b = append(b, []byte{0x20}...)
 	b = append(b, ln.monthsAbbreviated[t.Month()]...)
 	b = append(b, []byte{0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -391,7 +401,12 @@ func (ln *ln_AO) FmtDateLong(t time.Time) string {
 	b = append(b, []byte{0x20}...)
 	b = append(b, ln.monthsWide[t.Month()]...)
 	b = append(b, []byte{0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -407,7 +422,12 @@ func (ln *ln_AO) FmtDateFull(t time.Time) string {
 	b = append(b, []byte{0x20}...)
 	b = append(b, ln.monthsWide[t.Month()]...)
 	b = append(b, []byte{0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }

@@ -56,12 +56,12 @@ func New() locales.Translator {
 		perMille:               "‰",
 		timeSeparator:          ":",
 		inifinity:              "∞",
-		currencies:             []string{"ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON", "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "AUD", "AWG", "AZM", "AZN", "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN", "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC", "BRE", "BRL", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYR", "BZD", "CAD", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNX", "CNY", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP", "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN", "ESA", "ESB", "ESP", "ETB", "EUR", "FIM", "FJD", "FKP", "FRF", "GBP", "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE", "GWP", "GYD", "HKD", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ILP", "ILR", "ILS", "INR", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "JPY", "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "KRW", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "LVL", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN", "MLF", "MMK", "MNT", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK", "MXN", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC", "NIO", "NLG", "NOK", "NPR", "NZD", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "PHP", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB", "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD", "SHP", "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "SUR", "SVC", "SYP", "SZL", "THB", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "TRY", "TTD", "TWD", "TZS", "UAH", "UAK", "UGS", "UGX", "USD", "USN", "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "VND", "VNN", "VUV", "WST", "XAF", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "XCD", "XDR", "XEU", "XFO", "XFU", "XOF", "XPD", "XPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL", "ZWR"},
+		currencies:             []string{"ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON", "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "AUD", "AWG", "AZM", "AZN", "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN", "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC", "BRE", "BRL", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYN", "BYR", "BZD", "CAD", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNX", "CNY", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP", "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN", "ESA", "ESB", "ESP", "ETB", "EUR", "FIM", "FJD", "FKP", "FRF", "GBP", "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE", "GWP", "GYD", "HKD", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ILP", "ILR", "ILS", "INR", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "JPY", "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "KRW", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "LVL", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN", "MLF", "MMK", "MNT", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK", "MXN", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC", "NIO", "NLG", "NOK", "NPR", "NZD", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "PHP", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB", "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD", "SHP", "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "SUR", "SVC", "SYP", "SZL", "THB", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "TRY", "TTD", "TWD", "TZS", "UAH", "UAK", "UGS", "UGX", "USD", "USN", "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "VND", "VNN", "VUV", "WST", "XAF", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "XCD", "XDR", "XEU", "XFO", "XFU", "XOF", "XPD", "XPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL", "ZWR"},
 		currencyPositiveSuffix: " ",
 		currencyNegativePrefix: "(",
 		currencyNegativeSuffix: " )",
-		monthsAbbreviated:      []string{"", "Jan", "Shk", "Mar", "Pri", "Maj", "Qer", "Kor", "Gsh", "Sht", "Tet", "Nën", "Dhj"},
-		monthsNarrow:           []string{"", "J", "S", "M", "P", "M", "Q", "K", "G", "S", "T", "N", "D"},
+		monthsAbbreviated:      []string{"", "jan", "shk", "mar", "pri", "maj", "qer", "kor", "gsh", "sht", "tet", "nën", "dhj"},
+		monthsNarrow:           []string{"", "j", "s", "m", "p", "m", "q", "k", "g", "s", "t", "n", "d"},
 		monthsWide:             []string{"", "janar", "shkurt", "mars", "prill", "maj", "qershor", "korrik", "gusht", "shtator", "tetor", "nëntor", "dhjetor"},
 		daysAbbreviated:        []string{"Die", "Hën", "Mar", "Mër", "Enj", "Pre", "Sht"},
 		daysNarrow:             []string{"D", "H", "M", "M", "E", "P", "S"},
@@ -70,10 +70,10 @@ func New() locales.Translator {
 		periodsAbbreviated:     []string{"e paradites", "e pasdites"},
 		periodsNarrow:          []string{"e paradites", "e pasdites"},
 		periodsWide:            []string{"e paradites", "e pasdites"},
-		erasAbbreviated:        []string{"p.e.r.", "e.r."},
-		erasNarrow:             []string{"p.e.r.", "e.r."},
-		erasWide:               []string{"para erës së re", "erës së re"},
-		timezones:              map[string]string{"COST": "Ora verore e Kolumbisë", "MESZ": "Ora verore e Europës Qendrore", "ACWST": "Ora standarde e Australisë Qendroro-Perëndimore", "ACWDT": "Ora verore e Australisë Qendroro-Perëndimore", "JST": "Ora standarde e Japonisë", "CHAST": "Ora standarde e Katamit", "WEZ": "Ora standarde e Europës Perëndimore", "ART": "Ora standarde e Argjentinës", "TMST": "Ora verore e Turkmenistanit", "ARST": "Ora verore e Argjentinës", "JDT": "Ora verore e Japonisë", "LHST": "Ora standarde e Lord-Houit", "OESZ": "Ora verore e Europës Lindore", "CST": "Ora standarde e SHBA-së Qendrore", "MST": "Ora standarde amerikane e Brezit Malor", "CAT": "Ora e Afrikës Qendrore", "∅∅∅": "Ora verore e Ejkrit [Ako]", "OEZ": "Ora standarde e Europës Lindore", "AKST": "Ora standarde e Alaskës", "EST": "Ora standarde e SHBA-së Lindore", "WAT": "Ora standarde e Afrikës Perëndimore", "NZST": "Ora standarde e Zelandës së Re", "LHDT": "Ora verore e Lord-Houit", "WARST": "Ora verore e Argjentinës Perëndimore", "PDT": "Ora verore amerikane e Bregut të Paqësorit", "CDT": "Ora verore e SHBA-së Qendrore", "MDT": "Ora verore amerikane e Brezit Malor", "AWDT": "Ora verore e Australisë Perëndimore", "TMT": "Ora standarde e Turkmenistanit", "HNT": "Ora standarde e Njufaundlendit [Tokës së Re]", "SRT": "Ora e Surinamit", "WIB": "Ora e Indonezisë Perëndimore", "AEST": "Ora standarde e Australisë Lindore", "AKDT": "Ora verore e Alsaskës", "PST": "Ora standarde amerikane e Bregut të Paqësorit", "HKST": "Ora verore e Hong-Kongut", "SGT": "Ora e Singaporit", "AEDT": "Ora verore e Australisë Lindore", "EAT": "Ora e Afrikës Lindore", "AWST": "Ora standarde e Australisë Perëndimore", "ECT": "Ora e Ekuadorit", "EDT": "Ora verore e SHBA-së Lindore", "WAST": "Ora verore e Afrikës Perëndimore", "GYT": "Ora e Guajanës", "CLST": "Ora verore e Kilit", "GFT": "Ora e Guajanës Franceze", "WESZ": "Ora verore e Europës Perëndimore", "COT": "Ora standarde e Kolumbisë", "VET": "Ora e Venezuelës", "UYST": "Ora verore e Uruguait", "HADT": "Ora verore e Ishujve Hauai-Aleutian", "WITA": "Ora e Indonezisë Qendrore", "BOT": "Ora e Bolivisë", "NZDT": "Ora verore e Zelandës së Re", "ChST": "Ora e Kamorros", "ACDT": "Ora verore e Australisë Qendrore", "IST": "Ora standarde e Indisë", "CLT": "Ora standarde e Kilit", "MEZ": "Ora standarde e Europës Qendrore", "ADT": "Ora verore e Atlantikut", "MYT": "Ora e Malajzisë", "UYT": "Ora standarde e Uruguait", "CHADT": "Ora verore e Katamit", "WART": "Ora standarde e Argjentinës Perëndimore", "GMT": "Ora e Meridianit të Grinuiçit", "HAT": "Ora verore e Njufaundlendit [Tokës së Re]", "WIT": "Ora e Indonezisë Lindore", "BT": "Ora e Butanit", "HKT": "Ora standarde e Hong-Kongut", "ACST": "Ora standarde e Australisë Qendrore", "HAST": "Ora standarde e Ishujve Hauai-Aleutian", "AST": "Ora standarde e Atlantikut", "SAST": "Ora standarde e Afrikës Jugore"},
+		erasAbbreviated:        []string{"p.K.", "mb.K."},
+		erasNarrow:             []string{"p.K.", "mb.K."},
+		erasWide:               []string{"para Krishtit", "mbas Krishtit"},
+		timezones:              map[string]string{"MESZ": "Ora verore e Evropës Qendrore", "CLST": "Ora verore e Kilit", "EDT": "Ora verore e SHBA-së Lindore", "COT": "Ora standarde e Kolumbisë", "PDT": "Ora verore amerikane e Bregut të Paqësorit", "NZST": "Ora standarde e Zelandës së Re", "ADT": "Ora verore e Atlantikut", "WAT": "Ora standarde e Afrikës Perëndimore", "HNT": "Ora standarde e Njufaundlendit [Tokës së Re]", "ChST": "Ora e Kamorros", "HADT": "Ora verore e Ishujve Hauai-Aleutian", "IST": "Ora standarde e Indisë", "ACDT": "Ora verore e Australisë Qendrore", "HNNOMX": "Ora standarde e Meksikës Veriperëndimore", "CLT": "Ora standarde e Kilit", "OESZ": "Ora verore e Evropës Lindore", "JDT": "Ora verore e Japonisë", "MDT": "Ora verore e Makaos", "GMT": "Ora e Meridianit të Grinuiçit", "HNPMX": "Ora standarde meksikane e Bregut të Paqësorit", "HEPMX": "Ora verore meksikane e Bregut të Paqësorit", "BOT": "Ora e Bolivisë", "PST": "Ora standarde amerikane e Bregut të Paqësorit", "HAT": "Ora verore e Njufaundlendit [Tokës së Re]", "GFT": "Ora e Guajanës Franceze", "CST": "Ora standarde e SHBA-së Qendrore", "CAT": "Ora e Afrikës Qendrore", "WARST": "Ora verore e Argjentinës Perëndimore", "AKDT": "Ora verore e Alsaskës", "AWST": "Ora standarde e Australisë Perëndimore", "COST": "Ora verore e Kolumbisë", "OEZ": "Ora standarde e Evropës Lindore", "TMT": "Ora standarde e Turkmenistanit", "WAST": "Ora verore e Afrikës Perëndimore", "HKST": "Ora verore e Hong-Kongut", "HNPM": "Ora standarde e Shën-Pier dhe Mikuelon", "SGT": "Ora e Singaporit", "AST": "Ora standarde e Atlantikut", "NZDT": "Ora verore e Zelandës së Re", "JST": "Ora standarde e Japonisë", "WIT": "Ora e Indonezisë Lindore", "VET": "Ora e Venezuelës", "HNEG": "Ora standarde e Grenlandës Lindore", "HKT": "Ora standarde e Hong-Kongut", "ACST": "Ora standarde e Australisë Qendrore", "HEPM": "Ora verore e Shën-Pier dhe Mikuelon", "CDT": "Ora verore e SHBA-së Qendrore", "ECT": "Ora e Ekuadorit", "HNOG": "Ora standarde e Grenlandës Perëndimore", "HENOMX": "Ora verore e Meksikës Veriperëndimore", "HEEG": "Ora verore e Grenlandës Lindore", "WITA": "Ora e Indonezisë Qendrore", "AEDT": "Ora verore e Australisë Lindore", "UYT": "Ora standarde e Uruguait", "LHST": "Ora standarde e Lord-Houit", "AWDT": "Ora verore e Australisë Perëndimore", "∅∅∅": "Ora verore e Amazonës", "WESZ": "Ora verore e Evropës Perëndimore", "MST": "Ora standarde e Makaos", "ARST": "Ora verore e Argjentinës", "AKST": "Ora standarde e Alaskës", "LHDT": "Ora verore e Lord-Houit", "GYT": "Ora e Guajanës", "ACWST": "Ora standarde e Australisë Qendroro-Perëndimore", "WEZ": "Ora standarde e Evropës Perëndimore", "MYT": "Ora e Malajzisë", "TMST": "Ora verore e Turkmenistanit", "ART": "Ora standarde e Argjentinës", "UYST": "Ora verore e Uruguait", "SAST": "Ora standarde e Afrikës Jugore", "CHAST": "Ora standarde e Katamit", "MEZ": "Ora standarde e Evropës Qendrore", "SRT": "Ora e Surinamit", "EAT": "Ora e Afrikës Lindore", "HECU": "Ora verore e Kubës", "CHADT": "Ora verore e Katamit", "HAST": "Ora standarde e Ishujve Hauai-Aleutian", "HEOG": "Ora verore e Grenlandës Perëndimore", "EST": "Ora standarde e SHBA-së Lindore", "BT": "Ora e Butanit", "AEST": "Ora standarde e Australisë Lindore", "HNCU": "Ora standarde e Kubës", "WIB": "Ora e Indonezisë Perëndimore", "ACWDT": "Ora verore e Australisë Qendroro-Perëndimore", "WART": "Ora standarde e Argjentinës Perëndimore"},
 	}
 }
 
@@ -439,7 +439,12 @@ func (sq *sq_AL) FmtDateMedium(t time.Time) string {
 	b = append(b, []byte{0x20}...)
 	b = append(b, sq.monthsAbbreviated[t.Month()]...)
 	b = append(b, []byte{0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -453,7 +458,12 @@ func (sq *sq_AL) FmtDateLong(t time.Time) string {
 	b = append(b, []byte{0x20}...)
 	b = append(b, sq.monthsWide[t.Month()]...)
 	b = append(b, []byte{0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -469,7 +479,12 @@ func (sq *sq_AL) FmtDateFull(t time.Time) string {
 	b = append(b, []byte{0x20}...)
 	b = append(b, sq.monthsWide[t.Month()]...)
 	b = append(b, []byte{0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }

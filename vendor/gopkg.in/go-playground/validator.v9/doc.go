@@ -222,7 +222,7 @@ ensures the value is not nil.
 
 Length
 
-For numbers, max will ensure that the value is
+For numbers, length will ensure that the value is
 equal to the parameter given. For strings, it checks that
 the string length is exactly that number of characters. For slices,
 arrays, and maps, validates the number of items.
@@ -238,7 +238,7 @@ slices, arrays, and maps, validates the number of items.
 
 	Usage: max=10
 
-Mininum
+Minimum
 
 For numbers, min will ensure that the value is
 greater or equal to the parameter given. For strings, it checks that
@@ -654,7 +654,7 @@ Printable ASCII
 This validates that a string value contains only printable ASCII characters.
 NOTE: if the string is blank, this validates as true.
 
-	Usage: asciiprint
+	Usage: printascii
 
 Multi-Byte Characters
 

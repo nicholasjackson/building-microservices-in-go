@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/consul/consul/structs"
 	"github.com/hashicorp/consul/lib"
 	"github.com/hashicorp/consul/testutil"
+	"github.com/hashicorp/consul/types"
 	"github.com/hashicorp/net-rpc-msgpackrpc"
 )
 
@@ -31,6 +32,7 @@ func TestCatalog_Register(t *testing.T) {
 			Port:    8000,
 		},
 		Check: &structs.HealthCheck{
+			CheckID:   types.CheckID("db-check"),
 			ServiceID: "db",
 		},
 	}
@@ -40,13 +42,41 @@ func TestCatalog_Register(t *testing.T) {
 	if err != nil {
 		t.Fatalf("err: %v", err)
 	}
+}
 
-	testutil.WaitForResult(func() (bool, error) {
-		err := msgpackrpc.CallWithCodec(codec, "Catalog.Register", &arg, &out)
-		return err == nil, err
-	}, func(err error) {
+func TestCatalog_Register_NodeID(t *testing.T) {
+	dir1, s1 := testServer(t)
+	defer os.RemoveAll(dir1)
+	defer s1.Shutdown()
+	codec := rpcClient(t, s1)
+	defer codec.Close()
+
+	arg := structs.RegisterRequest{
+		Datacenter: "dc1",
+		ID:         "nope",
+		Node:       "foo",
+		Address:    "127.0.0.1",
+		Service: &structs.NodeService{
+			Service: "db",
+			Tags:    []string{"master"},
+			Port:    8000,
+		},
+		Check: &structs.HealthCheck{
+			CheckID:   types.CheckID("db-check"),
+			ServiceID: "db",
+		},
+	}
+	var out struct{}
+
+	err := msgpackrpc.CallWithCodec(codec, "Catalog.Register", &arg, &out)
+	if err == nil || !strings.Contains(err.Error(), "Bad node ID") {
 		t.Fatalf("err: %v", err)
-	})
+	}
+
+	arg.ID = types.NodeID("adf4238a-882b-9ddc-4a9d-5b6758e4159e")
+	if err := msgpackrpc.CallWithCodec(codec, "Catalog.Register", &arg, &out); err != nil {
+		t.Fatalf("err: %v", err)
+	}
 }
 
 func TestCatalog_Register_ACLDeny(t *testing.T) {
@@ -573,12 +603,12 @@ func TestCatalog_ListNodes(t *testing.T) {
 		t.Fatalf("err: %v", err)
 	}
 
-	testutil.WaitForResult(func() (bool, error) {
+	if err := testutil.WaitForResult(func() (bool, error) {
 		msgpackrpc.CallWithCodec(codec, "Catalog.ListNodes", &args, &out)
 		return len(out.Nodes) == 2, nil
-	}, func(err error) {
-		t.Fatalf("err: %v", err)
-	})
+	}); err != nil {
+		t.Fatal(err)
+	}
 
 	// Server node is auto added from Serf
 	if out.Nodes[1].Node != s1.config.NodeName {
@@ -616,12 +646,12 @@ func TestCatalog_ListNodes_NodeMetaFilter(t *testing.T) {
 	}
 	var out structs.IndexedNodes
 
-	testutil.WaitForResult(func() (bool, error) {
+	if err := testutil.WaitForResult(func() (bool, error) {
 		msgpackrpc.CallWithCodec(codec, "Catalog.ListNodes", &args, &out)
 		return len(out.Nodes) == 1, nil
-	}, func(err error) {
-		t.Fatalf("err: %v", err)
-	})
+	}); err != nil {
+		t.Fatal(err)
+	}
 
 	// Verify that only the correct node was returned
 	if out.Nodes[0].Node != "foo" {
@@ -648,12 +678,12 @@ func TestCatalog_ListNodes_NodeMetaFilter(t *testing.T) {
 	}
 
 	// Should get an empty list of nodes back
-	testutil.WaitForResult(func() (bool, error) {
+	if err := testutil.WaitForResult(func() (bool, error) {
 		msgpackrpc.CallWithCodec(codec, "Catalog.ListNodes", &args, &out)
 		return len(out.Nodes) == 0, nil
-	}, func(err error) {
-		t.Fatalf("err: %v", err)
-	})
+	}); err != nil {
+		t.Fatal(err)
+	}
 }
 
 func TestCatalog_ListNodes_StaleRaad(t *testing.T) {
@@ -845,9 +875,9 @@ func TestCatalog_ListNodes_DistanceSort(t *testing.T) {
 
 	// Set all but one of the nodes to known coordinates.
 	updates := structs.Coordinates{
-		{"foo", generateCoordinate(2 * time.Millisecond)},
-		{"bar", generateCoordinate(5 * time.Millisecond)},
-		{"baz", generateCoordinate(1 * time.Millisecond)},
+		{"foo", lib.GenerateCoordinate(2 * time.Millisecond)},
+		{"bar", lib.GenerateCoordinate(5 * time.Millisecond)},
+		{"baz", lib.GenerateCoordinate(1 * time.Millisecond)},
 	}
 	if err := s1.fsm.State().CoordinateBatchUpdate(5, updates); err != nil {
 		t.Fatalf("err: %v", err)
@@ -859,12 +889,12 @@ func TestCatalog_ListNodes_DistanceSort(t *testing.T) {
 		Datacenter: "dc1",
 	}
 	var out structs.IndexedNodes
-	testutil.WaitForResult(func() (bool, error) {
+	if err := testutil.WaitForResult(func() (bool, error) {
 		msgpackrpc.CallWithCodec(codec, "Catalog.ListNodes", &args, &out)
 		return len(out.Nodes) == 5, nil
-	}, func(err error) {
-		t.Fatalf("err: %v", err)
-	})
+	}); err != nil {
+		t.Fatal(err)
+	}
 	if out.Nodes[0].Node != "aaa" {
 		t.Fatalf("bad: %v", out)
 	}
@@ -887,12 +917,12 @@ func TestCatalog_ListNodes_DistanceSort(t *testing.T) {
 		Datacenter: "dc1",
 		Source:     structs.QuerySource{Datacenter: "dc1", Node: "foo"},
 	}
-	testutil.WaitForResult(func() (bool, error) {
+	if err := testutil.WaitForResult(func() (bool, error) {
 		msgpackrpc.CallWithCodec(codec, "Catalog.ListNodes", &args, &out)
 		return len(out.Nodes) == 5, nil
-	}, func(err error) {
-		t.Fatalf("err: %v", err)
-	})
+	}); err != nil {
+		t.Fatal(err)
+	}
 	if out.Nodes[0].Node != "foo" {
 		t.Fatalf("bad: %v", out)
 	}
@@ -1439,9 +1469,9 @@ func TestCatalog_ListServiceNodes_DistanceSort(t *testing.T) {
 
 	// Set all but one of the nodes to known coordinates.
 	updates := structs.Coordinates{
-		{"foo", generateCoordinate(2 * time.Millisecond)},
-		{"bar", generateCoordinate(5 * time.Millisecond)},
-		{"baz", generateCoordinate(1 * time.Millisecond)},
+		{"foo", lib.GenerateCoordinate(2 * time.Millisecond)},
+		{"bar", lib.GenerateCoordinate(5 * time.Millisecond)},
+		{"baz", lib.GenerateCoordinate(1 * time.Millisecond)},
 	}
 	if err := s1.fsm.State().CoordinateBatchUpdate(9, updates); err != nil {
 		t.Fatalf("err: %v", err)

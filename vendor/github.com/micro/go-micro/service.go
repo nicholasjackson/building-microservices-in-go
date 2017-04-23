@@ -60,6 +60,10 @@ func (s *service) Init(opts ...Option) {
 	// so we can call cmd.Init once.
 	select {
 	case <-s.init:
+		// only process options
+		for _, o := range opts {
+			o(&s.opts)
+		}
 	default:
 		// close init
 		close(s.init)
@@ -68,9 +72,11 @@ func (s *service) Init(opts ...Option) {
 		// This is pretty ugly, find a better way
 		options := newOptions()
 		options.Cmd = s.opts.Cmd
+
 		for _, o := range opts {
 			o(&options)
 		}
+
 		s.opts.Cmd = options.Cmd
 
 		// Initialise the command flags, overriding new service
@@ -81,11 +87,6 @@ func (s *service) Init(opts ...Option) {
 			cmd.Client(&s.opts.Client),
 			cmd.Server(&s.opts.Server),
 		)
-	}
-
-	// Update any options to override command flags
-	for _, o := range opts {
-		o(&s.opts)
 	}
 }
 

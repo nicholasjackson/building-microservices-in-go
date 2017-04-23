@@ -55,12 +55,12 @@ func New() locales.Translator {
 		perMille:               "‰",
 		timeSeparator:          ":",
 		inifinity:              "∞",
-		currencies:             []string{"ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON", "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "A$", "AWG", "AZM", "AZN", "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN", "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC", "BRE", "R$", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYR", "BZD", "CA$", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNX", "CN¥", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP", "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN", "ESA", "ESB", "ESP", "ETB", "€", "FIM", "FJD", "FKP", "FRF", "£", "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE", "GWP", "GYD", "HK$", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ILP", "ILR", "₪", "₹", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "JP¥", "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "₩", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "LVL", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN", "MLF", "MMK", "MNT", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK", "MX$", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC", "NIO", "NLG", "NOK", "NPR", "NZ$", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "PHP", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB", "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD", "SHP", "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "SUR", "SVC", "SYP", "SZL", "฿", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "TRY", "TTD", "NT$", "TZS", "UAH", "UAK", "UGS", "UGX", "US$", "USN", "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "₫", "VNN", "VUV", "WST", "FCFA", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "EC$", "XDR", "XEU", "XFO", "XFU", "CFA", "XPD", "CFPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "R", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL", "ZWR"},
+		currencies:             []string{"ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON", "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "A$", "AWG", "AZM", "AZN", "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN", "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC", "BRE", "R$", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYN", "BYR", "BZD", "CA$", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNX", "CN¥", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP", "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN", "ESA", "ESB", "ESP", "ETB", "€", "FIM", "FJD", "FKP", "FRF", "£", "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE", "GWP", "GYD", "HK$", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ILP", "ILR", "₪", "₹", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "JP¥", "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "₩", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "LVL", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN", "MLF", "MMK", "MNT", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK", "MX$", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC", "NIO", "NLG", "NOK", "NPR", "NZ$", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "PHP", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB", "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD", "SHP", "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "SUR", "SVC", "SYP", "SZL", "฿", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "TRY", "TTD", "NT$", "TZS", "UAH", "UAK", "UGS", "UGX", "US$", "USN", "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "₫", "VNN", "VUV", "WST", "FCFA", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "EC$", "XDR", "XEU", "XFO", "XFU", "CFA", "XPD", "CFPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "R", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL", "ZWR"},
 		currencyNegativePrefix: "(",
 		currencyNegativeSuffix: ")",
 		monthsAbbreviated:      []string{"", "Jan", "Feb", "Mas", "Eph", "Mey", "Jun", "Jul", "Aga", "Sep", "Okt", "Nov", "Dis"},
 		monthsNarrow:           []string{"", "J", "F", "M", "E", "M", "J", "J", "A", "S", "O", "N", "D"},
-		monthsWide:             []string{"", "Januwari", "Februwari", "Mashi", "Ephreli", "Meyi", "Juni", "Julayi", "Agasti", "Septhemba", "Okthoba", "Novemba", "Disemba"},
+		monthsWide:             []string{"", "UMasingana", "Februwari", "Mashi", "Ephreli", "Meyi", "Juni", "Julayi", "Agasti", "Septhemba", "Okthoba", "Novemba", "Disemba"},
 		daysAbbreviated:        []string{"Son", "Mso", "Bil", "Tha", "Sin", "Hla", "Mgq"},
 		daysNarrow:             []string{"S", "M", "B", "T", "S", "H", "M"},
 		daysShort:              []string{"Son", "Mso", "Bil", "Tha", "Sin", "Hla", "Mgq"},
@@ -71,7 +71,7 @@ func New() locales.Translator {
 		erasAbbreviated:        []string{"BC", "AD"},
 		erasNarrow:             []string{"", ""},
 		erasWide:               []string{"BC", "AD"},
-		timezones:              map[string]string{"PDT": "isikhathi sase-North American Pacific sasemini", "ADT": "isikhathi sase-Atlantic sasemini", "TMST": "Isikhathi sehlobo sase-Turkmenistan", "ChST": "Isikhathi esijwayelekile sase-Chamorro", "GMT": "Isikhathi sase-Greenwich Mean", "HAST": "isikhathi sase-Hawaii-Aleutia esijwayelekile", "CHAST": "Isikhathi esivamile sase-Chatham", "EDT": "isikhathi sase-North American East sasemini", "MST": "isikhathi sase-North American Mountain esijwayelekile", "AWST": "I-Australian Western Standard Time", "OEZ": "Isikhathi esijwayelekile sase-Eastern Europe", "WEZ": "Isikhathi esijwayelekile sase-Western Europe", "AEST": "Isikhathi esivamile sase-Australian East", "EST": "isikhathi sase-North American East esijwayelekile", "WAST": "Isikhathi sasehlobo saseNtshonalanga Afrika", "UYST": "Isikhathi sase-Uruguay sasehlobo", "JST": "Isikhathi esivamile sase-Japan", "WARST": "Isikhathi saseNyakatho ne-Argentina sasehlobo", "NZDT": "Isikhathi sasemini sase-New Zealand", "WIB": "Isikhathi sase-Western Indonesia", "ACST": "esase-Austrilian Central Standard Time", "COST": "Isikhathi sase-Colombia sasehlobo", "AKST": "isikhathi sase-Alaska esijwayelekile", "WITA": "Isikhathi sase-Central Indonesia", "BT": "esase-Bhutan Time", "ACWDT": "Isikhathi sasemini sase-Australian Central West", "AEDT": "Isikhathi sasemini sase-Australian East", "PST": "isikhathi sase-North American Pacific esijwayelekile", "EAT": "Isikhathi saseMpumalanga Afrika", "WAT": "Isikhathi esijwayelekile saseNtshonalanga Afrika", "ACWST": "Isikhathi sase-Australian Central West esivamile", "HKST": "Isikhathi sehlobo sase-Hong Kong", "COT": "Isikhathi sase-Colombia esijwayelekile", "SRT": "Isikhathi sase-Suriname", "WESZ": "Isikhathi sasehlobo sase-Western Europe", "MESZ": "Isikhathi sasehlobo sase-Central Europe", "WART": "Isikhathi saseNyakatho ne-Argentina esijwayelekile", "SAST": "Isikhathi esijwayelekile saseNingizimu Afrika", "WIT": "Isikhathi sase-Eastern Indonesia", "LHST": "Isikhathi sase-Lord Howe esivamile", "JDT": "Isikhathi semini sase-Japan", "SGT": "Isikhathi esivamile sase-Singapore", "∅∅∅": "Isikhathi sase-Peru sasehlobo", "MYT": "Isikhathi sase-Malaysia", "CLT": "Isikhathi sase-Chile esijwayelekile", "UYT": "Isikhathi sase-Uruguay esijwayelekile", "HKT": "Isikhathi esivamile sase-Hong Kong", "IST": "esase-India Standard Time", "GYT": "Isikhathi sase-Guyana", "NZST": "Isikhathi esivamile sase-New Zealand", "CHADT": "Isikhathi semini sase-Chatham", "ARST": "Isikhathi sase-Argentina sasehlobo", "AWDT": "I-Australian Western Daylight Time", "MEZ": "Isikhathi esijwayelekile sase-Central Europe", "ACDT": "esase-Austrilian Central Daylight Time", "HADT": "isikhathi sase-Hawaii-Aleutia sasemini", "ART": "Isikhathi sase-Argentina esijwayelekile", "AKDT": "Isikhathi sase-Alaska sasemini", "HAT": "isikhathi sase-Newfoundland sasemini", "OESZ": "Isikhathi sasehlobo sase-Eastern Europe", "CST": "isikhathi sase-North American Central esijwayelekile", "MDT": "isikhathi sase-North American Mountain sasemini", "BOT": "Isikhathi sase-Bolivia", "CLST": "Isikhathi sase-Chile sasehlobo", "ECT": "Isikhathi sase-Ecuador", "AST": "isikhathi sase-Atlantic esijwayelekile", "HNT": "isikhathi sase-Newfoundland esijwayelekile", "VET": "Isikhathi sase-Venezuela", "TMT": "Isikhathi esivamile sase-Turkmenistan", "CDT": "isikhathi sase-North American Central sasemini", "CAT": "Isikhathi sase-Central Africa", "LHDT": "Isikhathi sase-Lord Howe sasemini", "GFT": "Isikhathi sase-French Guiana"},
+		timezones:              map[string]string{"HNOG": "Isikhathi sase-West Greenland esijwayelekile", "MST": "MST", "HENOMX": "Isikhathi sase-Northwest Mexico sasemini", "AKDT": "Isikhathi sase-Alaska sasemini", "HNCU": "Isikhathi sase-Cuba esijwayelekile", "JDT": "Isikhathi semini sase-Japan", "HNEG": "Isikhathi sase-East Greenland esijwayelekile", "HEPMX": "Isikhathi sase-Mexican Pacific sasemini", "CDT": "Isikhathi sase-North American Central sasemini", "CLST": "Isikhathi sase-Chile sasehlobo", "VET": "Isikhathi sase-Venezuela", "AEST": "Isikhathi esivamile sase-Australian East", "HNPM": "Iikhathi sase-Saint Pierre nase-Miquelon esijwayelekile", "WIT": "Isikhathi sase-Eastern Indonesia", "HAST": "Isikhathi sase-Hawaii-Aleutia esijwayelekile", "MESZ": "Isikhathi sasehlobo sase-Central Europe", "HEPM": "Isikhathi sase-Saint Pierre nase-Miquelon sasemini", "SRT": "Isikhathi sase-Suriname", "ECT": "Isikhathi sase-Ecuador", "WAT": "Isikhathi esijwayelekile saseNtshonalanga Afrika", "COT": "Isikhathi sase-Colombia esijwayelekile", "GFT": "Isikhathi sase-French Guiana", "WITA": "Isikhathi sase-Central Indonesia", "AKST": "Isikhathi sase-Alaska esijwayelekile", "NZDT": "Isikhathi sasemini sase-New Zealand", "HKT": "Isikhathi esivamile sase-Hong Kong", "AEDT": "Isikhathi sasemini sase-Australian East", "WEZ": "Isikhathi esijwayelekile sase-Western Europe", "HEOG": "Isikhathi sase-West Greenland sasehlobo", "ADT": "Isikhathi sase-Atlantic sasemini", "EDT": "Isikhathi sase-North American East sasemini", "ACDT": "Isikhathi sase-Australian Central sasemini", "HNPMX": "Isikhathi sase-Mexican Pacific esijwayelekile", "SAST": "Isikhathi esijwayelekile saseNingizimu Afrika", "AWST": "Isikhathi sase-Australian Western esivamile", "ACWDT": "Isikhathi sasemini sase-Australian Central West", "HNNOMX": "Isikhathi sase-Northwest Mexico esijwayelekile", "HNT": "Isikhathi sase-Newfoundland esijwayelekile", "ChST": "Isikhathi esijwayelekile sase-Chamorro", "AWDT": "Isikhathi sase-Australian Western sasemini", "HADT": "Isikhathi sase-Hawaii-Aleutia sasemini", "COST": "Isikhathi sase-Colombia sasehlobo", "MEZ": "Isikhathi esijwayelekile sase-Central Europe", "UYT": "Isikhathi sase-Uruguay esijwayelekile", "JST": "Isikhathi esivamile sase-Japan", "WESZ": "Isikhathi sasehlobo sase-Western Europe", "LHDT": "Isikhathi sase-Lord Howe sasemini", "GYT": "Isikhathi sase-Guyana", "PDT": "Isikhathi sase-North American Pacific sasemini", "ART": "Isikhathi sase-Argentina esijwayelekile", "ARST": "Isikhathi sase-Argentina sasehlobo", "HKST": "Isikhathi sehlobo sase-Hong Kong", "WAST": "Isikhathi sasehlobo saseNtshonalanga Afrika", "LHST": "Isikhathi sase-Lord Howe esivamile", "WART": "Isikhathi saseNyakatho ne-Argentina esijwayelekile", "WARST": "Isikhathi saseNyakatho ne-Argentina sasehlobo", "IST": "Isikhathi sase-India esivamile", "∅∅∅": "∅∅∅", "HAT": "Isikhathi sase-Newfoundland sasemini", "EAT": "Isikhathi saseMpumalanga Afrika", "BOT": "Isikhathi sase-Bolivia", "CAT": "Isikhathi sase-Central Africa", "BT": "Isikhathi sase-Bhutan", "CHAST": "Isikhathi esivamile sase-Chatham", "SGT": "Isikhathi esivamile sase-Singapore", "TMST": "Isikhathi sehlobo sase-Turkmenistan", "ACST": "Isikhathi sase-Australian Central esivamile", "PST": "Isikhathi sase-North American Pacific esijwayelekile", "CLT": "Isikhathi sase-Chile esijwayelekile", "AST": "Isikhathi sase-Atlantic esijwayelekile", "TMT": "Isikhathi esivamile sase-Turkmenistan", "NZST": "Isikhathi esivamile sase-New Zealand", "MYT": "Isikhathi sase-Malaysia", "OEZ": "Isikhathi esijwayelekile sase-Eastern Europe", "MDT": "MDT", "HEEG": "Isikhathi sase-East Greenland sasemini", "UYST": "Isikhathi sase-Uruguay sasehlobo", "CST": "Isikhathi sase-North American Central esijwayelekile", "GMT": "Isikhathi sase-Greenwich Mean", "OESZ": "Isikhathi sasehlobo sase-Eastern Europe", "EST": "Isikhathi sase-North American East esijwayelekile", "WIB": "Isikhathi sase-Western Indonesia", "HECU": "Isikhathi sase-Cuba sasemini", "CHADT": "Isikhathi sasemini sase-Chatham", "ACWST": "Isikhathi sase-Australian Central West esivamile"},
 	}
 }
 
@@ -426,7 +426,12 @@ func (zu *zu) FmtDateMedium(t time.Time) string {
 	b = append(b, []byte{0x20}...)
 	b = strconv.AppendInt(b, int64(t.Day()), 10)
 	b = append(b, []byte{0x2c, 0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -440,7 +445,12 @@ func (zu *zu) FmtDateLong(t time.Time) string {
 	b = append(b, []byte{0x20}...)
 	b = strconv.AppendInt(b, int64(t.Day()), 10)
 	b = append(b, []byte{0x2c, 0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -456,7 +466,12 @@ func (zu *zu) FmtDateFull(t time.Time) string {
 	b = append(b, []byte{0x20}...)
 	b = strconv.AppendInt(b, int64(t.Day()), 10)
 	b = append(b, []byte{0x2c, 0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -466,13 +481,11 @@ func (zu *zu) FmtTimeShort(t time.Time) string {
 
 	b := make([]byte, 0, 32)
 
-	h := t.Hour()
-
-	if h > 12 {
-		h -= 12
+	if t.Hour() < 10 {
+		b = append(b, '0')
 	}
 
-	b = strconv.AppendInt(b, int64(h), 10)
+	b = strconv.AppendInt(b, int64(t.Hour()), 10)
 	b = append(b, zu.timeSeparator...)
 
 	if t.Minute() < 10 {
@@ -480,13 +493,6 @@ func (zu *zu) FmtTimeShort(t time.Time) string {
 	}
 
 	b = strconv.AppendInt(b, int64(t.Minute()), 10)
-	b = append(b, []byte{0x20}...)
-
-	if t.Hour() < 12 {
-		b = append(b, zu.periodsAbbreviated[0]...)
-	} else {
-		b = append(b, zu.periodsAbbreviated[1]...)
-	}
 
 	return string(b)
 }
@@ -496,13 +502,11 @@ func (zu *zu) FmtTimeMedium(t time.Time) string {
 
 	b := make([]byte, 0, 32)
 
-	h := t.Hour()
-
-	if h > 12 {
-		h -= 12
+	if t.Hour() < 10 {
+		b = append(b, '0')
 	}
 
-	b = strconv.AppendInt(b, int64(h), 10)
+	b = strconv.AppendInt(b, int64(t.Hour()), 10)
 	b = append(b, zu.timeSeparator...)
 
 	if t.Minute() < 10 {
@@ -517,13 +521,6 @@ func (zu *zu) FmtTimeMedium(t time.Time) string {
 	}
 
 	b = strconv.AppendInt(b, int64(t.Second()), 10)
-	b = append(b, []byte{0x20}...)
-
-	if t.Hour() < 12 {
-		b = append(b, zu.periodsAbbreviated[0]...)
-	} else {
-		b = append(b, zu.periodsAbbreviated[1]...)
-	}
 
 	return string(b)
 }
@@ -533,13 +530,11 @@ func (zu *zu) FmtTimeLong(t time.Time) string {
 
 	b := make([]byte, 0, 32)
 
-	h := t.Hour()
-
-	if h > 12 {
-		h -= 12
+	if t.Hour() < 10 {
+		b = append(b, '0')
 	}
 
-	b = strconv.AppendInt(b, int64(h), 10)
+	b = strconv.AppendInt(b, int64(t.Hour()), 10)
 	b = append(b, zu.timeSeparator...)
 
 	if t.Minute() < 10 {
@@ -554,14 +549,6 @@ func (zu *zu) FmtTimeLong(t time.Time) string {
 	}
 
 	b = strconv.AppendInt(b, int64(t.Second()), 10)
-	b = append(b, []byte{0x20}...)
-
-	if t.Hour() < 12 {
-		b = append(b, zu.periodsAbbreviated[0]...)
-	} else {
-		b = append(b, zu.periodsAbbreviated[1]...)
-	}
-
 	b = append(b, []byte{0x20}...)
 
 	tz, _ := t.Zone()
@@ -575,13 +562,11 @@ func (zu *zu) FmtTimeFull(t time.Time) string {
 
 	b := make([]byte, 0, 32)
 
-	h := t.Hour()
-
-	if h > 12 {
-		h -= 12
+	if t.Hour() < 10 {
+		b = append(b, '0')
 	}
 
-	b = strconv.AppendInt(b, int64(h), 10)
+	b = strconv.AppendInt(b, int64(t.Hour()), 10)
 	b = append(b, zu.timeSeparator...)
 
 	if t.Minute() < 10 {
@@ -596,14 +581,6 @@ func (zu *zu) FmtTimeFull(t time.Time) string {
 	}
 
 	b = strconv.AppendInt(b, int64(t.Second()), 10)
-	b = append(b, []byte{0x20}...)
-
-	if t.Hour() < 12 {
-		b = append(b, zu.periodsAbbreviated[0]...)
-	} else {
-		b = append(b, zu.periodsAbbreviated[1]...)
-	}
-
 	b = append(b, []byte{0x20}...)
 
 	tz, _ := t.Zone()

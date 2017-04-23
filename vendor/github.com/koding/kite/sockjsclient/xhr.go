@@ -6,45 +6,54 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
-	"net/http/cookiejar"
 	"sync"
+	"time"
 
+	"github.com/koding/kite/config"
 	"github.com/koding/kite/utils"
+
+	"github.com/igm/sockjs-go/sockjs"
 )
 
-// the implementation of New() doesn't have any error to be returned yet it
-// returns, so it's totally safe to neglect the error
-var cookieJar, _ = cookiejar.New(nil)
+// ErrPollTimeout is returned when reading first byte of the http response
+// body has timed out.
+//
+// It is an fatal error when waiting for the session open frame ('o').
+//
+// After the session is opened, the error makes the poller retry polling.
+var ErrPollTimeout = errors.New("polling on XHR response has timed out")
+
+var errAborted = errors.New("session aborted by server")
 
 // XHRSession implements sockjs.Session with XHR transport.
 type XHRSession struct {
 	mu sync.Mutex
 
 	client     *http.Client
+	timeout    time.Duration
 	sessionURL string
 	sessionID  string
 	messages   []string
 	abort      chan struct{}
-
-	// TODO(rjeczalik): replace with single state field
-	opened bool
-	closed bool
+	req        *http.Request
+	state      sockjs.SessionState
 }
 
-// NewXHRSession returns a new XHRSession, a SockJS client which supports
-// xhr-polling
-// http://sockjs.github.io/sockjs-protocol/sockjs-protocol-0.3.3.html#section-74
-func NewXHRSession(opts *DialOptions) (*XHRSession, error) {
-	client := opts.Client()
+var _ sockjs.Session = (*XHRSession)(nil)
 
+// DialXHR establishes a SockJS session over a XHR connection.
+//
+// Requires cfg.XHR to be a valid client.
+func DialXHR(uri string, cfg *config.Config) (*XHRSession, error) {
 	// following /server_id/session_id should always be the same for every session
 	serverID := threeDigits()
 	sessionID := utils.RandomString(20)
-	sessionURL := opts.BaseURL + "/" + serverID + "/" + sessionID
+	sessionURL := uri + "/" + serverID + "/" + sessionID
 
 	// start the initial session handshake
-	sessionResp, err := client.Post(sessionURL+"/xhr", "text/plain", nil)
+	sessionResp, err := cfg.XHR.Post(sessionURL+"/xhr", "text/plain", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -55,23 +64,35 @@ func NewXHRSession(opts *DialOptions) (*XHRSession, error) {
 			http.StatusOK, sessionResp.StatusCode)
 	}
 
-	buf := bufio.NewReader(sessionResp.Body)
-	frame, err := buf.ReadByte()
+	frame, err := newFrameReader(sessionResp.Body, cfg.Timeout).ReadByte()
 	if err != nil {
 		return nil, err
 	}
 
 	if frame != 'o' {
-		return nil, fmt.Errorf("can't start session, invalid frame: %s", frame)
+		return nil, fmt.Errorf("can't start session, invalid frame: %s", string(frame))
 	}
 
 	return &XHRSession{
-		client:     client,
+		client:     cfg.XHR,
+		timeout:    cfg.Timeout,
 		sessionID:  sessionID,
 		sessionURL: sessionURL,
-		opened:     true,
+		state:      sockjs.SessionActive,
 		abort:      make(chan struct{}, 1),
 	}, nil
+}
+
+// NewXHRSession returns a new XHRSession, a SockJS client which supports xhr-polling:
+//
+//   http://sockjs.github.io/sockjs-protocol/sockjs-protocol-0.3.3.html#section-74
+//
+// Deprecated: Use DialXHR instead.
+func NewXHRSession(opts *DialOptions) (*XHRSession, error) {
+	cfg := config.New()
+	cfg.XHR = opts.client()
+
+	return DialXHR(opts.BaseURL, cfg)
 }
 
 func (x *XHRSession) ID() string {
@@ -98,7 +119,7 @@ func (x *XHRSession) Recv() (string, error) {
 	for {
 		req, err := http.NewRequest("POST", x.sessionURL+"/xhr", nil)
 		if err != nil {
-			return "", fmt.Errorf("Receiving data failed: %s", err)
+			return "", errors.New("invalid session url: " + err.Error())
 		}
 
 		req.Header.Set("Content-Type", "text/plain")
@@ -109,7 +130,11 @@ func (x *XHRSession) Recv() (string, error) {
 				cn.CancelRequest(req)
 			}
 
-			return "", fmt.Errorf("session aborted by server")
+			return "", &ErrSession{
+				Type:  config.XHRPolling,
+				State: sockjs.SessionClosed,
+				Err:   errAborted,
+			}
 		case res := <-x.do(req):
 			if res.Error != nil {
 				return "", fmt.Errorf("Receiving data failed: %s", res.Error)
@@ -129,33 +154,76 @@ func (x *XHRSession) Recv() (string, error) {
 	}
 }
 
+func (x *XHRSession) setState(state sockjs.SessionState) {
+	x.mu.Lock()
+	x.state = state
+	x.mu.Unlock()
+}
+
+// GetSessionState gives state of the session.
+func (x *XHRSession) GetSessionState() sockjs.SessionState {
+	x.mu.Lock()
+	defer x.mu.Unlock()
+
+	return x.state
+}
+
+// Request implements the sockjs.Session interface.
+func (x *XHRSession) Request() *http.Request {
+	return x.req
+}
+
 func (x *XHRSession) handleResp(resp *http.Response) (msg string, again bool, err error) {
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		return "", false, fmt.Errorf("Receiving data failed. Want: %d Got: %d",
-			http.StatusOK, resp.StatusCode)
+	switch resp.StatusCode {
+	case http.StatusOK:
+	case http.StatusNotFound:
+		x.Close(3000, "session not found") // invalidate session - see details: sockjs/sockjs-client#66
+
+		return "", false, &ErrSession{
+			Type:  config.XHRPolling,
+			State: sockjs.SessionClosed,
+			Err:   errors.New("session does not exist: " + x.sessionID),
+		}
+	default:
+		return "", false, fmt.Errorf("Receiving data failed. Want: 200 Got: %d", resp.StatusCode)
 	}
 
-	buf := bufio.NewReader(resp.Body)
+	fr := newFrameReader(resp.Body, x.timeout)
 
-	// returns an error if buffer is empty
-	frame, err := buf.ReadByte()
+	frame, err := fr.ReadByte()
+	if err == ErrPollTimeout {
+		return "", true, nil
+	}
 	if err != nil {
 		return "", false, err
 	}
 
 	switch frame {
 	case 'o':
-		x.mu.Lock()
-		x.opened = true
-		x.mu.Unlock()
+		x.setState(sockjs.SessionActive)
 
 		return "", true, nil
+	case 'm':
+		var message string
+		if err := json.NewDecoder(fr).Decode(&message); err != nil {
+			return "", false, err
+		}
+
+		if message == "" {
+			return "", false, errors.New("unexpected empty message")
+		}
+
+		x.messages = append(x.messages, message)
+
+		message, x.messages = x.messages[0], x.messages[1:]
+
+		return message, false, nil
 	case 'a':
 		// received an array of messages
 		var messages []string
-		if err := json.NewDecoder(buf).Decode(&messages); err != nil {
+		if err := json.NewDecoder(fr).Decode(&messages); err != nil {
 			return "", false, err
 		}
 
@@ -172,15 +240,21 @@ func (x *XHRSession) handleResp(resp *http.Response) (msg string, again bool, er
 
 		return msg, false, nil
 	case 'h':
-		// heartbeat received
 		return "", true, nil
 	case 'c':
-		x.mu.Lock()
-		x.opened = false
-		x.closed = true
-		x.mu.Unlock()
+		var code int
+		var reason string
+		var frame = []interface{}{&code, &reason}
 
-		return "", false, ErrSessionClosed
+		_ = json.NewDecoder(fr).Decode(&frame)
+
+		x.setState(sockjs.SessionClosed)
+
+		return "", false, &ErrSession{
+			Type:  config.XHRPolling,
+			State: sockjs.SessionClosed,
+			Err:   fmt.Errorf("closed by server: code=%d, reason=%q", code, reason),
+		}
 	default:
 		return "", false, errors.New("invalid frame type")
 	}
@@ -191,14 +265,7 @@ func (x *XHRSession) Send(frame string) error {
 		return ErrSessionClosed
 	}
 
-	if !x.isOpened() {
-		return errors.New("session is not opened yet")
-	}
-
-	// Need's to be JSON encoded array of string messages (SockJS protocol
-	// requirement)
-	message := []string{frame}
-	body, err := json.Marshal(&message)
+	body, err := json.Marshal([]string{frame})
 	if err != nil {
 		return err
 	}
@@ -209,24 +276,24 @@ func (x *XHRSession) Send(frame string) error {
 	}
 
 	if resp.StatusCode == http.StatusNotFound {
-		x.Close(0, "") // invalidate session - see details: sockjs/sockjs-client#66
+		x.Close(3000, "session not found") // invalidate session - see details: sockjs/sockjs-client#66
 
-		return fmt.Errorf("XHR session does not exist: %s", x.sessionID)
+		return &ErrSession{
+			Type:  config.XHRPolling,
+			State: sockjs.SessionClosed,
+			Err:   errors.New("session does not exist: " + x.sessionID),
+		}
 	}
 
 	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusNoContent {
-		return fmt.Errorf("Sending data failed. Want: %d Got: %d",
-			http.StatusOK, resp.StatusCode)
+		return fmt.Errorf("Sending data failed. Want: %d Got: %d", http.StatusOK, resp.StatusCode)
 	}
 
 	return nil
 }
 
 func (x *XHRSession) Close(status uint32, reason string) error {
-	x.mu.Lock()
-	x.opened = false
-	x.closed = true
-	x.mu.Unlock()
+	x.setState(sockjs.SessionClosed)
 
 	select {
 	case x.abort <- struct{}{}:
@@ -236,18 +303,8 @@ func (x *XHRSession) Close(status uint32, reason string) error {
 	return nil
 }
 
-func (x *XHRSession) isOpened() bool {
-	x.mu.Lock()
-	defer x.mu.Unlock()
-
-	return x.opened
-}
-
 func (x *XHRSession) isClosed() bool {
-	x.mu.Lock()
-	defer x.mu.Unlock()
-
-	return x.closed
+	return x.GetSessionState() == sockjs.SessionClosed
 }
 
 type doResult struct {
@@ -265,4 +322,74 @@ func (x *XHRSession) do(req *http.Request) <-chan doResult {
 	}()
 
 	return ch
+}
+
+type frameReader struct {
+	r       *bufio.Reader
+	timeout time.Duration
+
+	once  sync.Once
+	frame byte
+	err   error
+}
+
+func newFrameReader(r io.Reader, timeout time.Duration) *frameReader {
+	return &frameReader{
+		r:       bufio.NewReader(r),
+		timeout: timeout,
+	}
+}
+
+func (fr *frameReader) Read(p []byte) (int, error) {
+	fr.once.Do(fr.readFrame)
+
+	if fr.err != nil {
+		return 0, fr.err
+	}
+
+	var n int
+
+	if fr.frame != 0 {
+		p[0], p = fr.frame, p[1:]
+		fr.frame, n = 0, 1
+	}
+
+	m, err := fr.r.Read(p)
+	return n + m, err
+}
+
+func (fr *frameReader) ReadByte() (byte, error) {
+	fr.once.Do(fr.readFrame)
+
+	if fr.err != nil {
+		return 0, fr.err
+	}
+
+	if fr.frame != 0 {
+		c := fr.frame
+		fr.frame = 0
+		return c, nil
+	}
+
+	return fr.r.ReadByte()
+}
+
+func (fr *frameReader) readFrame() {
+	type result struct {
+		c   byte
+		err error
+	}
+	done := make(chan result, 1)
+
+	go func() {
+		c, err := fr.r.ReadByte()
+		done <- result{c, err}
+	}()
+
+	select {
+	case res := <-done:
+		fr.frame, fr.err = res.c, res.err
+	case <-time.After(fr.timeout):
+		fr.err = ErrPollTimeout
+	}
 }

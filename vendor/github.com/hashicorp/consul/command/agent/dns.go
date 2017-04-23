@@ -304,12 +304,20 @@ func (d *DNSServer) dispatch(network string, req, resp *dns.Msg) {
 	// Split into the label parts
 	labels := dns.SplitDomainName(qName)
 
-	// The last label is either "node", "service", "query", or a datacenter name
+	// The last label is either "node", "service", "query", "_<protocol>", or a datacenter name
 PARSE:
 	n := len(labels)
 	if n == 0 {
 		goto INVALID
 	}
+
+	// If this is a SRV query the "service" label is optional, we add it back to use the
+	// existing code-path.
+	if req.Question[0].Qtype == dns.TypeSRV && strings.HasPrefix(labels[n-1], "_") {
+		labels = append(labels, "service")
+		n = n + 1
+	}
+
 	switch labels[n-1] {
 	case "service":
 		if n == 1 {
@@ -876,8 +884,7 @@ func (d *DNSServer) serviceSRVRecords(dc string, nodes structs.CheckServiceNodes
 
 		// Add the extra record
 		records := d.formatNodeRecord(node.Node, addr, srvRec.Target, dns.TypeANY, ttl)
-
-		if records != nil {
+		if len(records) > 0 {
 			// Use the node address if it doesn't differ from the service address
 			if addr == node.Node.Address {
 				resp.Extra = append(resp.Extra, records...)
@@ -900,6 +907,10 @@ func (d *DNSServer) serviceSRVRecords(dc string, nodes structs.CheckServiceNodes
 					srvRec.Target = fmt.Sprintf("%s.addr.%s.%s", hex.EncodeToString(record.AAAA), dc, d.domain)
 					record.Hdr.Name = srvRec.Target
 					resp.Extra = append(resp.Extra, record)
+
+				// Something else (probably a CNAME; just add the records).
+				default:
+					resp.Extra = append(resp.Extra, records...)
 				}
 			}
 		}

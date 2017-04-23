@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"sync"
 	"time"
 
 	"github.com/armon/go-metrics"
@@ -24,8 +25,15 @@ type consulFSM struct {
 	logOutput io.Writer
 	logger    *log.Logger
 	path      string
+
+	// stateLock is only used to protect outside callers to State() from
+	// racing with Restore(), which is called by Raft (it puts in a totally
+	// new state store). Everything internal here is synchronized by the
+	// Raft side, so doesn't need to lock this.
+	stateLock sync.RWMutex
 	state     *state.StateStore
-	gc        *state.TombstoneGC
+
+	gc *state.TombstoneGC
 }
 
 // consulSnapshot is used to provide a snapshot of the current
@@ -60,6 +68,8 @@ func NewFSM(gc *state.TombstoneGC, logOutput io.Writer) (*consulFSM, error) {
 
 // State is used to return a handle to the current state
 func (c *consulFSM) State() *state.StateStore {
+	c.stateLock.RLock()
+	defer c.stateLock.RUnlock()
 	return c.state
 }
 
@@ -95,6 +105,8 @@ func (c *consulFSM) Apply(log *raft.Log) interface{} {
 		return c.applyPreparedQueryOperation(buf[1:], log.Index)
 	case structs.TxnRequestType:
 		return c.applyTxn(buf[1:], log.Index)
+	case structs.AutopilotRequestType:
+		return c.applyAutopilotUpdate(buf[1:], log.Index)
 	default:
 		if ignoreUnknown {
 			c.logger.Printf("[WARN] consul.fsm: ignoring unknown message type (%d), upgrade to newer version", msgType)
@@ -297,7 +309,29 @@ func (c *consulFSM) applyTxn(buf []byte, index uint64) interface{} {
 	}
 	defer metrics.MeasureSince([]string{"consul", "fsm", "txn"}, time.Now())
 	results, errors := c.state.TxnRW(index, req.Ops)
-	return structs.TxnResponse{results, errors}
+	return structs.TxnResponse{
+		Results: results,
+		Errors:  errors,
+	}
+}
+
+func (c *consulFSM) applyAutopilotUpdate(buf []byte, index uint64) interface{} {
+	var req structs.AutopilotSetConfigRequest
+	if err := structs.Decode(buf, &req); err != nil {
+		panic(fmt.Errorf("failed to decode request: %v", err))
+	}
+	defer metrics.MeasureSince([]string{"consul", "fsm", "autopilot"}, time.Now())
+
+	if req.CAS {
+		act, err := c.state.AutopilotCASConfig(index, req.Config.ModifyIndex, &req.Config)
+		if err != nil {
+			return err
+		} else {
+			return act
+		}
+	} else {
+		return c.state.AutopilotSetConfig(index, &req.Config)
+	}
 }
 
 func (c *consulFSM) Snapshot() (raft.FSMSnapshot, error) {
@@ -308,18 +342,19 @@ func (c *consulFSM) Snapshot() (raft.FSMSnapshot, error) {
 	return &consulSnapshot{c.state.Snapshot()}, nil
 }
 
+// Restore streams in the snapshot and replaces the current state store with a
+// new one based on the snapshot if all goes OK during the restore.
 func (c *consulFSM) Restore(old io.ReadCloser) error {
 	defer old.Close()
 
-	// Create a new state store
+	// Create a new state store.
 	stateNew, err := state.NewStateStore(c.gc)
 	if err != nil {
 		return err
 	}
-	c.state = stateNew
 
 	// Set up a new restore transaction
-	restore := c.state.Restore()
+	restore := stateNew.Restore()
 	defer restore.Abort()
 
 	// Create a decoder
@@ -416,12 +451,33 @@ func (c *consulFSM) Restore(old io.ReadCloser) error {
 				return err
 			}
 
+		case structs.AutopilotRequestType:
+			var req structs.AutopilotConfig
+			if err := dec.Decode(&req); err != nil {
+				return err
+			}
+			if err := restore.Autopilot(&req); err != nil {
+				return err
+			}
+
 		default:
 			return fmt.Errorf("Unrecognized msg type: %v", msgType)
 		}
 	}
 
 	restore.Commit()
+
+	// External code might be calling State(), so we need to synchronize
+	// here to make sure we swap in the new state store atomically.
+	c.stateLock.Lock()
+	stateOld := c.state
+	c.state = stateNew
+	c.stateLock.Unlock()
+
+	// Signal that the old state store has been abandoned. This is required
+	// because we don't operate on it any more, we just throw it away, so
+	// blocking queries won't see any changes and need to be woken up.
+	stateOld.Abandon()
 	return nil
 }
 
@@ -466,6 +522,11 @@ func (s *consulSnapshot) Persist(sink raft.SnapshotSink) error {
 	}
 
 	if err := s.persistPreparedQueries(sink, encoder); err != nil {
+		sink.Cancel()
+		return err
+	}
+
+	if err := s.persistAutopilot(sink, encoder); err != nil {
 		sink.Cancel()
 		return err
 	}
@@ -630,6 +691,21 @@ func (s *consulSnapshot) persistPreparedQueries(sink raft.SnapshotSink,
 			return err
 		}
 	}
+	return nil
+}
+
+func (s *consulSnapshot) persistAutopilot(sink raft.SnapshotSink,
+	encoder *codec.Encoder) error {
+	autopilot, err := s.state.Autopilot()
+	if err != nil {
+		return err
+	}
+
+	sink.Write([]byte{byte(structs.AutopilotRequestType)})
+	if err := encoder.Encode(autopilot); err != nil {
+		return err
+	}
+
 	return nil
 }
 

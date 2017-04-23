@@ -55,7 +55,7 @@ func New() locales.Translator {
 		perMille:               "‰",
 		timeSeparator:          ":",
 		inifinity:              "∞",
-		currencies:             []string{"ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON", "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "AUD", "AWG", "AZM", "AZN", "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN", "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC", "BRE", "BRL", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYR", "BZD", "CAD", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNX", "CNY", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP", "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN", "ESA", "ESB", "ESP", "ETB", "EUR", "FIM", "FJD", "FKP", "FRF", "GBP", "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE", "GWP", "GYD", "HKD", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ILP", "ILR", "ILS", "INR", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "JPY", "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "KRW", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "LVL", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN", "MLF", "MMK", "MNT", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK", "MXN", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC", "NIO", "NLG", "NOK", "NPR", "NZD", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "PHP", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB", "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD", "SHP", "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "SUR", "SVC", "SYP", "SZL", "THB", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "TRY", "TTD", "TWD", "TZS", "UAH", "UAK", "UGS", "UGX", "USD", "USN", "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "VND", "VNN", "VUV", "WST", "XAF", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "XCD", "XDR", "XEU", "XFO", "XFU", "XOF", "XPD", "XPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL", "ZWR"},
+		currencies:             []string{"ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON", "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "AUD", "AWG", "AZM", "AZN", "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN", "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC", "BRE", "BRL", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYN", "BYR", "BZD", "CAD", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNX", "CNY", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP", "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN", "ESA", "ESB", "ESP", "ETB", "EUR", "FIM", "FJD", "FKP", "FRF", "GBP", "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE", "GWP", "GYD", "HKD", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ILP", "ILR", "ILS", "INR", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "JPY", "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "KRW", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "LVL", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN", "MLF", "MMK", "MNT", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK", "MXN", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC", "NIO", "NLG", "NOK", "NPR", "NZD", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "PHP", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB", "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD", "SHP", "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "SUR", "SVC", "SYP", "SZL", "THB", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "TRY", "TTD", "TWD", "TZS", "UAH", "UAK", "UGS", "UGX", "USD", "USN", "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "VND", "VNN", "VUV", "WST", "XAF", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "XCD", "XDR", "XEU", "XFO", "XFU", "XOF", "XPD", "XPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL", "ZWR"},
 		currencyPositiveSuffix: " ",
 		currencyNegativeSuffix: " ",
 		monthsAbbreviated:      []string{"", "thg 1", "thg 2", "thg 3", "thg 4", "thg 5", "thg 6", "thg 7", "thg 8", "thg 9", "thg 10", "thg 11", "thg 12"},
@@ -68,10 +68,10 @@ func New() locales.Translator {
 		periodsAbbreviated:     []string{"SA", "CH"},
 		periodsNarrow:          []string{"s", "c"},
 		periodsWide:            []string{"SA", "CH"},
-		erasAbbreviated:        []string{"tr. CN", "sau CN"},
+		erasAbbreviated:        []string{"", ""},
 		erasNarrow:             []string{"tr. CN", "sau CN"},
-		erasWide:               []string{"tr. CN", "sau CN"},
-		timezones:              map[string]string{"MDT": "Giờ ban ngày miền núi", "NZST": "Giờ Chuẩn New Zealand", "BT": "Giờ Bhutan", "GFT": "Giờ Guiana thuộc Pháp", "HAST": "Giờ Chuẩn Hawaii-Aleutian", "ACWDT": "Giờ Mùa Hè Miền Trung Tây Nước Úc", "IST": "Giờ Chuẩn Ấn Độ", "AKST": "Giờ Chuẩn Alaska", "WEZ": "Giờ Chuẩn Tây Âu", "WITA": "Giờ Miền Trung Indonesia", "HKT": "Giờ Chuẩn Hồng Kông", "ECT": "Giờ Ecuador", "MEZ": "Giờ Chuẩn Trung Âu", "ACWST": "Giờ Chuẩn Miền Trung Tây Nước Úc", "EST": "Giờ chuẩn miền đông", "ARST": "Giờ Mùa Hè Argentina", "TMST": "Giờ Mùa Hè Turkmenistan", "AWST": "Giờ Chuẩn Miền Tây Nước Úc", "HAT": "Giờ Mùa Hè Newfoundland", "AST": "Giờ Chuẩn Đại Tây Dương", "UYST": "Giờ Mùa Hè Uruguay", "JDT": "Giờ Mùa Hè Nhật Bản", "UYT": "Giờ Chuẩn Uruguay", "CHAST": "Giờ Chuẩn Chatham", "SRT": "Giờ Suriname", "CST": "Giờ chuẩn miền trung", "AWDT": "Giờ Mùa Hè Miền Tây Nước Úc", "HNT": "Giờ Chuẩn Newfoundland", "CLT": "Giờ Chuẩn Chile", "∅∅∅": "Giờ Mùa Hè Azores", "OEZ": "Giờ Chuẩn Đông Âu", "OESZ": "Giờ Mùa Hè Đông Âu", "WESZ": "Giờ Mùa hè Tây Âu", "CLST": "Giờ Mùa Hè Chile", "ACST": "Giờ Chuẩn Miền Trung Nước Úc", "WART": "Giờ chuẩn miền mây Argentina", "WAST": "Giờ Mùa Hè Tây Phi", "TMT": "Giờ Chuẩn Turkmenistan", "VET": "Giờ Venezuela", "PST": "Giờ chuẩn Thái Bình Dương", "BOT": "Giờ Bolivia", "SGT": "Giờ Singapore", "WARST": "Giờ mùa hè miền tây Argentina", "EDT": "Giờ ban ngày miền đông", "MST": "Giờ chuẩn miền núi", "WAT": "Giờ Chuẩn Tây Phi", "CAT": "Giờ Trung Phi", "JST": "Giờ Chuẩn Nhật Bản", "MYT": "Giờ Malaysia", "LHDT": "Giờ Mùa Hè Lord Howe", "WIB": "Giờ Miền Tây Indonesia", "ART": "Giờ Chuẩn Argentina", "HADT": "Giờ Mùa Hè Hawaii-Aleutian", "PDT": "Giờ ban ngày Thái Bình Dương", "AEDT": "Giờ Mùa Hè Miền Đông Nước Úc", "AKDT": "Giờ Mùa Hè Alaska", "ADT": "Giờ Mùa hè Đại Tây Dương", "NZDT": "Giờ Mùa Hè New Zealand", "COST": "Giờ Mùa Hè Colombia", "MESZ": "Giờ Mùa Hè Trung Âu", "ACDT": "Giờ Mùa Hè Miền Trung Nước Úc", "AEST": "Giờ Chuẩn Miền Đông Nước Úc", "GMT": "Giờ Trung bình Greenwich", "LHST": "Giờ Chuẩn Lord Howe", "CHADT": "Giờ Mùa Hè Chatham", "GYT": "Giờ Guyana", "ChST": "Giờ Chamorro", "WIT": "Giờ Miền Đông Indonesia", "HKST": "Giờ Mùa Hè Hồng Kông", "COT": "Giờ Chuẩn Colombia", "EAT": "Giờ Đông Phi", "SAST": "Giờ Chuẩn Nam Phi", "CDT": "Giờ ban ngày miền trung"},
+		erasWide:               []string{"", ""},
+		timezones:              map[string]string{"JDT": "Giờ Mùa Hè Nhật Bản", "AST": "Giờ Chuẩn Đại Tây Dương", "OESZ": "Giờ Mùa Hè Đông Âu", "TMST": "Giờ Mùa Hè Turkmenistan", "HNNOMX": "Giờ Chuẩn Tây Bắc Mexico", "GYT": "Giờ Guyana", "OEZ": "Giờ Chuẩn Đông Âu", "CHAST": "Giờ Chuẩn Chatham", "PST": "Giờ chuẩn Thái Bình Dương", "CLST": "Giờ Mùa Hè Chile", "COST": "Giờ Mùa Hè Colombia", "HNT": "Giờ Chuẩn Newfoundland", "GFT": "Giờ Guiana thuộc Pháp", "LHST": "Giờ Chuẩn Lord Howe", "ACDT": "Giờ Mùa Hè Miền Trung Nước Úc", "BT": "Giờ Bhutan", "HNCU": "Giờ Chuẩn Cuba", "CHADT": "Giờ Mùa Hè Chatham", "VET": "Giờ Venezuela", "WAT": "Giờ Chuẩn Tây Phi", "HNEG": "Giờ Chuẩn Miền Đông Greenland", "HECU": "Giờ Mùa Hè Cuba", "HAST": "Giờ Chuẩn Hawaii-Aleutian", "CLT": "Giờ Chuẩn Chile", "WAST": "Giờ Mùa Hè Tây Phi", "HKT": "Giờ Chuẩn Hồng Kông", "AEDT": "Giờ Mùa Hè Miền Đông Nước Úc", "WITA": "Giờ Miền Trung Indonesia", "AKST": "Giờ Chuẩn Alaska", "WIB": "Giờ Miền Tây Indonesia", "BOT": "Giờ Bolivia", "NZST": "Giờ Chuẩn New Zealand", "MYT": "Giờ Malaysia", "MST": "Giờ Chuẩn Ma Cao", "HEPM": "Giờ Mùa Hè Saint Pierre và Miquelon", "ACWST": "Giờ Chuẩn Miền Trung Tây Nước Úc", "MEZ": "Giờ Chuẩn Trung Âu", "HEOG": "Giờ Mùa Hè Miền Tây Greenland", "MDT": "Giờ Mùa Hè Ma Cao", "SRT": "Giờ Suriname", "WARST": "Giờ mùa hè miền tây Argentina", "HNOG": "Giờ Chuẩn Miền Tây Greenland", "ART": "Giờ Chuẩn Argentina", "LHDT": "Giờ Mùa Hè Lord Howe", "NZDT": "Giờ Mùa Hè New Zealand", "GMT": "Giờ Trung bình Greenwich", "ADT": "Giờ Mùa hè Đại Tây Dương", "EST": "Giờ chuẩn miền đông", "ACST": "Giờ Chuẩn Miền Trung Nước Úc", "IST": "Giờ Chuẩn Ấn Độ", "ARST": "Giờ Mùa Hè Argentina", "HEEG": "Giờ Mùa Hè Miền Đông Greenland", "UYT": "Giờ Chuẩn Uruguay", "AWST": "Giờ Chuẩn Miền Tây Nước Úc", "AWDT": "Giờ Mùa Hè Miền Tây Nước Úc", "WART": "Giờ chuẩn miền mây Argentina", "HKST": "Giờ Mùa Hè Hồng Kông", "HENOMX": "Giờ Mùa Hè Tây Bắc Mexico", "HNPMX": "Giờ Chuẩn Thái Bình Dương Mexico", "WESZ": "Giờ Mùa hè Tây Âu", "TMT": "Giờ Chuẩn Turkmenistan", "∅∅∅": "Giờ Mùa Hè Acre", "UYST": "Giờ Mùa Hè Uruguay", "PDT": "Giờ Mùa hè Thái Bình Dương", "JST": "Giờ Chuẩn Nhật Bản", "ChST": "Giờ Chamorro", "SAST": "Giờ Chuẩn Nam Phi", "HEPMX": "Giờ Mùa Hè Thái Bình Dương Mexico", "ECT": "Giờ Ecuador", "CAT": "Giờ Trung Phi", "ACWDT": "Giờ Mùa Hè Miền Trung Tây Nước Úc", "WEZ": "Giờ Chuẩn Tây Âu", "COT": "Giờ Chuẩn Colombia", "HNPM": "Giờ Chuẩn St. Pierre và Miquelon", "CST": "Giờ chuẩn miền trung", "CDT": "Giờ mùa hè miền trung", "WIT": "Giờ Miền Đông Indonesia", "MESZ": "Giờ Mùa Hè Trung Âu", "EDT": "Giờ mùa hè miền đông", "HAT": "Giờ Mùa Hè Newfoundland", "AEST": "Giờ Chuẩn Miền Đông Nước Úc", "AKDT": "Giờ Mùa Hè Alaska", "EAT": "Giờ Đông Phi", "SGT": "Giờ Singapore", "HADT": "Giờ Mùa Hè Hawaii-Aleutian"},
 	}
 }
 
@@ -400,7 +400,12 @@ func (vi *vi_VN) FmtDateShort(t time.Time) string {
 	b = strconv.AppendInt(b, int64(t.Month()), 10)
 
 	b = append(b, []byte{0x2f}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -414,7 +419,12 @@ func (vi *vi_VN) FmtDateMedium(t time.Time) string {
 	b = append(b, []byte{0x20}...)
 	b = append(b, vi.monthsAbbreviated[t.Month()]...)
 	b = append(b, []byte{0x2c, 0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -424,26 +434,16 @@ func (vi *vi_VN) FmtDateLong(t time.Time) string {
 
 	b := make([]byte, 0, 32)
 
-	b = append(b, []byte{0x4e, 0x67, 0xc3, 0xa0, 0x79}...)
-	b = append(b, []byte{0x20}...)
-
-	if t.Day() < 10 {
-		b = append(b, '0')
-	}
-
 	b = strconv.AppendInt(b, int64(t.Day()), 10)
-	b = append(b, []byte{0x20, 0x74, 0x68, 0xc3, 0xa1, 0x6e, 0x67}...)
 	b = append(b, []byte{0x20}...)
+	b = append(b, vi.monthsWide[t.Month()]...)
+	b = append(b, []byte{0x2c, 0x20}...)
 
-	if t.Month() < 10 {
-		b = append(b, '0')
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
 	}
-
-	b = strconv.AppendInt(b, int64(t.Month()), 10)
-
-	b = append(b, []byte{0x20, 0x6e, 0xc4, 0x83, 0x6d}...)
-	b = append(b, []byte{0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
 
 	return string(b)
 }
@@ -454,19 +454,17 @@ func (vi *vi_VN) FmtDateFull(t time.Time) string {
 	b := make([]byte, 0, 32)
 
 	b = append(b, vi.daysWide[t.Weekday()]...)
-	b = append(b, []byte{0x2c, 0x20, 0x6e, 0x67, 0xc3, 0xa0, 0x79}...)
-	b = append(b, []byte{0x20}...)
-
-	if t.Day() < 10 {
-		b = append(b, '0')
-	}
-
+	b = append(b, []byte{0x2c, 0x20}...)
 	b = strconv.AppendInt(b, int64(t.Day()), 10)
 	b = append(b, []byte{0x20}...)
 	b = append(b, vi.monthsWide[t.Month()]...)
-	b = append(b, []byte{0x20, 0x6e, 0xc4, 0x83, 0x6d}...)
-	b = append(b, []byte{0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+	b = append(b, []byte{0x2c, 0x20}...)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }

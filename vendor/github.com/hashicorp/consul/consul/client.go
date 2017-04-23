@@ -14,6 +14,7 @@ import (
 	"github.com/hashicorp/consul/consul/agent"
 	"github.com/hashicorp/consul/consul/servers"
 	"github.com/hashicorp/consul/consul/structs"
+	"github.com/hashicorp/consul/lib"
 	"github.com/hashicorp/serf/coordinate"
 	"github.com/hashicorp/serf/serf"
 )
@@ -144,6 +145,7 @@ func (c *Client) setupSerf(conf *serf.Config, ch chan serf.Event, path string) (
 	conf.NodeName = c.config.NodeName
 	conf.Tags["role"] = "node"
 	conf.Tags["dc"] = c.config.Datacenter
+	conf.Tags["id"] = string(c.config.NodeID)
 	conf.Tags["vsn"] = fmt.Sprintf("%d", c.config.ProtocolVersion)
 	conf.Tags["vsn_min"] = fmt.Sprintf("%d", ProtocolVersionMin)
 	conf.Tags["vsn_max"] = fmt.Sprintf("%d", ProtocolVersionMax)
@@ -154,9 +156,12 @@ func (c *Client) setupSerf(conf *serf.Config, ch chan serf.Event, path string) (
 	conf.SnapshotPath = filepath.Join(c.config.DataDir, path)
 	conf.ProtocolVersion = protocolVersionMap[c.config.ProtocolVersion]
 	conf.RejoinAfterLeave = c.config.RejoinAfterLeave
-	conf.Merge = &lanMergeDelegate{dc: c.config.Datacenter}
-	conf.DisableCoordinates = c.config.DisableCoordinates
-	if err := ensurePath(conf.SnapshotPath, false); err != nil {
+	conf.Merge = &lanMergeDelegate{
+		dc:       c.config.Datacenter,
+		nodeID:   c.config.NodeID,
+		nodeName: c.config.NodeName,
+	}
+	if err := lib.EnsurePath(conf.SnapshotPath, false); err != nil {
 		return nil, err
 	}
 	return serf.Create(conf)

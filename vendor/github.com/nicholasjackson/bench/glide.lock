@@ -1,0 +1,54 @@
+hash: 312bf155fff0f0a72294ea68c1bd1934fd0a69cdcd9f9e1cc78a6079a963f74b
+updated: 2017-01-11T08:51:05.437505418-05:00
+imports:
+- name: github.com/blendlabs/go-exception
+  version: 3016f62c905ec9aab528104ef58ac4f5cd395a22
+- name: github.com/fatih/color
+  version: 34e4ee095d12986a2cef5ddb9aeb3b8cfcfea17c
+- name: github.com/golang/freetype
+  version: d9be45aaf7452cc30c0ceb1b1bf7efe1d17b7c87
+  subpackages:
+  - raster
+  - truetype
+- name: github.com/mattn/go-colorable
+  version: d228849504861217f796da67fae4f6e347643f15
+- name: github.com/mattn/go-isatty
+  version: 30a891c33c7cde7b02a981314b4228ec99380cca
+- name: github.com/wcharczuk/go-chart
+  version: fc2973067ce43455507ea5f9aa9814aabbf8f2ca
+  subpackages:
+  - drawing
+- name: golang.org/x/image
+  version: 1ff62c92167a10494f3e0b1e77cb67860a6ac43a
+  subpackages:
+  - draw
+  - font
+  - math/f64
+  - math/fixed
+- name: golang.org/x/sys
+  version: d75a52659825e75fff6158388dddc6a5b04f9ba5
+  subpackages:
+  - unix
+testImports:
+- name: github.com/alecthomas/assert
+  version: 561411bbb7e98b005e520f4c0f491c2d23782048
+- name: github.com/alecthomas/colour
+  version: 60882d9e27213e8552dcff6328914fe4c2b44bc9
+- name: github.com/alecthomas/repr
+  version: d44565ca483f0ed23c2ac9cda62c966b116e77a3
+- name: github.com/davecgh/go-spew
+  version: 6d212800a42e8ab5c146b8ace3490ee17e5225f9
+  subpackages:
+  - spew
+- name: github.com/pmezard/go-difflib
+  version: d8ed2627bdf02c080bf22230dbb337003b7aba2d
+  subpackages:
+  - difflib
+- name: github.com/sergi/go-diff
+  version: 83532ca1c1caa393179c677b6facf48e61f4ca5d
+  subpackages:
+  - diffmatchpatch
+- name: github.com/stretchr/testify
+  version: 69483b4bd14f5845b5a1e55bca19e954e827f1d0
+  subpackages:
+  - assert

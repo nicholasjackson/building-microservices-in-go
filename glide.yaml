@@ -45,6 +45,11 @@ import:
   subpackages:
   - go-fuzz
   - go-fuzz-build
+- package: github.com/SermoDigital/jose
+  version: ^1.1.0
+  subpackages:
+  - crypto
+  - jws
 testImport:
 - package: github.com/DATA-DOG/godog
   version: ^0.5.4

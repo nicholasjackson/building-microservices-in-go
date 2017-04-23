@@ -4,12 +4,31 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"os"
 	"path/filepath"
+	"reflect"
+	"regexp"
 	"strconv"
 	"strings"
+	"testing"
 
 	"github.com/DATA-DOG/godog/gherkin"
 )
+
+func TestMain(m *testing.M) {
+	status := RunWithOptions("godogs", func(s *Suite) {
+		SuiteContext(s)
+	}, Options{
+		Format:      "progress",
+		Paths:       []string{"features"},
+		Concurrency: 4,
+	})
+
+	if st := m.Run(); st > status {
+		status = st
+	}
+	os.Exit(status)
+}
 
 func SuiteContext(s *Suite) {
 	c := &suiteContext{}
@@ -49,6 +68,15 @@ func SuiteContext(s *Suite) {
 	s.Step(`^passing step$`, func() error {
 		return nil
 	})
+
+	// duplicate step to 'a failing step' I added to help test cucumber.feature
+	// I needed to have an Scenario Outline where the status was passing or failing
+	// I needed the same step def language.
+	s.Step(`^failing step$`, c.aFailingStep)
+
+	// Introduced to test formatter/cucumber.feature
+	s.Step(`^the rendered json will be as follows:$`, c.theRenderJSONWillBe)
+
 }
 
 type firedEvent struct {
@@ -168,7 +196,7 @@ func (s *suiteContext) followingStepsShouldHave(status string, steps *gherkin.Do
 	}
 
 	if len(expected) > len(actual) {
-		return fmt.Errorf("number of expected %s steps: %d is less than actual %s steps: %d", status, len(expected), status, len(actual))
+		return fmt.Errorf("number of expeted %s steps: %d is less than actual %s steps: %d", status, len(expected), status, len(actual))
 	}
 
 	for _, a := range actual {
@@ -356,6 +384,26 @@ func (s *suiteContext) theseEventsHadToBeFiredForNumberOfTimes(tbl *gherkin.Data
 		if err := s.thereWereNumEventsFired("", int(num), row.Cells[0].Value); err != nil {
 			return err
 		}
+	}
+	return nil
+}
+
+func (s *suiteContext) theRenderJSONWillBe(docstring *gherkin.DocString) error {
+	loc := regexp.MustCompile(`"suite_test.go:\d+"`)
+	var expected []cukeFeatureJSON
+	if err := json.Unmarshal([]byte(loc.ReplaceAllString(docstring.Content, `"suite_test.go:0"`)), &expected); err != nil {
+		return err
+	}
+
+	var actual []cukeFeatureJSON
+	re := regexp.MustCompile(`"duration":\s*\d+`)
+	replaced := re.ReplaceAllString(s.out.String(), `"duration": -1`)
+	if err := json.Unmarshal([]byte(loc.ReplaceAllString(replaced, `"suite_test.go:0"`)), &actual); err != nil {
+		return err
+	}
+
+	if !reflect.DeepEqual(expected, actual) {
+		return fmt.Errorf("expected json does not match actual: %s", replaced)
 	}
 	return nil
 }

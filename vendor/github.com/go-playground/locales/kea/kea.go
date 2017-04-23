@@ -56,7 +56,7 @@ func New() locales.Translator {
 		perMille:               "‰",
 		timeSeparator:          ":",
 		inifinity:              "∞",
-		currencies:             []string{"ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON", "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "AU$", "AWG", "AZM", "AZN", "BAD", "BAM", "BAN", "BBD", "৳", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN", "BGO", "BHD", "BIF", "BMD", "$", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC", "BRE", "R$", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYR", "BZD", "CA$", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNX", "CN¥", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "\u200b", "CYP", "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN", "ESA", "ESB", "ESP", "ETB", "€", "FIM", "$", "FKP", "FRF", "£", "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE", "GWP", "GYD", "HK$", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ILP", "ILR", "₪", "₹", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "JP¥", "KES", "KGS", "៛", "KMF", "KPW", "KRH", "KRO", "₩", "KWD", "KYD", "₸", "₭", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "LVL", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN", "MLF", "MMK", "₮", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK", "MX$", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC", "NIO", "NLG", "NOK", "NPR", "NZ$", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "₱", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB", "RUR", "RWF", "SAR", "$", "SCR", "SDD", "SDG", "SDP", "SEK", "$", "SHP", "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "SUR", "SVC", "SYP", "SZL", "฿", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "₺", "TTD", "NT$", "TZS", "UAH", "UAK", "UGS", "UGX", "US$", "USN", "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "₫", "VNN", "VUV", "WST", "FCFA", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "EC$", "XDR", "XEU", "XFO", "XFU", "CFA", "XPD", "CFPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL", "ZWR"},
+		currencies:             []string{"ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON", "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "AU$", "AWG", "AZM", "AZN", "BAD", "BAM", "BAN", "BBD", "৳", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN", "BGO", "BHD", "BIF", "BMD", "$", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC", "BRE", "R$", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYN", "BYR", "BZD", "CA$", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNX", "CN¥", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "\u200b", "CYP", "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN", "ESA", "ESB", "ESP", "ETB", "€", "FIM", "$", "FKP", "FRF", "£", "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE", "GWP", "GYD", "HK$", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ILP", "ILR", "₪", "₹", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "JP¥", "KES", "KGS", "៛", "KMF", "KPW", "KRH", "KRO", "₩", "KWD", "KYD", "₸", "₭", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "LVL", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN", "MLF", "MMK", "₮", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK", "MX$", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC", "NIO", "NLG", "NOK", "NPR", "NZ$", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "₱", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB", "RUR", "RWF", "SAR", "$", "SCR", "SDD", "SDG", "SDP", "SEK", "$", "SHP", "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "SUR", "SVC", "SYP", "SZL", "฿", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "₺", "TTD", "NT$", "TZS", "UAH", "UAK", "UGS", "UGX", "US$", "USN", "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "₫", "VNN", "VUV", "WST", "FCFA", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "EC$", "XDR", "XEU", "XFO", "XFU", "CFA", "XPD", "CFPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL", "ZWR"},
 		currencyPositiveSuffix: " ",
 		currencyNegativePrefix: "(",
 		currencyNegativeSuffix: " )",
@@ -73,7 +73,7 @@ func New() locales.Translator {
 		erasAbbreviated:        []string{"AK", "DK"},
 		erasNarrow:             []string{"", ""},
 		erasWide:               []string{"Antis di Kristu", "Dispos di Kristu"},
-		timezones:              map[string]string{"OESZ": "Ora di Verãu di Europa Oriental", "PDT": "Ora di Pasifiku di Verãu", "BOT": "BOT", "ACST": "Ora Padrãu di Australia Sentral", "ADT": "Ora di Verãu di Atlantiku", "EDT": "Ora Oriental di Verãu", "CLST": "CLST", "HKT": "HKT", "GFT": "GFT", "WIB": "WIB", "COT": "COT", "COST": "COST", "UYST": "UYST", "IST": "IST", "CAT": "Ora di Afrika Sentral", "WIT": "WIT", "CST": "Ora Sentral Padrãu", "GYT": "GYT", "∅∅∅": "∅∅∅", "OEZ": "Ora Padrãu di Europa Oriental", "SGT": "SGT", "HADT": "HADT", "WARST": "WARST", "SAST": "Ora di Sul di Afrika", "ChST": "ChST", "AWST": "Ora Padrãu di Australia Osidental", "SRT": "SRT", "VET": "VET", "ARST": "ARST", "EAT": "Ora di Afrika Oriental", "WAT": "Ora Padrãu di Afrika Osidental", "TMST": "TMST", "MST": "Ora di Montanha Padrãu", "HAT": "HAT", "ECT": "ECT", "EST": "Ora Oriental Padrãu", "WITA": "WITA", "JDT": "JDT", "WEZ": "Ora Padrãu di Europa Osidental", "ACWST": "Ora Padrãu di Australia Sentru-Osidental", "TMT": "TMT", "NZST": "NZST", "LHST": "LHST", "UYT": "UYT", "JST": "JST", "CHAST": "CHAST", "HAST": "HAST", "GMT": "GMT", "AEST": "Ora Padrãu di Australia Oriental", "AKST": "AKST", "HNT": "HNT", "CLT": "CLT", "HKST": "HKST", "MEZ": "Ora Padrãu di Europa Sentral", "NZDT": "NZDT", "ACWDT": "Ora di Verãu di Australia Sentru-Osidental", "AEDT": "Ora di Verãu di Australia Oriental", "PST": "Ora di Pasifiku Padrãu", "WAST": "Ora di Verão di Afrika Osidental", "AWDT": "Ora di Verãu di Australia Osidental", "LHDT": "LHDT", "MESZ": "Ora di Verãu di Europa Sentral", "CDT": "Ora Sentral di Verãu", "MDT": "Ora di Verãu di Montanha", "MYT": "MYT", "BT": "BT", "AKDT": "AKDT", "WESZ": "Ora di Verãu di Europa Osidental", "CHADT": "CHADT", "ACDT": "Ora di Verãu di Australia Sentral", "ART": "ART", "WART": "WART", "AST": "Ora Padrãu di Atlantiku"},
+		timezones:              map[string]string{"ECT": "ECT", "HADT": "HADT", "IST": "IST", "HNOG": "HNOG", "HNT": "HNT", "AEST": "Ora Padrãu di Australia Oriental", "SRT": "SRT", "SGT": "SGT", "OESZ": "Ora di Verãu di Europa Oriental", "GFT": "GFT", "HNPM": "HNPM", "CDT": "Ora Sentral di Verãu", "HAST": "HAST", "HKST": "HKST", "HNNOMX": "HNNOMX", "AEDT": "Ora di Verãu di Australia Oriental", "SAST": "Ora di Sul di Afrika", "ART": "ART", "UYT": "UYT", "AWDT": "Ora di Verãu di Australia Osidental", "ACWST": "Ora Padrãu di Australia Sentru-Osidental", "WARST": "WARST", "COST": "COST", "BOT": "BOT", "NZDT": "NZDT", "MESZ": "Ora di Verãu di Europa Sentral", "WAT": "Ora Padrãu di Afrika Osidental", "EST": "Ora Oriental Padrãu", "HNEG": "HNEG", "EAT": "Ora di Afrika Oriental", "CHADT": "CHADT", "CLST": "CLST", "HEOG": "HEOG", "GMT": "GMT", "TMST": "TMST", "COT": "COT", "HNPMX": "HNPMX", "WESZ": "Ora di Verãu di Europa Osidental", "MST": "MST", "HKT": "HKT", "ACST": "Ora Padrãu di Australia Sentral", "HAT": "HAT", "BT": "BT", "LHST": "LHST", "VET": "VET", "MYT": "MYT", "MDT": "MDT", "ARST": "ARST", "HEEG": "HEEG", "WIB": "WIB", "WEZ": "Ora Padrãu di Europa Osidental", "UYST": "UYST", "HEPM": "HEPM", "AWST": "Ora Padrãu di Australia Osidental", "CHAST": "CHAST", "NZST": "NZST", "OEZ": "Ora Padrãu di Europa Oriental", "TMT": "TMT", "∅∅∅": "∅∅∅", "LHDT": "LHDT", "CST": "Ora Sentral Padrãu", "PST": "Ora di Pasifiku Padrãu", "MEZ": "Ora Padrãu di Europa Sentral", "JDT": "JDT", "ACWDT": "Ora di Verãu di Australia Sentru-Osidental", "WART": "WART", "HENOMX": "HENOMX", "HNCU": "HNCU", "WIT": "WIT", "CAT": "Ora di Afrika Sentral", "PDT": "Ora di Pasifiku di Verãu", "JST": "JST", "ADT": "Ora di Verãu di Atlantiku", "ACDT": "Ora di Verãu di Australia Sentral", "AKDT": "AKDT", "ChST": "ChST", "HEPMX": "HEPMX", "AKST": "AKST", "GYT": "GYT", "HECU": "HECU", "CLT": "CLT", "AST": "Ora Padrãu di Atlantiku", "WAST": "Ora di Verão di Afrika Osidental", "EDT": "Ora Oriental di Verãu", "WITA": "WITA"},
 	}
 }
 
@@ -391,7 +391,12 @@ func (kea *kea) FmtDateShort(t time.Time) string {
 	b = append(b, []byte{0x2f}...)
 	b = strconv.AppendInt(b, int64(t.Month()), 10)
 	b = append(b, []byte{0x2f}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -405,7 +410,12 @@ func (kea *kea) FmtDateMedium(t time.Time) string {
 	b = append(b, []byte{0x20}...)
 	b = append(b, kea.monthsAbbreviated[t.Month()]...)
 	b = append(b, []byte{0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -421,7 +431,12 @@ func (kea *kea) FmtDateLong(t time.Time) string {
 	b = append(b, kea.monthsWide[t.Month()]...)
 	b = append(b, []byte{0x20, 0x64, 0x69}...)
 	b = append(b, []byte{0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -439,7 +454,12 @@ func (kea *kea) FmtDateFull(t time.Time) string {
 	b = append(b, kea.monthsWide[t.Month()]...)
 	b = append(b, []byte{0x20, 0x64, 0x69}...)
 	b = append(b, []byte{0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }

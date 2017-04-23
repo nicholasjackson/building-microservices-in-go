@@ -25,8 +25,10 @@ import (
 	"github.com/hashicorp/consul/types"
 	"github.com/hashicorp/go-sockaddr/template"
 	"github.com/hashicorp/go-uuid"
+	"github.com/hashicorp/raft"
 	"github.com/hashicorp/serf/coordinate"
 	"github.com/hashicorp/serf/serf"
+	"github.com/shirou/gopsutil/host"
 )
 
 const (
@@ -42,26 +44,11 @@ const (
 		"but no reason was provided. This is a default message."
 	defaultServiceMaintReason = "Maintenance mode is enabled for this " +
 		"service, but no reason was provided. This is a default message."
-
-	// The meta key prefix reserved for Consul's internal use
-	metaKeyReservedPrefix = "consul-"
-
-	// The maximum number of metadata key pairs allowed to be registered
-	metaMaxKeyPairs = 64
-
-	// The maximum allowed length of a metadata key
-	metaKeyMaxLength = 128
-
-	// The maximum allowed length of a metadata value
-	metaValueMaxLength = 512
 )
 
 var (
 	// dnsNameRe checks if a name or tag is dns-compatible.
 	dnsNameRe = regexp.MustCompile(`^[a-zA-Z0-9\-]+$`)
-
-	// metaKeyFormat checks if a metadata key string is valid
-	metaKeyFormat = regexp.MustCompile(`^[a-zA-Z0-9_-]+$`).MatchString
 )
 
 /*
@@ -224,7 +211,6 @@ func Create(config *Config, logOutput io.Writer, logWriter *logger.LogWriter,
 		shutdownCh:     make(chan struct{}),
 		endpoints:      make(map[string]string),
 	}
-
 	if err := agent.resolveTmplAddrs(); err != nil {
 		return nil, err
 	}
@@ -235,6 +221,12 @@ func Create(config *Config, logOutput io.Writer, logWriter *logger.LogWriter,
 		return nil, err
 	}
 	agent.acls = acls
+
+	// Retrieve or generate the node ID before setting up the rest of the
+	// agent, which depends on it.
+	if err := agent.setupNodeID(config); err != nil {
+		return nil, fmt.Errorf("Failed to setup node ID: %v", err)
+	}
 
 	// Initialize the local state.
 	agent.state.Init(config, agent.logger)
@@ -302,6 +294,9 @@ func (a *Agent) consulConfig() *consul.Config {
 	} else {
 		base = consul.DefaultConfig()
 	}
+
+	// This is set when the agent starts up
+	base.NodeID = a.config.NodeID
 
 	// Apply dev mode
 	base.DevMode = a.config.DevMode
@@ -388,6 +383,9 @@ func (a *Agent) consulConfig() *consul.Config {
 	if a.config.Protocol > 0 {
 		base.ProtocolVersion = uint8(a.config.Protocol)
 	}
+	if a.config.RaftProtocol != 0 {
+		base.RaftConfig.ProtocolVersion = raft.ProtocolVersion(a.config.RaftProtocol)
+	}
 	if a.config.ACLToken != "" {
 		base.ACLToken = a.config.ACLToken
 	}
@@ -418,6 +416,27 @@ func (a *Agent) consulConfig() *consul.Config {
 	if a.config.SessionTTLMinRaw != "" {
 		base.SessionTTLMin = a.config.SessionTTLMin
 	}
+	if a.config.Autopilot.CleanupDeadServers != nil {
+		base.AutopilotConfig.CleanupDeadServers = *a.config.Autopilot.CleanupDeadServers
+	}
+	if a.config.Autopilot.LastContactThreshold != nil {
+		base.AutopilotConfig.LastContactThreshold = *a.config.Autopilot.LastContactThreshold
+	}
+	if a.config.Autopilot.MaxTrailingLogs != nil {
+		base.AutopilotConfig.MaxTrailingLogs = *a.config.Autopilot.MaxTrailingLogs
+	}
+	if a.config.Autopilot.ServerStabilizationTime != nil {
+		base.AutopilotConfig.ServerStabilizationTime = *a.config.Autopilot.ServerStabilizationTime
+	}
+	if a.config.NonVotingServer {
+		base.NonVoter = a.config.NonVotingServer
+	}
+	if a.config.Autopilot.RedundancyZoneTag != "" {
+		base.AutopilotConfig.RedundancyZoneTag = a.config.Autopilot.RedundancyZoneTag
+	}
+	if a.config.Autopilot.DisableUpgradeMigration != nil {
+		base.AutopilotConfig.DisableUpgradeMigration = *a.config.Autopilot.DisableUpgradeMigration
+	}
 
 	// Format the build string
 	revision := a.config.Revision
@@ -436,6 +455,7 @@ func (a *Agent) consulConfig() *consul.Config {
 	base.KeyFile = a.config.KeyFile
 	base.ServerName = a.config.ServerName
 	base.Domain = a.config.Domain
+	base.TLSMinVersion = a.config.TLSMinVersion
 
 	// Setup the ServerUp callback
 	base.ServerUp = a.state.ConsulServerUp
@@ -506,14 +526,6 @@ func (a *Agent) resolveTmplAddrs() error {
 			return fmt.Errorf("HTTPS address resolution failed: %v", err)
 		}
 		a.config.Addresses.HTTPS = ipStr
-	}
-
-	if a.config.Addresses.RPC != "" {
-		ipStr, err := parseSingleIPTemplate(a.config.Addresses.RPC)
-		if err != nil {
-			return fmt.Errorf("RPC address resolution failed: %v", err)
-		}
-		a.config.Addresses.RPC = ipStr
 	}
 
 	if a.config.AdvertiseAddrWan != "" {
@@ -597,6 +609,104 @@ func (a *Agent) setupClient() error {
 		return fmt.Errorf("Failed to start Consul client: %v", err)
 	}
 	a.client = client
+	return nil
+}
+
+// makeRandomID will generate a random UUID for a node.
+func (a *Agent) makeRandomID() (string, error) {
+	id, err := uuid.GenerateUUID()
+	if err != nil {
+		return "", err
+	}
+
+	a.logger.Printf("[DEBUG] Using random ID %q as node ID", id)
+	return id, nil
+}
+
+// makeNodeID will try to find a host-specific ID, or else will generate a
+// random ID. The returned ID will always be formatted as a GUID. We don't tell
+// the caller whether this ID is random or stable since the consequences are
+// high for us if this changes, so we will persist it either way. This will let
+// gopsutil change implementations without affecting in-place upgrades of nodes.
+func (a *Agent) makeNodeID() (string, error) {
+	// Try to get a stable ID associated with the host itself.
+	info, err := host.Info()
+	if err != nil {
+		a.logger.Printf("[DEBUG] Couldn't get a unique ID from the host: %v", err)
+		return a.makeRandomID()
+	}
+
+	// Make sure the host ID parses as a UUID, since we don't have complete
+	// control over this process.
+	id := strings.ToLower(info.HostID)
+	if _, err := uuid.ParseUUID(id); err != nil {
+		a.logger.Printf("[DEBUG] Unique ID %q from host isn't formatted as a UUID: %v",
+			id, err)
+		return a.makeRandomID()
+	}
+
+	a.logger.Printf("[DEBUG] Using unique ID %q from host as node ID", id)
+	return id, nil
+}
+
+// setupNodeID will pull the persisted node ID, if any, or create a random one
+// and persist it.
+func (a *Agent) setupNodeID(config *Config) error {
+	// If they've configured a node ID manually then just use that, as
+	// long as it's valid.
+	if config.NodeID != "" {
+		config.NodeID = types.NodeID(strings.ToLower(string(config.NodeID)))
+		if _, err := uuid.ParseUUID(string(config.NodeID)); err != nil {
+			return err
+		}
+
+		return nil
+	}
+
+	// For dev mode we have no filesystem access so just make one.
+	if a.config.DevMode {
+		id, err := a.makeNodeID()
+		if err != nil {
+			return err
+		}
+
+		config.NodeID = types.NodeID(id)
+		return nil
+	}
+
+	// Load saved state, if any. Since a user could edit this, we also
+	// validate it.
+	fileID := filepath.Join(config.DataDir, "node-id")
+	if _, err := os.Stat(fileID); err == nil {
+		rawID, err := ioutil.ReadFile(fileID)
+		if err != nil {
+			return err
+		}
+
+		nodeID := strings.TrimSpace(string(rawID))
+		nodeID = strings.ToLower(nodeID)
+		if _, err := uuid.ParseUUID(nodeID); err != nil {
+			return err
+		}
+
+		config.NodeID = types.NodeID(nodeID)
+	}
+
+	// If we still don't have a valid node ID, make one.
+	if config.NodeID == "" {
+		id, err := a.makeNodeID()
+		if err != nil {
+			return err
+		}
+		if err := lib.EnsurePath(fileID, false); err != nil {
+			return err
+		}
+		if err := ioutil.WriteFile(fileID, []byte(id), 0600); err != nil {
+			return err
+		}
+
+		config.NodeID = types.NodeID(id)
+	}
 	return nil
 }
 
@@ -1082,11 +1192,7 @@ func (a *Agent) RemoveService(serviceID string, persist bool) error {
 	}
 
 	// Remove service immediately
-	err := a.state.RemoveService(serviceID)
-
-	// TODO: Return the error instead of just logging here in Consul 0.8
-	// For now, keep the current idempotent behavior on deleting a nonexistent service
-	if err != nil {
+	if err := a.state.RemoveService(serviceID); err != nil {
 		a.logger.Printf("[WARN] agent: Failed to deregister service %q: %s", serviceID, err)
 		return nil
 	}
@@ -1718,41 +1824,6 @@ func parseMetaPair(raw string) (string, string) {
 	} else {
 		return pair[0], ""
 	}
-}
-
-// validateMeta validates a set of key/value pairs from the agent config
-func validateMetadata(meta map[string]string) error {
-	if len(meta) > metaMaxKeyPairs {
-		return fmt.Errorf("Node metadata cannot contain more than %d key/value pairs", metaMaxKeyPairs)
-	}
-
-	for key, value := range meta {
-		if err := validateMetaPair(key, value); err != nil {
-			return fmt.Errorf("Couldn't load metadata pair ('%s', '%s'): %s", key, value, err)
-		}
-	}
-
-	return nil
-}
-
-// validateMetaPair checks that the given key/value pair is in a valid format
-func validateMetaPair(key, value string) error {
-	if key == "" {
-		return fmt.Errorf("Key cannot be blank")
-	}
-	if !metaKeyFormat(key) {
-		return fmt.Errorf("Key contains invalid characters")
-	}
-	if len(key) > metaKeyMaxLength {
-		return fmt.Errorf("Key is too long (limit: %d characters)", metaKeyMaxLength)
-	}
-	if strings.HasPrefix(key, metaKeyReservedPrefix) {
-		return fmt.Errorf("Key prefix '%s' is reserved for internal use", metaKeyReservedPrefix)
-	}
-	if len(value) > metaValueMaxLength {
-		return fmt.Errorf("Value is too long (limit: %d characters)", metaValueMaxLength)
-	}
-	return nil
 }
 
 // unloadMetadata resets the local metadata state

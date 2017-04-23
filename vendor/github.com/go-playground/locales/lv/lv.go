@@ -55,13 +55,13 @@ func New() locales.Translator {
 		perMille:               "‰",
 		timeSeparator:          ":",
 		inifinity:              "∞",
-		currencies:             []string{"ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON", "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "AU$", "AWG", "AZM", "AZN", "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN", "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC", "BRE", "R$", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYR", "BZD", "CA$", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNX", "CN¥", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP", "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN", "ESA", "ESB", "ESP", "ETB", "€", "FIM", "FJD", "FKP", "FRF", "£", "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE", "GWP", "GYD", "HK$", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ILP", "ILR", "₪", "₹", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "¥", "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "₩", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "Ls", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN", "MLF", "MMK", "MNT", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK", "MX$", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC", "NIO", "NLG", "NOK", "NPR", "NZ$", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "PHP", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB", "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD", "SHP", "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "SUR", "SVC", "SYP", "SZL", "฿", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "TRY", "TTD", "NT$", "TZS", "UAH", "UAK", "UGS", "UGX", "$", "USN", "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "₫", "VNN", "VUV", "WST", "FCFA", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "EC$", "XDR", "XEU", "XFO", "XFU", "CFA", "XPD", "CFPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL", "ZWR"},
+		currencies:             []string{"ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON", "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "AU$", "AWG", "AZM", "AZN", "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN", "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC", "BRE", "R$", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYN", "BYR", "BZD", "CA$", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNX", "CN¥", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP", "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN", "ESA", "ESB", "ESP", "ETB", "€", "FIM", "FJD", "FKP", "FRF", "£", "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE", "GWP", "GYD", "HK$", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ILP", "ILR", "₪", "₹", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "¥", "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "₩", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "Ls", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN", "MLF", "MMK", "MNT", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK", "MX$", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "NAD", "NGN", "NIC", "NIO", "NLG", "NOK", "NPR", "NZ$", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "PHP", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB", "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD", "SHP", "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "SUR", "SVC", "SYP", "SZL", "฿", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "TRY", "TTD", "NT$", "TZS", "UAH", "UAK", "UGS", "UGX", "$", "USN", "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "₫", "VNN", "VUV", "WST", "FCFA", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "EC$", "XDR", "XEU", "XFO", "XFU", "CFA", "XPD", "CFPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL", "ZWR"},
 		currencyPositiveSuffix: " ",
 		currencyNegativeSuffix: " ",
 		monthsAbbreviated:      []string{"", "janv.", "febr.", "marts", "apr.", "maijs", "jūn.", "jūl.", "aug.", "sept.", "okt.", "nov.", "dec."},
 		monthsNarrow:           []string{"", "J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"},
 		monthsWide:             []string{"", "janvāris", "februāris", "marts", "aprīlis", "maijs", "jūnijs", "jūlijs", "augusts", "septembris", "oktobris", "novembris", "decembris"},
-		daysAbbreviated:        []string{"Sv", "Pr", "Ot", "Tr", "Ce", "Pk", "Se"},
+		daysAbbreviated:        []string{"svētd.", "pirmd.", "otrd.", "trešd.", "ceturtd.", "piektd.", "sestd."},
 		daysNarrow:             []string{"S", "P", "O", "T", "C", "P", "S"},
 		daysShort:              []string{"Sv", "Pr", "Ot", "Tr", "Ce", "Pk", "Se"},
 		daysWide:               []string{"svētdiena", "pirmdiena", "otrdiena", "trešdiena", "ceturtdiena", "piektdiena", "sestdiena"},
@@ -71,7 +71,7 @@ func New() locales.Translator {
 		erasAbbreviated:        []string{"p.m.ē.", "m.ē."},
 		erasNarrow:             []string{"p.m.ē.", "m.ē."},
 		erasWide:               []string{"pirms mūsu ēras", "mūsu ērā"},
-		timezones:              map[string]string{"ART": "Argentīnas ziemas laiks", "LHDT": "Lorda Hava salas vasaras laiks", "SRT": "Surinamas laiks", "WART": "Rietumargentīnas ziemas laiks", "AKST": "Aļaskas ziemas laiks", "WITA": "Centrālindonēzijas laiks", "PDT": "Klusā okeāna vasaras laiks", "BOT": "Bolīvijas laiks", "HNT": "Ņūfaundlendas ziemas laiks", "CLT": "Čīles ziemas laiks", "AEDT": "Austrālijas austrumu vasaras laiks", "EAT": "Austrumāfrikas laiks", "PST": "Klusā okeāna ziemas laiks", "GMT": "Griničas laiks", "JST": "Japānas ziemas laiks", "MEZ": "Centrāleiropas ziemas laiks", "MDT": "MDT", "HAT": "Ņūfaundlendas vasaras laiks", "WAT": "Rietumāfrikas ziemas laiks", "MYT": "Malaizijas laiks", "CHADT": "Četemas vasaras laiks", "AEST": "Austrālijas austrumu ziemas laiks", "WARST": "Rietumargentīnas vasaras laiks", "ADT": "Atlantijas vasaras laiks", "NZST": "Jaunzēlandes ziemas laiks", "NZDT": "Jaunzēlandes vasaras laiks", "GFT": "Franču Gviānas laiks", "ACWST": "Austrālijas centrālais rietumu ziemas laiks", "GYT": "Gajānas laiks", "WEZ": "Rietumeiropas ziemas laiks", "HKT": "Honkongas ziemas laiks", "HKST": "Honkongas vasaras laiks", "ACST": "Austrālijas centrālais ziemas laiks", "COT": "Kolumbijas ziemas laiks", "AST": "Atlantijas ziemas laiks", "CDT": "Centrālais vasaras laiks", "AWST": "Austrālijas rietumu ziemas laiks", "CLST": "Čīles vasaras laiks", "WIT": "Austrumindonēzijas laiks", "∅∅∅": "Brazīlijas vasaras laiks", "WESZ": "Rietumeiropas vasaras laiks", "ECT": "Ekvadoras laiks", "ChST": "Čamoro standarta laiks", "BT": "Butānas laiks", "AWDT": "Austrālijas rietumu vasaras laiks", "AKDT": "Aļaskas vasaras laiks", "CST": "Centrālais ziemas laiks", "JDT": "Japānas vasaras laiks", "HADT": "Havaju–Aleutu vasaras laiks", "TMT": "Turkmenistānas ziemas laiks", "EDT": "Austrumu vasaras laiks", "UYT": "Urugvajas ziemas laiks", "MESZ": "Centrāleiropas vasaras laiks", "SGT": "Singapūras laiks", "COST": "Kolumbijas vasaras laiks", "WAST": "Rietumāfrikas vasaras laiks", "IST": "Indijas ziemas laiks", "TMST": "Turkmenistānas vasaras laiks", "CAT": "Centrālāfrikas laiks", "UYST": "Urugvajas vasaras laiks", "OEZ": "Austrumeiropas ziemas laiks", "OESZ": "Austrumeiropas vasaras laiks", "ACDT": "Austrālijas centrālais vasaras laiks", "SAST": "Dienvidāfrikas ziemas laiks", "MST": "MST", "LHST": "Lorda Hava salas ziemas laiks", "WIB": "Rietumindonēzijas laiks", "ACWDT": "Austrālijas centrālais rietumu vasaras laiks", "CHAST": "Četemas ziemas laiks", "VET": "Venecuēlas laiks", "HAST": "Havaju–Aleutu ziemas laiks", "ARST": "Argentīnas vasaras laiks", "EST": "Austrumu ziemas laiks"},
+		timezones:              map[string]string{"AKDT": "Aļaskas vasaras laiks", "AEST": "Austrālijas austrumu ziemas laiks", "UYT": "Urugvajas ziemas laiks", "ARST": "Argentīnas vasaras laiks", "HADT": "Havaju–Aleutu vasaras laiks", "EDT": "Austrumu vasaras laiks", "ACST": "Austrālijas centrālais ziemas laiks", "MDT": "Kalnu vasaras laiks", "HNCU": "Kubas ziemas laiks", "CDT": "Centrālais vasaras laiks", "WIT": "Austrumindonēzijas laiks", "HKST": "Honkongas vasaras laiks", "HAT": "Ņūfaundlendas vasaras laiks", "HEEG": "Austrumgrenlandes vasaras laiks", "CAT": "Centrālāfrikas laiks", "MESZ": "Centrāleiropas vasaras laiks", "WAT": "Rietumāfrikas ziemas laiks", "ACDT": "Austrālijas centrālais vasaras laiks", "CHAST": "Četemas ziemas laiks", "HNOG": "Rietumgrenlandes ziemas laiks", "PDT": "Klusā okeāna vasaras laiks", "WESZ": "Rietumeiropas vasaras laiks", "TMST": "Turkmenistānas vasaras laiks", "COST": "Kolumbijas vasaras laiks", "HENOMX": "Ziemeļrietumu Meksikas vasaras laiks", "ChST": "Čamorra ziemas laiks", "AWST": "Austrālijas rietumu ziemas laiks", "CHADT": "Četemas vasaras laiks", "HNEG": "Austrumgrenlandes ziemas laiks", "HNPM": "Senpjēras un Mikelonas ziemas laiks", "LHST": "Lorda Hava salas ziemas laiks", "OESZ": "Austrumeiropas vasaras laiks", "WART": "Rietumargentīnas ziemas laiks", "WAST": "Rietumāfrikas vasaras laiks", "EST": "Austrumu ziemas laiks", "HEPMX": "Meksikas Klusā okeāna piekrastes vasaras laiks", "SGT": "Singapūras laiks", "HEOG": "Rietumgrenlandes vasaras laiks", "OEZ": "Austrumeiropas ziemas laiks", "ART": "Argentīnas ziemas laiks", "MST": "Kalnu ziemas laiks", "HNPMX": "Meksikas Klusā okeāna piekrastes ziemas laiks", "TMT": "Turkmenistānas ziemas laiks", "UYST": "Urugvajas vasaras laiks", "GYT": "Gajānas laiks", "ECT": "Ekvadoras laiks", "AST": "Atlantijas ziemas laiks", "GMT": "Griničas laiks", "AWDT": "Austrālijas rietumu vasaras laiks", "BOT": "Bolīvijas laiks", "PST": "Klusā okeāna ziemas laiks", "NZST": "Jaunzēlandes ziemas laiks", "ADT": "Atlantijas vasaras laiks", "IST": "Indijas ziemas laiks", "WIB": "Rietumindonēzijas laiks", "NZDT": "Jaunzēlandes vasaras laiks", "MEZ": "Centrāleiropas ziemas laiks", "COT": "Kolumbijas ziemas laiks", "∅∅∅": "∅∅∅", "WITA": "Centrālindonēzijas laiks", "AEDT": "Austrālijas austrumu vasaras laiks", "SRT": "Surinamas laiks", "CLT": "Čīles ziemas laiks", "WEZ": "Rietumeiropas ziemas laiks", "BT": "Butānas laiks", "AKST": "Aļaskas ziemas laiks", "HECU": "Kubas vasaras laiks", "HAST": "Havaju–Aleutu ziemas laiks", "JDT": "Japānas vasaras laiks", "JST": "Japānas ziemas laiks", "CLST": "Čīles vasaras laiks", "HNNOMX": "Ziemeļrietumu Meksikas ziemas laiks", "GFT": "Franču Gviānas laiks", "LHDT": "Lorda Hava salas vasaras laiks", "CST": "Centrālais ziemas laiks", "ACWST": "Austrālijas centrālais rietumu ziemas laiks", "HKT": "Honkongas ziemas laiks", "HEPM": "Senpjēras un Mikelonas vasaras laiks", "EAT": "Austrumāfrikas laiks", "VET": "Venecuēlas laiks", "MYT": "Malaizijas laiks", "WARST": "Rietumargentīnas vasaras laiks", "HNT": "Ņūfaundlendas ziemas laiks", "SAST": "Dienvidāfrikas ziemas laiks", "ACWDT": "Austrālijas centrālais rietumu vasaras laiks"},
 	}
 }
 
@@ -296,15 +296,28 @@ func (lv *lv) FmtCurrency(num float64, v uint64, currency currency.Type) string 
 
 	s := strconv.FormatFloat(math.Abs(num), 'f', int(v), 64)
 	symbol := lv.currencies[currency]
-	l := len(s) + len(symbol) + 4
-
+	l := len(s) + len(symbol) + 4 + 2*len(s[:len(s)-int(v)-1])/3
+	count := 0
+	inWhole := v == 0
 	b := make([]byte, 0, l)
 
 	for i := len(s) - 1; i >= 0; i-- {
 
 		if s[i] == '.' {
 			b = append(b, lv.decimal[0])
+			inWhole = true
 			continue
+		}
+
+		if inWhole {
+			if count == 3 {
+				for j := len(lv.group) - 1; j >= 0; j-- {
+					b = append(b, lv.group[j])
+				}
+				count = 1
+			} else {
+				count++
+			}
 		}
 
 		b = append(b, s[i])
@@ -343,15 +356,28 @@ func (lv *lv) FmtAccounting(num float64, v uint64, currency currency.Type) strin
 
 	s := strconv.FormatFloat(math.Abs(num), 'f', int(v), 64)
 	symbol := lv.currencies[currency]
-	l := len(s) + len(symbol) + 4
-
+	l := len(s) + len(symbol) + 4 + 2*len(s[:len(s)-int(v)-1])/3
+	count := 0
+	inWhole := v == 0
 	b := make([]byte, 0, l)
 
 	for i := len(s) - 1; i >= 0; i-- {
 
 		if s[i] == '.' {
 			b = append(b, lv.decimal[0])
+			inWhole = true
 			continue
+		}
+
+		if inWhole {
+			if count == 3 {
+				for j := len(lv.group) - 1; j >= 0; j-- {
+					b = append(b, lv.group[j])
+				}
+				count = 1
+			} else {
+				count++
+			}
 		}
 
 		b = append(b, s[i])
@@ -425,7 +451,12 @@ func (lv *lv) FmtDateMedium(t time.Time) string {
 
 	b := make([]byte, 0, 32)
 
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
+
 	b = append(b, []byte{0x2e, 0x20, 0x67, 0x61, 0x64, 0x61}...)
 	b = append(b, []byte{0x20}...)
 	b = strconv.AppendInt(b, int64(t.Day()), 10)
@@ -440,7 +471,12 @@ func (lv *lv) FmtDateLong(t time.Time) string {
 
 	b := make([]byte, 0, 32)
 
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
+
 	b = append(b, []byte{0x2e, 0x20, 0x67, 0x61, 0x64, 0x61}...)
 	b = append(b, []byte{0x20}...)
 	b = strconv.AppendInt(b, int64(t.Day()), 10)
@@ -457,7 +493,13 @@ func (lv *lv) FmtDateFull(t time.Time) string {
 
 	b = append(b, lv.daysWide[t.Weekday()]...)
 	b = append(b, []byte{0x2c, 0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
+
 	b = append(b, []byte{0x2e, 0x20, 0x67, 0x61, 0x64, 0x61}...)
 	b = append(b, []byte{0x20}...)
 	b = strconv.AppendInt(b, int64(t.Day()), 10)

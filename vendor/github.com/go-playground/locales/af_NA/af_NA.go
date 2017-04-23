@@ -55,7 +55,7 @@ func New() locales.Translator {
 		perMille:               "‰",
 		timeSeparator:          ":",
 		inifinity:              "∞",
-		currencies:             []string{"ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON", "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "AUD", "AWG", "AZM", "AZN", "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN", "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC", "BRE", "BRL", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYR", "BZD", "CAD", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNX", "CNY", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP", "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN", "ESA", "ESB", "ESP", "ETB", "EUR", "FIM", "FJD", "FKP", "FRF", "GBP", "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE", "GWP", "GYD", "HKD", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ILP", "ILR", "ILS", "INR", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "JPY", "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "KRW", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "LVL", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN", "MLF", "MMK", "MNT", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK", "MXN", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "$", "NGN", "NIC", "NIO", "NLG", "NOK", "NPR", "NZD", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "PHP", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB", "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD", "SHP", "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "SUR", "SVC", "SYP", "SZL", "THB", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "TRY", "TTD", "TWD", "TZS", "UAH", "UAK", "UGS", "UGX", "USD", "USN", "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "VND", "VNN", "VUV", "WST", "XAF", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "XCD", "XDR", "XEU", "XFO", "XFU", "XOF", "XPD", "XPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL", "ZWR"},
+		currencies:             []string{"ADP", "AED", "AFA", "AFN", "ALK", "ALL", "AMD", "ANG", "AOA", "AOK", "AON", "AOR", "ARA", "ARL", "ARM", "ARP", "ARS", "ATS", "AUD", "AWG", "AZM", "AZN", "BAD", "BAM", "BAN", "BBD", "BDT", "BEC", "BEF", "BEL", "BGL", "BGM", "BGN", "BGO", "BHD", "BIF", "BMD", "BND", "BOB", "BOL", "BOP", "BOV", "BRB", "BRC", "BRE", "BRL", "BRN", "BRR", "BRZ", "BSD", "BTN", "BUK", "BWP", "BYB", "BYN", "BYR", "BZD", "CAD", "CDF", "CHE", "CHF", "CHW", "CLE", "CLF", "CLP", "CNX", "CNY", "COP", "COU", "CRC", "CSD", "CSK", "CUC", "CUP", "CVE", "CYP", "CZK", "DDM", "DEM", "DJF", "DKK", "DOP", "DZD", "ECS", "ECV", "EEK", "EGP", "ERN", "ESA", "ESB", "ESP", "ETB", "EUR", "FIM", "FJD", "FKP", "FRF", "GBP", "GEK", "GEL", "GHC", "GHS", "GIP", "GMD", "GNF", "GNS", "GQE", "GRD", "GTQ", "GWE", "GWP", "GYD", "HKD", "HNL", "HRD", "HRK", "HTG", "HUF", "IDR", "IEP", "ILP", "ILR", "ILS", "INR", "IQD", "IRR", "ISJ", "ISK", "ITL", "JMD", "JOD", "JPY", "KES", "KGS", "KHR", "KMF", "KPW", "KRH", "KRO", "KRW", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LTL", "LTT", "LUC", "LUF", "LUL", "LVL", "LVR", "LYD", "MAD", "MAF", "MCF", "MDC", "MDL", "MGA", "MGF", "MKD", "MKN", "MLF", "MMK", "MNT", "MOP", "MRO", "MTL", "MTP", "MUR", "MVP", "MVR", "MWK", "MXN", "MXP", "MXV", "MYR", "MZE", "MZM", "MZN", "$", "NGN", "NIC", "NIO", "NLG", "NOK", "NPR", "NZD", "OMR", "PAB", "PEI", "PEN", "PES", "PGK", "PHP", "PKR", "PLN", "PLZ", "PTE", "PYG", "QAR", "RHD", "ROL", "RON", "RSD", "RUB", "RUR", "RWF", "SAR", "SBD", "SCR", "SDD", "SDG", "SDP", "SEK", "SGD", "SHP", "SIT", "SKK", "SLL", "SOS", "SRD", "SRG", "SSP", "STD", "SUR", "SVC", "SYP", "SZL", "THB", "TJR", "TJS", "TMM", "TMT", "TND", "TOP", "TPE", "TRL", "TRY", "TTD", "TWD", "TZS", "UAH", "UAK", "UGS", "UGX", "USD", "USN", "USS", "UYI", "UYP", "UYU", "UZS", "VEB", "VEF", "VND", "VNN", "VUV", "WST", "XAF", "XAG", "XAU", "XBA", "XBB", "XBC", "XBD", "XCD", "XDR", "XEU", "XFO", "XFU", "XOF", "XPD", "XPF", "XPT", "XRE", "XSU", "XTS", "XUA", "XXX", "YDD", "YER", "YUD", "YUM", "YUN", "YUR", "ZAL", "ZAR", "ZMK", "ZMW", "ZRN", "ZRZ", "ZWD", "ZWL", "ZWR"},
 		currencyNegativePrefix: "(",
 		currencyNegativeSuffix: ")",
 		monthsAbbreviated:      []string{"", "Jan.", "Feb.", "Mrt.", "Apr.", "Mei", "Jun.", "Jul.", "Aug.", "Sep.", "Okt.", "Nov.", "Des."},
@@ -71,7 +71,7 @@ func New() locales.Translator {
 		erasAbbreviated:        []string{"v.C.", "n.C."},
 		erasNarrow:             []string{"v.C.", "n.C."},
 		erasWide:               []string{"voor Christus", "na Christus"},
-		timezones:              map[string]string{"ACWDT": "Australiese sentraal-Westelike dagligtyd", "GYT": "Guyana-tyd", "CLST": "Chili-somertyd", "ECT": "Ecuador-tyd", "ACST": "Australiese sentraal-standaardtyd", "WAT": "Wes-Afrika-standaardtyd", "ARST": "Argentinië-somertyd", "SAST": "Suid-Afrika-standaardtyd", "MDT": "Berg-dagligtyd", "HKT": "Hongkong-standaardtyd", "ACDT": "Australiese sentrale dagligtyd", "MST": "Berg-standaardtyd", "WIT": "Oos-Indonesië-tyd", "AWDT": "Australiese Westelike dagligtyd", "HADT": "Hawaii-Aleusiër-dagligtyd", "ACWST": "Australiese sentraal-Westelike standaard-tyd", "AWST": "Australiese Westelike standaardtyd", "TMT": "Turkmenistan-standaardtyd", "ChST": "Chamorro-standaardtyd", "BOT": "Bolivia-tyd", "BT": "Bhoetan-tyd", "HNT": "Newfoundland-standaardtyd", "MEZ": "Sentraal-Europese standaardtyd", "MESZ": "Sentraal-Europese somertyd", "VET": "Venezuela-tyd", "WART": "Wes-Argentinië-standaardtyd", "HAST": "Hawaii-Aleusiër-standaardtyd", "AEST": "Australiese Oostelike standaardtyd", "PST": "Pasifiese standaardtyd", "∅∅∅": "Brasilië somertyd", "HKST": "Hongkong-somertyd", "WESZ": "Wes-Europese somertyd", "CST": "Sentrale standaardtyd", "EAT": "Oos-Afrika-tyd", "IST": "Indië-standaardtyd", "TMST": "Turkmenistan-somertyd", "GMT": "Greenwich-mediaantyd", "AKST": "Alaska-standaardtyd", "ADT": "Atlantiese dagligtyd", "MYT": "Maleisië-tyd", "LHST": "Lord Howe-standaardtyd", "UYT": "Uruguay-standaardtyd", "COST": "Colombië-somertyd", "AST": "Atlantiese standaardtyd", "NZDT": "Nieu-Seeland-dagligtyd", "LHDT": "Lord Howe-dagligtyd", "SRT": "Suriname-tyd", "COT": "Colombië-standaardtyd", "AEDT": "Australiese Oostelike dagligtyd", "EDT": "Oostelike dagligtyd", "NZST": "Nieu-Seeland-standaardtyd", "JST": "Japan-standaardtyd", "GFT": "Frans-Guiana-tyd", "WARST": "Wes-Argentinië-somertyd", "WITA": "Sentraal Indonesië-tyd", "CDT": "Sentrale dagligtyd", "CLT": "Chili-standaardtyd", "WIB": "Wes-Indonesië-tyd", "SGT": "Singapoer-standaardtyd", "OEZ": "Oos-Europese standaardtyd", "OESZ": "Oos-Europese somertyd", "CHADT": "Chatham-dagligtyd", "AKDT": "Alaska-dagligtyd", "CAT": "Sentraal-Afrika-tyd", "HAT": "Newfoundland-dagligtyd", "UYST": "Uruguay-somertyd", "JDT": "Japan-dagligtyd", "ART": "Argentinië-standaardtyd", "EST": "Oostelike standaardtyd", "PDT": "Pasifiese dagligtyd", "WAST": "Wes-Afrika-somertyd", "WEZ": "Wes-Europese standaardtyd", "CHAST": "Chatham-standaardtyd"},
+		timezones:              map[string]string{"HNEG": "Oos-Groenland-standaardtyd", "HEEG": "Oos-Groenland-somertyd", "LHDT": "Lord Howe-dagligtyd", "SRT": "Suriname-tyd", "GYT": "Guyana-tyd", "ADT": "Atlantiese dagligtyd", "EST": "Oostelike standaardtyd", "COST": "Colombië-somertyd", "HNCU": "Kuba-standaardtyd", "WIT": "Oos-Indonesië-tyd", "HNPM": "Sint-Pierre en Miquelon-standaardtyd", "WESZ": "Wes-Europese somertyd", "TMT": "Turkmenistan-standaardtyd", "ACDT": "Australiese sentrale dagligtyd", "AKDT": "Alaska-dagligtyd", "WITA": "Sentraal Indonesië-tyd", "LHST": "Lord Howe-standaardtyd", "WIB": "Wes-Indonesië-tyd", "CST": "Sentrale standaardtyd", "OEZ": "Oos-Europese standaardtyd", "CLST": "Chili-somertyd", "COT": "Colombië-standaardtyd", "HENOMX": "Noordwes-Meksiko-dagligtyd", "CDT": "Sentrale dagligtyd", "CAT": "Sentraal-Afrika-tyd", "JDT": "Japan-dagligtyd", "EDT": "Oostelike dagligtyd", "ART": "Argentinië-standaardtyd", "MST": "MST", "ChST": "Chamorro-standaardtyd", "ECT": "Ecuador-tyd", "IST": "Indië-standaardtyd", "ACWDT": "Australiese sentraal-Westelike dagligtyd", "VET": "Venezuela-tyd", "AWST": "Australiese Westelike standaardtyd", "TMST": "Turkmenistan-somertyd", "AEDT": "Australiese Oostelike dagligtyd", "PST": "Pasifiese standaardtyd", "ACWST": "Australiese sentraal-Westelike standaard-tyd", "ACST": "Australiese sentraal-standaardtyd", "BT": "Bhoetan-tyd", "GFT": "Frans-Guiana-tyd", "HEPMX": "Meksikaanse Pasifiese dagligtyd", "CHAST": "Chatham-standaardtyd", "HADT": "Hawaii-Aleusiër-dagligtyd", "ARST": "Argentinië-somertyd", "MDT": "MDT", "WAT": "Wes-Afrika-standaardtyd", "WAST": "Wes-Afrika-somertyd", "HAST": "Hawaii-Aleusiër-standaardtyd", "MEZ": "Sentraal-Europese standaardtyd", "WART": "Wes-Argentinië-standaardtyd", "AST": "Atlantiese standaardtyd", "EAT": "Oos-Afrika-tyd", "HKST": "Hongkong-somertyd", "HAT": "Newfoundland-dagligtyd", "SAST": "Suid-Afrika-standaardtyd", "CHADT": "Chatham-dagligtyd", "OESZ": "Oos-Europese somertyd", "HNT": "Newfoundland-standaardtyd", "HEPM": "Sint-Pierre en Miquelon-dagligtyd", "NZDT": "Nieu-Seeland-dagligtyd", "MESZ": "Sentraal-Europese somertyd", "HNOG": "Wes-Groenland-standaardtyd", "HEOG": "Wes-Groenland-somertyd", "MYT": "Maleisië-tyd", "AKST": "Alaska-standaardtyd", "UYST": "Uruguay-somertyd", "CLT": "Chili-standaardtyd", "AEST": "Australiese Oostelike standaardtyd", "BOT": "Bolivia-tyd", "WEZ": "Wes-Europese standaardtyd", "GMT": "Greenwich-mediaantyd", "WARST": "Wes-Argentinië-somertyd", "PDT": "Pasifiese dagligtyd", "NZST": "Nieu-Seeland-standaardtyd", "JST": "Japan-standaardtyd", "HKT": "Hongkong-standaardtyd", "HECU": "Kuba-dagligtyd", "∅∅∅": "Brasilië somertyd", "AWDT": "Australiese Westelike dagligtyd", "SGT": "Singapoer-standaardtyd", "HNNOMX": "Noordwes-Meksiko-standaardtyd", "UYT": "Uruguay-standaardtyd", "HNPMX": "Meksikaanse Pasifiese standaardtyd"},
 	}
 }
 
@@ -397,7 +397,12 @@ func (af *af_NA) FmtDateShort(t time.Time) string {
 
 	b := make([]byte, 0, 32)
 
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
+
 	b = append(b, []byte{0x2d}...)
 
 	if t.Month() < 10 {
@@ -426,7 +431,12 @@ func (af *af_NA) FmtDateMedium(t time.Time) string {
 	b = append(b, []byte{0x20}...)
 	b = append(b, af.monthsAbbreviated[t.Month()]...)
 	b = append(b, []byte{0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -440,7 +450,12 @@ func (af *af_NA) FmtDateLong(t time.Time) string {
 	b = append(b, []byte{0x20}...)
 	b = append(b, af.monthsWide[t.Month()]...)
 	b = append(b, []byte{0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -456,7 +471,12 @@ func (af *af_NA) FmtDateFull(t time.Time) string {
 	b = append(b, []byte{0x20}...)
 	b = append(b, af.monthsWide[t.Month()]...)
 	b = append(b, []byte{0x20}...)
-	b = strconv.AppendInt(b, int64(t.Year()), 10)
+
+	if t.Year() > 0 {
+		b = strconv.AppendInt(b, int64(t.Year()), 10)
+	} else {
+		b = strconv.AppendInt(b, int64(t.Year()*-1), 10)
+	}
 
 	return string(b)
 }
@@ -466,13 +486,11 @@ func (af *af_NA) FmtTimeShort(t time.Time) string {
 
 	b := make([]byte, 0, 32)
 
-	h := t.Hour()
-
-	if h > 12 {
-		h -= 12
+	if t.Hour() < 10 {
+		b = append(b, '0')
 	}
 
-	b = strconv.AppendInt(b, int64(h), 10)
+	b = strconv.AppendInt(b, int64(t.Hour()), 10)
 	b = append(b, af.timeSeparator...)
 
 	if t.Minute() < 10 {
@@ -480,13 +498,6 @@ func (af *af_NA) FmtTimeShort(t time.Time) string {
 	}
 
 	b = strconv.AppendInt(b, int64(t.Minute()), 10)
-	b = append(b, []byte{0x20}...)
-
-	if t.Hour() < 12 {
-		b = append(b, af.periodsAbbreviated[0]...)
-	} else {
-		b = append(b, af.periodsAbbreviated[1]...)
-	}
 
 	return string(b)
 }
@@ -496,13 +507,11 @@ func (af *af_NA) FmtTimeMedium(t time.Time) string {
 
 	b := make([]byte, 0, 32)
 
-	h := t.Hour()
-
-	if h > 12 {
-		h -= 12
+	if t.Hour() < 10 {
+		b = append(b, '0')
 	}
 
-	b = strconv.AppendInt(b, int64(h), 10)
+	b = strconv.AppendInt(b, int64(t.Hour()), 10)
 	b = append(b, af.timeSeparator...)
 
 	if t.Minute() < 10 {
@@ -517,13 +526,6 @@ func (af *af_NA) FmtTimeMedium(t time.Time) string {
 	}
 
 	b = strconv.AppendInt(b, int64(t.Second()), 10)
-	b = append(b, []byte{0x20}...)
-
-	if t.Hour() < 12 {
-		b = append(b, af.periodsAbbreviated[0]...)
-	} else {
-		b = append(b, af.periodsAbbreviated[1]...)
-	}
 
 	return string(b)
 }
@@ -533,13 +535,11 @@ func (af *af_NA) FmtTimeLong(t time.Time) string {
 
 	b := make([]byte, 0, 32)
 
-	h := t.Hour()
-
-	if h > 12 {
-		h -= 12
+	if t.Hour() < 10 {
+		b = append(b, '0')
 	}
 
-	b = strconv.AppendInt(b, int64(h), 10)
+	b = strconv.AppendInt(b, int64(t.Hour()), 10)
 	b = append(b, af.timeSeparator...)
 
 	if t.Minute() < 10 {
@@ -554,14 +554,6 @@ func (af *af_NA) FmtTimeLong(t time.Time) string {
 	}
 
 	b = strconv.AppendInt(b, int64(t.Second()), 10)
-	b = append(b, []byte{0x20}...)
-
-	if t.Hour() < 12 {
-		b = append(b, af.periodsAbbreviated[0]...)
-	} else {
-		b = append(b, af.periodsAbbreviated[1]...)
-	}
-
 	b = append(b, []byte{0x20}...)
 
 	tz, _ := t.Zone()
@@ -575,13 +567,11 @@ func (af *af_NA) FmtTimeFull(t time.Time) string {
 
 	b := make([]byte, 0, 32)
 
-	h := t.Hour()
-
-	if h > 12 {
-		h -= 12
+	if t.Hour() < 10 {
+		b = append(b, '0')
 	}
 
-	b = strconv.AppendInt(b, int64(h), 10)
+	b = strconv.AppendInt(b, int64(t.Hour()), 10)
 	b = append(b, af.timeSeparator...)
 
 	if t.Minute() < 10 {
@@ -596,14 +586,6 @@ func (af *af_NA) FmtTimeFull(t time.Time) string {
 	}
 
 	b = strconv.AppendInt(b, int64(t.Second()), 10)
-	b = append(b, []byte{0x20}...)
-
-	if t.Hour() < 12 {
-		b = append(b, af.periodsAbbreviated[0]...)
-	} else {
-		b = append(b, af.periodsAbbreviated[1]...)
-	}
-
 	b = append(b, []byte{0x20}...)
 
 	tz, _ := t.Zone()

@@ -20,13 +20,17 @@ Go Micro abstracts way the details of distributed systems. Here are the main fea
 - **Message Encoding** - Micro services can encode requests in a number of encoding formats and seamlessly decode based on the Content-Type header.
 - **RPC Client/Server** - The client and server leverage the above features and provide a clean simple interface for building microservices.
 
+## Docs
+
+For more detailed information on the architecture, installation and use of go-micro checkout the [docs](https://micro.mu/docs).
+
 ## Learn By Example
 
 An example service can be found in [**examples/service**](https://github.com/micro/examples/tree/master/service). The [**examples**](https://github.com/micro/examples) directory contains many more examples for using things such as middleware/wrappers, selector filters, pub/sub and code generation. 
 
 For the complete greeter example look at [**examples/greeter**](https://github.com/micro/examples/tree/master/greeter). Other examples can be found throughout the GitHub repository.
 
-Check out the blog post to learn how to write go-micro services [https://blog.micro.mu/2016/03/28/go-micro.html](https://blog.micro.mu/2016/03/28/go-micro.html) or watch the talk from the [Golang UK Conf 2016](https://www.youtube.com/watch?v=xspaDovwk34).
+Check out the blog post to learn how to write go-micro services [https://micro.mu/blog/2016/03/28/go-micro.html](https://micro.mu/blog/2016/03/28/go-micro.html) or watch the talk from the [Golang UK Conf 2016](https://www.youtube.com/watch?v=xspaDovwk34).
 
 ## Getting Started
 
@@ -38,7 +42,7 @@ There's just one prerequisite. We need a service discovery system to resolve ser
 The default discovery mechanism used in go-micro is Consul. Discovery is however pluggable so you can used 
 etcd, kubernetes, zookeeper, etc. Plugins can be found in [micro/go-plugins](https://github.com/micro/go-plugins).
 
-### Zero Dependency Discovery
+### Multicast DNS
 
 We can use multicast DNS with the built in MDNS registry for a zero dependency configuration. 
 
@@ -47,34 +51,35 @@ Just pass `--registry=mdns` to any command
 $ go run main.go --registry=mdns
 ```
 
-### Consul Discovery
+### Consul
 
 Alternatively we can use the default discovery system which is Consul.
 
-**Install on OS X**
-
+**Mac OS**
 ```
 brew install consul
+consul agent -dev
+```
+
+**Docker**
+```
+docker run consul
 ```
 
 [Further installation instructions](https://www.consul.io/intro/getting-started/install.html)
 
-**Run Consul**
-```
-$ consul agent -dev -advertise=127.0.0.1
-```
-
 ### Run Service
+
 ```
-$ go run examples/service/main.go
+$ go get github.com/micro/examples/service && service
 2016/03/14 10:59:14 Listening on [::]:50137
 2016/03/14 10:59:14 Broker Listening on [::]:50138
 2016/03/14 10:59:14 Registering node: greeter-ca62b017-e9d3-11e5-9bbb-68a86d0d36b6
 ```
 
-### Test Service
+### Call Service
 ```
-$ go run examples/service/main.go --run_client
+$ service --run_client
 Hello John
 ```
 
@@ -287,6 +292,7 @@ By default go-micro only provides a few implementation of each interface at the 
 If you want to integrate plugins simply link them in a separate file and rebuild
 
 Create a plugins.go file
+
 ```go
 import (
         // etcd v3 registry
@@ -299,6 +305,7 @@ import (
 ```
 
 Build binary
+
 ```shell
 // For local use
 go build -i -o service ./main.go ./plugins.go
@@ -309,8 +316,12 @@ Flag usage of plugins
 service --registry=etcdv3 --transport=nats --broker=kafka
 ```
 
+## Other Languages
+
+Check out [ja-micro](https://github.com/Sixt/ja-micro) to write services in Java
+
 ## Sponsors
 
 Open source development of Micro is sponsored by Sixt
 
-<a href="https://blog.micro.mu/2016/04/25/announcing-sixt-sponsorship.html"><img src="https://micro.mu/sixt_logo.png" width=150px height="auto" /></a>
+<a href="https://micro.mu/blog/2016/04/25/announcing-sixt-sponsorship.html"><img src="https://micro.mu/sixt_logo.png" width=150px height="auto" /></a>

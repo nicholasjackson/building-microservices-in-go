@@ -62,7 +62,7 @@ func (s *Server) aclLocalFault(id string) (string, string, error) {
 
 	// Query the state store.
 	state := s.fsm.State()
-	_, acl, err := state.ACLGet(id)
+	_, acl, err := state.ACLGet(nil, id)
 	if err != nil {
 		return "", "", err
 	}
@@ -341,9 +341,14 @@ func (f *aclFilter) allowNode(node string) bool {
 
 // allowService is used to determine if a service is accessible for an ACL.
 func (f *aclFilter) allowService(service string) bool {
-	if service == "" || service == ConsulServiceID {
+	if service == "" {
 		return true
 	}
+
+	if !f.enforceVersion8 && service == ConsulServiceID {
+		return true
+	}
+
 	return f.acl.ServiceRead(service)
 }
 

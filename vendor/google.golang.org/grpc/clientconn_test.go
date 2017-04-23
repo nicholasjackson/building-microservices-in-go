@@ -50,8 +50,8 @@ func TestDialTimeout(t *testing.T) {
 	if err == nil {
 		conn.Close()
 	}
-	if err != ErrClientConnTimeout {
-		t.Fatalf("Dial(_, _) = %v, %v, want %v", conn, err, ErrClientConnTimeout)
+	if err != context.DeadlineExceeded {
+		t.Fatalf("Dial(_, _) = %v, %v, want %v", conn, err, context.DeadlineExceeded)
 	}
 }
 
@@ -64,8 +64,8 @@ func TestTLSDialTimeout(t *testing.T) {
 	if err == nil {
 		conn.Close()
 	}
-	if err != ErrClientConnTimeout {
-		t.Fatalf("Dial(_, _) = %v, %v, want %v", conn, err, ErrClientConnTimeout)
+	if err != context.DeadlineExceeded {
+		t.Fatalf("Dial(_, _) = %v, %v, want %v", conn, err, context.DeadlineExceeded)
 	}
 }
 
@@ -76,6 +76,34 @@ func TestTLSServerNameOverwrite(t *testing.T) {
 		t.Fatalf("Failed to create credentials %v", err)
 	}
 	conn, err := Dial("Non-Existent.Server:80", WithTransportCredentials(creds))
+	if err != nil {
+		t.Fatalf("Dial(_, _) = _, %v, want _, <nil>", err)
+	}
+	conn.Close()
+	if conn.authority != overwriteServerName {
+		t.Fatalf("%v.authority = %v, want %v", conn, conn.authority, overwriteServerName)
+	}
+}
+
+func TestWithAuthority(t *testing.T) {
+	overwriteServerName := "over.write.server.name"
+	conn, err := Dial("Non-Existent.Server:80", WithInsecure(), WithAuthority(overwriteServerName))
+	if err != nil {
+		t.Fatalf("Dial(_, _) = _, %v, want _, <nil>", err)
+	}
+	conn.Close()
+	if conn.authority != overwriteServerName {
+		t.Fatalf("%v.authority = %v, want %v", conn, conn.authority, overwriteServerName)
+	}
+}
+
+func TestWithAuthorityAndTLS(t *testing.T) {
+	overwriteServerName := "over.write.server.name"
+	creds, err := credentials.NewClientTLSFromFile(tlsDir+"ca.pem", overwriteServerName)
+	if err != nil {
+		t.Fatalf("Failed to create credentials %v", err)
+	}
+	conn, err := Dial("Non-Existent.Server:80", WithTransportCredentials(creds), WithAuthority("no.effect.authority"))
 	if err != nil {
 		t.Fatalf("Dial(_, _) = _, %v, want _, <nil>", err)
 	}
