@@ -3,34 +3,25 @@ package jwt
 import (
 	"crypto/rsa"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"time"
 
 	"github.com/SermoDigital/jose/crypto"
 	"github.com/SermoDigital/jose/jws"
+	"github.com/nicholasjackson/building-microservices-in-go/chapter8/utils"
 )
 
 var rsaPrivate *rsa.PrivateKey
 var rsaPublic *rsa.PublicKey
 
 func init() {
-	bytes, err := ioutil.ReadFile("./sample_key.priv")
-	if err != nil {
-		log.Fatal("Unable to read private key", err)
-	}
-
-	rsaPrivate, err = crypto.ParseRSAPrivateKeyFromPEM(bytes)
+	var err error
+	rsaPrivate, err = utils.UnmarshalRSAPrivateKeyFromFile("../keys/sample_key.priv")
 	if err != nil {
 		log.Fatal("Unable to parse private key", err)
 	}
 
-	bytes, err = ioutil.ReadFile("./sample_key.pub")
-	if err != nil {
-		log.Fatal("Unable to read public key", err)
-	}
-
-	rsaPublic, err = crypto.ParseRSAPublicKeyFromPEM(bytes)
+	rsaPublic, err = utils.UnmarshalRSAPublicKeyFromFile("../keys/sample_key.pub")
 	if err != nil {
 		log.Fatal("Unable to parse public key", err)
 	}
@@ -39,7 +30,7 @@ func init() {
 // GenerateJWT creates a new JWT and signs it with the private key
 func GenerateJWT() []byte {
 	claims := jws.Claims{}
-	claims.SetExpiration(time.Now().Add(time.Duration(1440*3650) * time.Minute))
+	claims.SetExpiration(time.Now().Add(2880 * time.Minute))
 	claims.Set("userID", "abcsd232jfjf")
 	claims.Set("accessLevel", "user")
 

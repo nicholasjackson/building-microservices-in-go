@@ -8,6 +8,7 @@ import (
 	"io"
 )
 
+// EncryptData encrypts the given data using AES with the given key
 func EncryptData(data []byte, key []byte) ([]byte, error) {
 	if err := validateKey(key); err != nil {
 		return make([]byte, 0), err
@@ -16,7 +17,6 @@ func EncryptData(data []byte, key []byte) ([]byte, error) {
 	c, err := aes.NewCipher(key)
 	if err != nil {
 		return make([]byte, 0), err
-
 	}
 
 	gcm, err := cipher.NewGCM(c)
@@ -32,6 +32,7 @@ func EncryptData(data []byte, key []byte) ([]byte, error) {
 	return gcm.Seal(nonce, nonce, data, nil), nil
 }
 
+// DecryptData decrypts the given data with the given key
 func DecryptData(data []byte, key []byte) ([]byte, error) {
 	c, err := aes.NewCipher(key)
 	if err != nil {

@@ -27,10 +27,6 @@ func TestValidateJWT(t *testing.T) {
 
 func TestSplitIntoDataAndSignature(t *testing.T) {
 	data := strings.Split(validJWT, ".")
-	bytes, err := base64.RawURLEncoding.DecodeString(data[2])
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	file, err := os.OpenFile("data.txt", os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
@@ -40,11 +36,24 @@ func TestSplitIntoDataAndSignature(t *testing.T) {
 
 	file.WriteString(strings.Join(data[:2], "."))
 
+	file, err = os.OpenFile("signature.txt", os.O_RDWR|os.O_CREATE, 0666)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	file.WriteString(data[2])
+
+	signature, err := base64.RawURLEncoding.DecodeString(data[2])
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	file2, err := os.OpenFile("signature.sha256", os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer file2.Close()
 
-	file2.Write(bytes)
+	file2.Write(signature)
 }
