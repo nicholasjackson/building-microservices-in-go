@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -88,7 +87,6 @@ func getProducts(rw http.ResponseWriter, r *http.Request) {
 			break
 		}
 
-		fmt.Println(r)
 		products = append(products, obj.(product))
 	}
 

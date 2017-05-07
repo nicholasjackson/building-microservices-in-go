@@ -87,7 +87,7 @@ func productsHandler(rw http.ResponseWriter, r *http.Request) {
 func insertProduct(rw http.ResponseWriter, r *http.Request) {
 	log.Println("/insert handler called")
 
-	product := &Product{}
+	p := &product{}
 
 	data, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -96,7 +96,7 @@ func insertProduct(rw http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	err = json.Unmarshal(data, product)
+	err = json.Unmarshal(data, p)
 	if err != nil {
 		log.Println(err)
 		rw.WriteHeader(http.StatusBadRequest)
@@ -104,7 +104,7 @@ func insertProduct(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	txn := db.Txn(true)
-	if err := txn.Insert("product", product); err != nil {
+	if err := txn.Insert("product", p); err != nil {
 		log.Println(err)
 		rw.WriteHeader(http.StatusInternalServerError)
 		return
@@ -125,7 +125,7 @@ func getProducts(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	products := make([]Product, 0)
+	products := make([]product, 0)
 	for {
 		obj := results.Next()
 		if obj == nil {
@@ -133,7 +133,7 @@ func getProducts(rw http.ResponseWriter, r *http.Request) {
 		}
 
 		fmt.Println(r)
-		products = append(products, obj.(Product))
+		products = append(products, obj.(product))
 	}
 
 	encoder := json.NewEncoder(rw)
