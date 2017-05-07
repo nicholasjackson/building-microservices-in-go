@@ -11,18 +11,37 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/DATA-DOG/godog/gherkin"
 )
 
 func TestMain(m *testing.M) {
-	status := RunWithOptions("godogs", func(s *Suite) {
-		SuiteContext(s)
-	}, Options{
-		Format:      "progress",
-		Paths:       []string{"features"},
-		Concurrency: 4,
-	})
+	format := "progress" // non verbose mode
+	concurrency := 4
+
+	var specific bool
+	for _, arg := range os.Args[1:] {
+		if arg == "-test.v=true" { // go test transforms -v option - verbose mode
+			format = "pretty"
+			concurrency = 1
+			break
+		}
+		if strings.Index(arg, "-test.run") == 0 {
+			specific = true
+		}
+	}
+	var status int
+	if !specific {
+		status = RunWithOptions("godog", func(s *Suite) {
+			SuiteContext(s)
+		}, Options{
+			Format:      format, // pretty format for verbose mode, otherwise - progress
+			Paths:       []string{"features"},
+			Concurrency: concurrency,           // concurrency for verbose mode is 1
+			Randomize:   time.Now().UnixNano(), // randomize scenario execution order
+		})
+	}
 
 	if st := m.Run(); st > status {
 		status = st
@@ -77,6 +96,21 @@ func SuiteContext(s *Suite) {
 	// Introduced to test formatter/cucumber.feature
 	s.Step(`^the rendered json will be as follows:$`, c.theRenderJSONWillBe)
 
+	s.Step(`^failing multistep$`, func() Steps {
+		return Steps{"passing step", "failing step"}
+	})
+
+	s.Step(`^undefined multistep$`, func() Steps {
+		return Steps{"passing step", "undefined step", "passing step"}
+	})
+
+	s.Step(`^passing multistep$`, func() Steps {
+		return Steps{"passing step", "passing step", "passing step"}
+	})
+
+	s.Step(`^failing nested multistep$`, func() Steps {
+		return Steps{"passing step", "passing multistep", "failing multistep"}
+	})
 }
 
 type firedEvent struct {
@@ -103,9 +137,9 @@ func (s *suiteContext) ResetBeforeEachScenario(interface{}) {
 }
 
 func (s *suiteContext) iRunFeatureSuiteWithFormatter(name string) error {
-	f, err := findFmt(name)
-	if err != nil {
-		return err
+	f := findFmt(name)
+	if f == nil {
+		return fmt.Errorf(`formatter "%s" is not available`, name)
 	}
 	s.testedSuite.fmt = f("godog", &s.out)
 	if err := s.parseFeatures(); err != nil {
@@ -297,12 +331,19 @@ func (s *suiteContext) iShouldHaveNumFeatureFiles(num int, files *gherkin.DocStr
 		return fmt.Errorf("expected %d feature paths to be parsed, but have %d", len(expected), len(actual))
 	}
 	for i := 0; i < len(expected); i++ {
+		var matched bool
 		split := strings.Split(expected[i], "/")
 		exp := filepath.Join(split...)
-		split = strings.Split(actual[i], "/")
-		act := filepath.Join(split...)
-		if exp != act {
-			return fmt.Errorf(`expected feature path "%s" at position: %d, does not match actual "%s"`, exp, i, act)
+		for j := 0; j < len(actual); j++ {
+			split = strings.Split(actual[j], "/")
+			act := filepath.Join(split...)
+			if exp == act {
+				matched = true
+				break
+			}
+		}
+		if !matched {
+			return fmt.Errorf(`expected feature path "%s" at position: %d, was not parsed, actual are %+v`, exp, i, actual)
 		}
 	}
 	return nil
@@ -396,9 +437,8 @@ func (s *suiteContext) theRenderJSONWillBe(docstring *gherkin.DocString) error {
 	}
 
 	var actual []cukeFeatureJSON
-	re := regexp.MustCompile(`"duration":\s*\d+`)
-	replaced := re.ReplaceAllString(s.out.String(), `"duration": -1`)
-	if err := json.Unmarshal([]byte(loc.ReplaceAllString(replaced, `"suite_test.go:0"`)), &actual); err != nil {
+	replaced := loc.ReplaceAllString(s.out.String(), `"suite_test.go:0"`)
+	if err := json.Unmarshal([]byte(replaced), &actual); err != nil {
 		return err
 	}
 

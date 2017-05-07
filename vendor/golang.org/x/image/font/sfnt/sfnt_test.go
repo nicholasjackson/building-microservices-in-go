@@ -81,7 +81,42 @@ func checkSegmentsEqual(got, want []Segment) error {
 				i, g, w, got, want)
 		}
 	}
-	return nil
+
+	// Check that every contour is closed.
+	if len(got) == 0 {
+		return nil
+	}
+	if got[0].Op != SegmentOpMoveTo {
+		return fmt.Errorf("segments do not start with a moveTo")
+	}
+	var (
+		first, last fixed.Point26_6
+		firstI      int
+	)
+	checkClosed := func(lastI int) error {
+		if first != last {
+			return fmt.Errorf("segments[%d:%d] not closed:\nfirst %v\nlast  %v", firstI, lastI, first, last)
+		}
+		return nil
+	}
+	for i, g := range got {
+		switch g.Op {
+		case SegmentOpMoveTo:
+			if i != 0 {
+				if err := checkClosed(i); err != nil {
+					return err
+				}
+			}
+			firstI, first, last = i, g.Args[0], g.Args[0]
+		case SegmentOpLineTo:
+			last = g.Args[0]
+		case SegmentOpQuadTo:
+			last = g.Args[1]
+		case SegmentOpCubeTo:
+			last = g.Args[2]
+		}
+	}
+	return checkClosed(len(got))
 }
 
 func TestTrueTypeParse(t *testing.T) {
@@ -109,6 +144,73 @@ func testTrueType(t *testing.T, f *Font) {
 	// that "The WGL4 character set... [has] more than 650 characters in all.
 	if got, want := f.NumGlyphs(), 650; got <= want {
 		t.Errorf("NumGlyphs: got %d, want > %d", got, want)
+	}
+}
+
+func fontData(name string) []byte {
+	switch name {
+	case "gobold":
+		return gobold.TTF
+	case "gomono":
+		return gomono.TTF
+	case "goregular":
+		return goregular.TTF
+	}
+	panic("unreachable")
+}
+
+func TestBounds(t *testing.T) {
+	testCases := map[string]fixed.Rectangle26_6{
+		"gobold": {
+			Min: fixed.Point26_6{
+				X: -452,
+				Y: -2193,
+			},
+			Max: fixed.Point26_6{
+				X: 2190,
+				Y: 432,
+			},
+		},
+		"gomono": {
+			Min: fixed.Point26_6{
+				X: 0,
+				Y: -2227,
+			},
+			Max: fixed.Point26_6{
+				X: 1229,
+				Y: 432,
+			},
+		},
+		"goregular": {
+			Min: fixed.Point26_6{
+				X: -440,
+				Y: -2118,
+			},
+			Max: fixed.Point26_6{
+				X: 2160,
+				Y: 543,
+			},
+		},
+	}
+
+	var b Buffer
+	for name, want := range testCases {
+		f, err := Parse(fontData(name))
+		if err != nil {
+			t.Errorf("Parse(%q): %v", name, err)
+			continue
+		}
+		ppem := fixed.Int26_6(f.UnitsPerEm())
+
+		got, err := f.Bounds(&b, ppem, font.HintingNone)
+		if err != nil {
+			t.Errorf("name=%q: Bounds: %v", name, err)
+			continue
+		}
+		if got != want {
+			t.Errorf("name=%q: Bounds: got %v, want %v", name, got, want)
+			continue
+		}
 	}
 }
 
@@ -145,16 +247,7 @@ func TestGlyphAdvance(t *testing.T) {
 
 	var b Buffer
 	for name, testCases1 := range testCases {
-		data := []byte(nil)
-		switch name {
-		case "gobold":
-			data = gobold.TTF
-		case "gomono":
-			data = gomono.TTF
-		case "goregular":
-			data = goregular.TTF
-		}
-		f, err := Parse(data)
+		f, err := Parse(fontData(name))
 		if err != nil {
 			t.Errorf("Parse(%q): %v", name, err)
 			continue
@@ -358,11 +451,13 @@ func TestPostScriptSegments(t *testing.T) {
 		lineTo(450, 0),
 		lineTo(450, 533),
 		lineTo(50, 533),
+		lineTo(50, 0),
 		// - contour #1
 		moveTo(100, 50),
 		lineTo(100, 483),
 		lineTo(400, 483),
 		lineTo(400, 50),
+		lineTo(100, 50),
 	}, {
 		// zero
 		// - contour #0
@@ -384,12 +479,14 @@ func TestPostScriptSegments(t *testing.T) {
 		lineTo(300, 0),
 		lineTo(300, 800),
 		lineTo(100, 800),
+		lineTo(100, 0),
 	}, {
 		// Q
 		// - contour #0
 		moveTo(657, 237),
 		lineTo(289, 387),
 		lineTo(519, 615),
+		lineTo(657, 237),
 		// - contour #1
 		moveTo(792, 169),
 		cubeTo(867, 263, 926, 502, 791, 665),
@@ -398,6 +495,7 @@ func TestPostScriptSegments(t *testing.T) {
 		cubeTo(369, -39, 641, 18, 722, 93),
 		lineTo(802, 3),
 		lineTo(864, 83),
+		lineTo(792, 169),
 	}, {
 		// uni4E2D
 		// - contour #0
@@ -412,7 +510,7 @@ func TestPostScriptSegments(t *testing.T) {
 		lineTo(331, 758),
 		lineTo(243, 752),
 		lineTo(235, 562),
-		// TODO: explicitly (not implicitly) close these contours?
+		lineTo(141, 520),
 	}}
 
 	testSegments(t, "CFFTest.otf", wants)

@@ -1,1 +1,1 @@
-package symetric
+package symmetric

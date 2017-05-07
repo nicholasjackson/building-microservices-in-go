@@ -3,17 +3,16 @@ go:
   - 1.5
   - 1.6
   - 1.7
-  - tip
+  - 1.8
 
 go_import_path: github.com/DATA-DOG/godog
 
 install: go install github.com/DATA-DOG/godog/cmd/godog
 
 script:
-  # run standard go tests
   - go vet ./...
   - go fmt ./...
-  - go test -race -coverprofile=coverage.txt -covermode=atomic
+  - go test -v -race -coverprofile=coverage.txt -covermode=atomic
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

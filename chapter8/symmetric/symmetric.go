@@ -1,4 +1,4 @@
-package symetric
+package symmetric
 
 import (
 	"crypto/aes"

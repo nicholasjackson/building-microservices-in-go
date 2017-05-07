@@ -12,8 +12,8 @@ import (
 	"golang.org/x/sys/unix"
 )
 
-func TestSysctlUint64(t *testing.T) {
-	_, err := unix.SysctlUint64("security.mac.labeled")
+func TestSysctUint64(t *testing.T) {
+	_, err := unix.SysctlUint64("vm.max_kernel_address")
 	if err != nil {
 		t.Fatal(err)
 	}

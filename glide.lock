@@ -1,5 +1,5 @@
-hash: 3c217d3e1335cc225f7ae0ea1a702e8d1456633af2a8ea54ae312d7921f7bc11
-updated: 2017-04-10T05:53:56.910279787+01:00
+hash: c042c006911b2408611d6f57fd1929e3b915bda00dfcaa1719ee9496cd0e298a
+updated: 2017-05-07T12:43:34.497601659+01:00
 imports:
 - name: github.com/alexcesaro/statsd
   version: 7fea3f0d2fab1ad973e641e51dba45443a311a90
@@ -16,7 +16,7 @@ imports:
 - name: github.com/dgrijalva/jwt-go
   version: 2268707a8f0843315e2004ee4f1d021dc08baedf
 - name: github.com/dvyukov/go-fuzz
-  version: de4efd4342d989fca6c026fddb26881bec76ad22
+  version: 14b1e57bb23fd6afd2ab5216c1cae55e9cbbacbb
   subpackages:
   - go-fuzz
   - go-fuzz-build
@@ -35,31 +35,42 @@ imports:
 - name: github.com/go-playground/universal-translator
   version: b32fa301c9fe55953584134cb6853a13c87ec0a1
 - name: github.com/golang/freetype
-  version: 255de57f4e681ed92b2d55a483a27194dfa2b3dc
+  version: bcfeb16b74e8aea9e2fe043406f2ef74b1cb0759
   subpackages:
   - raster
   - truetype
 - name: github.com/golang/glog
   version: 23def4e6c14b4da8ac2ed8007337bc5eb5007998
 - name: github.com/golang/protobuf
-  version: 2bba0603135d7d7f5cb73b2125beeda19c09f4ef
+  version: 18c9bb3261723cd5401db4d0c9fbc5c3b6c70fe8
   subpackages:
   - proto
+  - ptypes/any
 - name: github.com/gorilla/context
   version: 08b5f424b9271eedf6f9f0ce86cb9396ed337a42
 - name: github.com/gorilla/mux
-  version: 599cba5e7b6137d46ddf58fb1765f5d928e69604
+  version: 4c1c3952b7d9d0a061a3fa7b36fd373ba0398ebc
 - name: github.com/gorilla/websocket
   version: a91eba7f97777409bc2c443f5534d41dd20c5720
 - name: github.com/hashicorp/consul
-  version: 3ef7dde64c27e015c61be5e08c3ca55199726b1a
+  version: a212bf55fe687d417ff4d7059100d2936db4333d
   subpackages:
   - api
   - watch
 - name: github.com/hashicorp/go-cleanhttp
   version: 3573b8b52aa7b37b9358d966a898feb387f62437
+- name: github.com/hashicorp/go-immutable-radix
+  version: 30664b879c9a771d8d50b137ab80ee0748cb2fcc
+- name: github.com/hashicorp/go-memdb
+  version: ed59a4bb9146689d4b00d060b70b9e9648b523af
+- name: github.com/hashicorp/go-rootcerts
+  version: 6bb64b370b90e7ef1fa532be9e591a81c3493e00
+- name: github.com/hashicorp/golang-lru
+  version: 0a025b7e63adc15a622f29b0b2c4c3848243bbf6
+  subpackages:
+  - simplelru
 - name: github.com/hashicorp/serf
-  version: 19f2c401e122352c047a84d6584dd51e2fb8fcc4
+  version: 65c2babe73c7a096cd24e9eeec67613eb4e436c9
   subpackages:
   - coordinate
 - name: github.com/igm/sockjs-go
@@ -91,7 +102,7 @@ imports:
 - name: github.com/micro/cli
   version: 3d2263bb092286dde294a31049c92665f8373820
 - name: github.com/micro/go-micro
-  version: d7dc4e618bb890958da4bfcfe0475a8dc38f7c4f
+  version: e55e5033b824d58ee64166fef2594f9379731c84
   subpackages:
   - broker
   - broker/codec
@@ -125,9 +136,20 @@ imports:
   - lib/net
   - lib/tls
 - name: github.com/miekg/dns
-  version: dcffd061aaeef4f0ab8369d0443146462b64ea6d
+  version: f282f80e243cc2bf8f6410c30d821b93b794e168
+- name: github.com/mitchellh/go-homedir
+  version: b8bc1bf767474819792c23f32d8286a45736f1c6
 - name: github.com/mitchellh/hashstructure
   version: ab25296c0f51f1022f01cd99dfb45f1775de8799
+- name: github.com/nats-io/go-nats
+  version: 61923ed1eaf8398000991fbbee2ef11ab5a5be0d
+- name: github.com/nats-io/nats
+  version: 61923ed1eaf8398000991fbbee2ef11ab5a5be0d
+  subpackages:
+  - encoders/builtin
+  - util
+- name: github.com/nats-io/nuid
+  version: 3cf34f9fca4e88afa9da8eabd75e3326c9941b44
 - name: github.com/nicholasjackson/bench
   version: 7e0e679563e3cdae97ffd630f8dbd51552fe50de
   subpackages:
@@ -164,18 +186,18 @@ imports:
   subpackages:
   - drawing
 - name: golang.org/x/crypto
-  version: 6022e334c1a8cce46fb30629dc30e835faa3844d
+  version: 5a033cc77e57eca05bdb50522851d29e03569cbe
   subpackages:
   - ssh/terminal
 - name: golang.org/x/image
-  version: 84a65118940ed74c8e841be84d3e502c29eff703
+  version: f483456c9f61fd7c1e170033d58ef22ff5ffe291
   subpackages:
   - draw
   - font
   - math/f64
   - math/fixed
 - name: golang.org/x/net
-  version: d1e1b351919c6738fdeb9893d5c998b161464f0c
+  version: feeb485667d1fdabe727840fe00adc22431bc86e
   subpackages:
   - bpf
   - context
@@ -190,21 +212,26 @@ imports:
   - lex/httplex
   - trace
 - name: golang.org/x/sys
-  version: e24f485414aeafb646f6fca458b0bf869c0880a1
+  version: 9d4e42a20653790449273b3c85e67d6d8bae6e2e
   subpackages:
   - unix
 - name: golang.org/x/text
-  version: f4b4367115ec2de254587813edaa901bc1c723a8
+  version: 470f45bf29f4147d6fbd7dfd0a02a848e49f5bf4
   subpackages:
   - secure/bidirule
   - transform
   - unicode/bidi
   - unicode/norm
+- name: google.golang.org/genproto
+  version: 411e09b969b1170a9f0c467558eb4c4c110d9c77
+  subpackages:
+  - googleapis/rpc/status
 - name: google.golang.org/grpc
-  version: 8050b9cbc271307e5a716a9d782803d09b0d6f2d
+  version: d2e1b51f33ff8c5e4a15560ff049d200e83726c5
   subpackages:
   - codes
   - credentials
+  - grpclb/grpc_lb_v1
   - grpclog
   - internal
   - keepalive
@@ -212,6 +239,7 @@ imports:
   - naming
   - peer
   - stats
+  - status
   - tap
   - transport
 - name: gopkg.in/alexcesaro/statsd.v2
@@ -238,7 +266,7 @@ testImports:
 - name: github.com/alecthomas/repr
   version: d44565ca483f0ed23c2ac9cda62c966b116e77a3
 - name: github.com/DATA-DOG/godog
-  version: cf8fbb4ad0d5fab464a5c9b79abbcfbd7c27e85b
+  version: 92fbee719c9593813b24a6ef042bcad40324ede4
   subpackages:
   - colors
   - gherkin

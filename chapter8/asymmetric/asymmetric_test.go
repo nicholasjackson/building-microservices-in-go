@@ -1,4 +1,4 @@
-package asymetric
+package asymmetric
 
 import (
 	"fmt"

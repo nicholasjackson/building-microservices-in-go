@@ -1,10 +1,48 @@
-## 0.8.1 (UNRELEASED)
+## 0.8.2 (UNRELEASED)
 
 FEATURES:
 
 IMPROVEMENTS:
 
+* agent: Added an error at agent startup time if both `-ui` and `-ui-dir` are configured together. [GH-2576]
+* agent: Added the datacenter of a node to the catalog, health, and query API endpoints which contain a Node structure. [GH-2713]
+* agent: Added the `ca_path`, `tls_cipher_suites`, and `tls_prefer_server_cipher_suites` options to give more flexibility around configuring TLS. [GH-2963]
+* agent: Reduced the timeouts for the `-dev` server mode so that the development server starts up almost instantly. [GH-2984]
+* agent: Added `verify_incoming_rpc` and `verify_incoming_https` options for more granular control over incoming TLS enforcement. [GH-2974]
+* agent: Updated parts of Consul's Docker library in order to fix the build on Illumos. [GH-2989]
+* agent: Use bind address as source for outgoing connections. [GH-2822]
+* api: Added the ACL replication status endpoint to the Go API client library. [GH-2947]
+* cli: Added Raft protocol version to output of `operator raft list-peers` command.[GH-2929]
+* ui: Added optional JSON validation when editing KV entries in the web UI. [GH-2712]
+* ui: Updated ACL guide links and made guides open in a new tab. [GH-3010]
+
 BUG FIXES:
+
+* server: Fixed a panic when the tombstone garbage collector was stopped. [GH-2087]
+* server: Fixed a panic in Autopilot that could occur when a node is elected but cannot complete leader establishment and steps back down. [GH-2980]
+* server: Added a new peers.json format that allows outage recovery when using Raft protocol version 3 and higher. Previously, you'd have to set the Raft protocol version back to 2 in order to manually recover a cluster. See https://www.consul.io/docs/guides/outage.html#manual-recovery-using-peers-json for more details. [GH-3003]
+* ui: Add and update favicons [GH-2945]
+
+## 0.8.1 (April 17, 2017)
+
+FEATURES:
+
+IMPROVEMENTS:
+
+* agent: Node IDs derived from host information are now hashed to prevent things like common server hardware from generating IDs with a common prefix across nodes. [GH-2884]
+* agent: Added new `-disable-host-node-id` CLI flag and `disable_host_node_id` config option to the Consul agent to prevent it from using information from the host when generating a node ID. This will result in a random node ID, which is useful when running multiple Consul agents on the same host for testing purposes. Having this built-in eases configuring a random node ID when running in containers. [GH-2877]
+* agent: Removed useless "==> Caught signal: broken pipe" logging since that often results from problems sending telemetry or broken incoming client connections; operators don't need to be alerted to these. [GH-2768]
+* cli: Added TLS options for setting the client/CA certificates to use when communicating with Consul. These can be provided through environment variables or command line flags. [GH-2914]
+* build: Consul is now built with Go 1.8.1. [GH-2888]
+* ui: Updates Consul assets to new branding. [GH-2898]
+
+BUG FIXES:
+
+* api: Added missing Raft index fields to AgentService and Node structures. [GH-2882]
+* server: Fixed an issue where flood joins would not work with IPv6 addresses. [GH-2878]
+* server: Fixed an issue where electing a 0.8.x leader during an upgrade would cause a panic in older servers. [GH-2889]
+* server: Fixed an issue where tracking of leadership changes could become incorrect when changes occurred very rapidly. This could manifest as a panic in Autopilot, but could have caused other issues with multiple leader management routines running simultaneously. [GH-2896]
+* server: Fixed a panic when checking ACLs on a session that doesn't exist. [GH-2624]
 
 ## 0.8.0 (April 5, 2017)
 

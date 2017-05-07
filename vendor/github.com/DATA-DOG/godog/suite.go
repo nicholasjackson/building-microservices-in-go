@@ -4,11 +4,11 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"reflect"
 	"regexp"
-	"sort"
 	"strconv"
 	"strings"
 	"unicode/utf8"
@@ -49,7 +49,9 @@ type Suite struct {
 	fmt      Formatter
 
 	failed        bool
+	randomSeed    int64
 	stopOnFailure bool
+	strict        bool
 
 	// suite event handlers
 	beforeSuiteHandlers    []func()
@@ -94,17 +96,33 @@ func (s *Suite) Step(expr interface{}, stepFunc interface{}) {
 	if typ.Kind() != reflect.Func {
 		panic(fmt.Sprintf("expected handler to be func, but got: %T", stepFunc))
 	}
+
 	if typ.NumOut() != 1 {
-		panic(fmt.Sprintf("expected handler to return an error, but it has more values in return: %d", typ.NumOut()))
+		panic(fmt.Sprintf("expected handler to return only one value, but it has: %d", typ.NumOut()))
 	}
-	if typ.Out(0).Kind() != reflect.Interface || !typ.Out(0).Implements(errorInterface) {
-		panic(fmt.Sprintf("expected handler to return an error interface, but we have: %s", typ.Out(0).Kind()))
-	}
-	s.steps = append(s.steps, &StepDef{
+
+	def := &StepDef{
 		Handler: stepFunc,
 		Expr:    regex,
 		hv:      v,
-	})
+	}
+
+	typ = typ.Out(0)
+	switch typ.Kind() {
+	case reflect.Interface:
+		if !typ.Implements(errorInterface) {
+			panic(fmt.Sprintf("expected handler to return an error, but got: %s", typ.Kind()))
+		}
+	case reflect.Slice:
+		if typ.Elem().Kind() != reflect.String {
+			panic(fmt.Sprintf("expected handler to return []string for multistep, but got: []%s", typ.Kind()))
+		}
+		def.nested = true
+	default:
+		panic(fmt.Sprintf("expected handler to return an error or []string, but got: %s", typ.Kind()))
+	}
+
+	s.steps = append(s.steps, def)
 }
 
 // BeforeSuite registers a function or method
@@ -183,41 +201,18 @@ func (s *Suite) run() {
 }
 
 func (s *Suite) matchStep(step *gherkin.Step) *StepDef {
-	for _, h := range s.steps {
-		if m := h.Expr.FindStringSubmatch(step.Text); len(m) > 0 {
-			var args []interface{}
-			for _, m := range m[1:] {
-				args = append(args, m)
-			}
-			if step.Argument != nil {
-				args = append(args, step.Argument)
-			}
-			h.args = args
-			return h
-		}
+	def := s.matchStepText(step.Text)
+	if def != nil && step.Argument != nil {
+		def.args = append(def.args, step.Argument)
 	}
-	// @TODO can handle ambiguous
-	return nil
+	return def
 }
 
 func (s *Suite) runStep(step *gherkin.Step, prevStepErr error) (err error) {
 	match := s.matchStep(step)
 	s.fmt.Defined(step, match)
-	if match == nil {
-		s.fmt.Undefined(step)
-		return ErrUndefined
-	}
 
-	if prevStepErr != nil {
-		s.fmt.Skipped(step)
-		return nil
-	}
-
-	// run before step handlers
-	for _, f := range s.beforeStepHandlers {
-		f(step)
-	}
-
+	// user multistep definitions may panic
 	defer func() {
 		if e := recover(); e != nil {
 			err = &traceError{
@@ -225,6 +220,15 @@ func (s *Suite) runStep(step *gherkin.Step, prevStepErr error) (err error) {
 				stack: callStack(),
 			}
 		}
+
+		if prevStepErr != nil {
+			return
+		}
+
+		if err == ErrUndefined {
+			return
+		}
+
 		switch err {
 		case nil:
 			s.fmt.Passed(step, match)
@@ -240,17 +244,107 @@ func (s *Suite) runStep(step *gherkin.Step, prevStepErr error) (err error) {
 		}
 	}()
 
-	err = match.run()
+	if undef := s.maybeUndefined(step.Text); len(undef) > 0 {
+		if match != nil {
+			match = &StepDef{
+				args:      match.args,
+				hv:        match.hv,
+				Expr:      match.Expr,
+				Handler:   match.Handler,
+				nested:    match.nested,
+				undefined: undef,
+			}
+		}
+		s.fmt.Undefined(step, match)
+		return ErrUndefined
+	}
+
+	if prevStepErr != nil {
+		s.fmt.Skipped(step, match)
+		return nil
+	}
+
+	// run before step handlers
+	for _, f := range s.beforeStepHandlers {
+		f(step)
+	}
+
+	err = s.maybeSubSteps(match.run())
 	return
 }
 
-func (s *Suite) runSteps(steps []*gherkin.Step, prevErr error) (err error) {
-	err = prevErr
+func (s *Suite) maybeUndefined(text string) (undefined []string) {
+	step := s.matchStepText(text)
+	if nil == step {
+		undefined = append(undefined, text)
+		return
+	}
+
+	if !step.nested {
+		return
+	}
+
+	for _, next := range step.run().(Steps) {
+		undefined = append(undefined, s.maybeUndefined(next)...)
+	}
+	return
+}
+
+func (s *Suite) maybeSubSteps(result interface{}) error {
+	if nil == result {
+		return nil
+	}
+
+	if err, ok := result.(error); ok {
+		return err
+	}
+
+	steps, ok := result.(Steps)
+	if !ok {
+		return fmt.Errorf("unexpected error, should have been []string: %T - %+v", result, result)
+	}
+
+	for _, text := range steps {
+		if def := s.matchStepText(text); def == nil {
+			return ErrUndefined
+		} else if err := s.maybeSubSteps(def.run()); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (s *Suite) matchStepText(text string) *StepDef {
+	for _, h := range s.steps {
+		if m := h.Expr.FindStringSubmatch(text); len(m) > 0 {
+			var args []interface{}
+			for _, m := range m[1:] {
+				args = append(args, m)
+			}
+
+			// since we need to assign arguments
+			// better to copy the step definition
+			return &StepDef{
+				args:    args,
+				hv:      h.hv,
+				Expr:    h.Expr,
+				Handler: h.Handler,
+				nested:  h.nested,
+			}
+		}
+	}
+	return nil
+}
+
+func (s *Suite) runSteps(steps []*gherkin.Step) (err error) {
 	for _, step := range steps {
 		stepErr := s.runStep(step, err)
 		switch stepErr {
 		case ErrUndefined:
-			err = stepErr
+			// do not overwrite failed error
+			if err == ErrUndefined || err == nil {
+				err = stepErr
+			}
 		case ErrPending:
 			err = stepErr
 		case nil:
@@ -263,7 +357,7 @@ func (s *Suite) runSteps(steps []*gherkin.Step, prevErr error) (err error) {
 
 func (s *Suite) skipSteps(steps []*gherkin.Step) {
 	for _, step := range steps {
-		s.fmt.Skipped(step)
+		s.fmt.Skipped(step, s.matchStep(step))
 	}
 }
 
@@ -306,18 +400,17 @@ func (s *Suite) runOutline(outline *gherkin.ScenarioOutline, b *gherkin.Backgrou
 			// run example table row
 			s.fmt.Node(group)
 
-			// run background
-			var err error
 			if b != nil {
-				err = s.runSteps(b.Steps, err)
+				steps = append(b.Steps, steps...)
 			}
-			err = s.runSteps(steps, err)
+
+			err := s.runSteps(steps)
 
 			for _, f := range s.afterScenarioHandlers {
 				f(outline, err)
 			}
 
-			if err != nil && err != ErrUndefined && err != ErrPending {
+			if s.shouldFail(err) {
 				failErr = err
 				if s.stopOnFailure {
 					return
@@ -328,9 +421,35 @@ func (s *Suite) runOutline(outline *gherkin.ScenarioOutline, b *gherkin.Backgrou
 	return
 }
 
+func (s *Suite) shouldFail(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	if err == ErrUndefined || err == ErrPending {
+		return s.strict
+	}
+
+	return true
+}
+
 func (s *Suite) runFeature(f *feature) {
 	s.fmt.Feature(f.Feature, f.Path, f.Content)
-	for _, scenario := range f.ScenarioDefinitions {
+
+	// make a local copy of the feature scenario defenitions,
+	// then shuffle it if we are randomizing scenarios
+	scenarios := make([]interface{}, len(f.ScenarioDefinitions))
+	if s.randomSeed != 0 {
+		r := rand.New(rand.NewSource(s.randomSeed))
+		perm := r.Perm(len(f.ScenarioDefinitions))
+		for i, v := range perm {
+			scenarios[v] = f.ScenarioDefinitions[i]
+		}
+	} else {
+		copy(scenarios, f.ScenarioDefinitions)
+	}
+
+	for _, scenario := range scenarios {
 		var err error
 		if f.Background != nil {
 			s.fmt.Node(f.Background)
@@ -341,7 +460,7 @@ func (s *Suite) runFeature(f *feature) {
 		case *gherkin.Scenario:
 			err = s.runScenario(t, f.Background)
 		}
-		if err != nil && err != ErrUndefined && err != ErrPending {
+		if s.shouldFail(err) {
 			s.failed = true
 			if s.stopOnFailure {
 				return
@@ -359,12 +478,13 @@ func (s *Suite) runScenario(scenario *gherkin.Scenario, b *gherkin.Background) (
 	s.fmt.Node(scenario)
 
 	// background
+	steps := scenario.Steps
 	if b != nil {
-		err = s.runSteps(b.Steps, err)
+		steps = append(b.Steps, steps...)
 	}
 
 	// scenario
-	err = s.runSteps(scenario.Steps, err)
+	err = s.runSteps(steps)
 
 	// run after scenario handlers
 	for _, f := range s.afterScenarioHandlers {
@@ -374,7 +494,7 @@ func (s *Suite) runScenario(scenario *gherkin.Scenario, b *gherkin.Background) (
 	return
 }
 
-func (s *Suite) printStepDefinitions() {
+func (s *Suite) printStepDefinitions(w io.Writer) {
 	var longest int
 	for _, def := range s.steps {
 		n := utf8.RuneCountInString(def.Expr.String())
@@ -386,10 +506,10 @@ func (s *Suite) printStepDefinitions() {
 		n := utf8.RuneCountInString(def.Expr.String())
 		location := def.definitionID()
 		spaces := strings.Repeat(" ", longest-n)
-		fmt.Println(yellow(def.Expr.String())+spaces, black("# "+location))
+		fmt.Fprintln(w, yellow(def.Expr.String())+spaces, black("# "+location))
 	}
 	if len(s.steps) == 0 {
-		fmt.Println("there were no contexts registered, could not find any step definition..")
+		fmt.Fprintln(w, "there were no contexts registered, could not find any step definition..")
 	}
 }
 
@@ -451,15 +571,8 @@ func parseFeatures(filter string, paths []string) (features []*feature, err erro
 			return features, err
 		}
 	}
-	sort.Sort(featuresSortedByPath(features))
 	return
 }
-
-type featuresSortedByPath []*feature
-
-func (s featuresSortedByPath) Len() int           { return len(s) }
-func (s featuresSortedByPath) Less(i, j int) bool { return s[i].Path < s[j].Path }
-func (s featuresSortedByPath) Swap(i, j int)      { s[i], s[j] = s[j], s[i] }
 
 func applyTagFilter(tags string, ft *gherkin.Feature) {
 	if len(tags) == 0 {

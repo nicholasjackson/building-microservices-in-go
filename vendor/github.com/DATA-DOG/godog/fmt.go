@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"os"
 	"reflect"
 	"regexp"
+	"strconv"
 	"strings"
 	"text/template"
 	"time"
@@ -51,20 +53,13 @@ type registeredFormatter struct {
 
 var formatters []*registeredFormatter
 
-func findFmt(format string) (f FormatterFunc, err error) {
-	var names []string
+func findFmt(format string) FormatterFunc {
 	for _, el := range formatters {
 		if el.name == format {
-			f = el.fmt
-			break
+			return el.fmt
 		}
-		names = append(names, el.name)
 	}
-
-	if f == nil {
-		err = fmt.Errorf(`unregistered formatter name: "%s", use one of: %s`, format, strings.Join(names, ", "))
-	}
-	return
+	return nil
 }
 
 // Format registers a feature suite output
@@ -103,8 +98,8 @@ type Formatter interface {
 	Defined(*gherkin.Step, *StepDef)
 	Failed(*gherkin.Step, *StepDef, error)
 	Passed(*gherkin.Step, *StepDef)
-	Skipped(*gherkin.Step)
-	Undefined(*gherkin.Step)
+	Skipped(*gherkin.Step, *StepDef)
+	Undefined(*gherkin.Step, *StepDef)
 	Pending(*gherkin.Step, *StepDef)
 	Summary()
 }
@@ -208,21 +203,23 @@ func (f *basefmt) Passed(step *gherkin.Step, match *StepDef) {
 	f.passed = append(f.passed, s)
 }
 
-func (f *basefmt) Skipped(step *gherkin.Step) {
+func (f *basefmt) Skipped(step *gherkin.Step, match *StepDef) {
 	s := &stepResult{
 		owner:   f.owner,
 		feature: f.features[len(f.features)-1],
 		step:    step,
+		def:     match,
 		typ:     skipped,
 	}
 	f.skipped = append(f.skipped, s)
 }
 
-func (f *basefmt) Undefined(step *gherkin.Step) {
+func (f *basefmt) Undefined(step *gherkin.Step, match *StepDef) {
 	s := &stepResult{
 		owner:   f.owner,
 		feature: f.features[len(f.features)-1],
 		step:    step,
+		def:     match,
 		typ:     undefined,
 	}
 	f.undefined = append(f.undefined, s)
@@ -303,7 +300,7 @@ func (f *basefmt) Summary() {
 		scenarios = append(scenarios, green(fmt.Sprintf("%d passed", passed)))
 	}
 	scenarios = append(scenarios, parts...)
-	elapsed := time.Since(f.started)
+	elapsed := timeNowFunc().Sub(f.started)
 
 	fmt.Fprintln(f.out, "")
 	if total == 0 {
@@ -318,6 +315,13 @@ func (f *basefmt) Summary() {
 		fmt.Fprintln(f.out, fmt.Sprintf("%d steps (%s)", nsteps, strings.Join(steps, ", ")))
 	}
 	fmt.Fprintln(f.out, elapsed)
+
+	// prints used randomization seed
+	seed, err := strconv.ParseInt(os.Getenv("GODOG_SEED"), 10, 64)
+	if err == nil && seed != 0 {
+		fmt.Fprintln(f.out, "")
+		fmt.Fprintln(f.out, "Randomized with seed:", colors.Yellow(seed))
+	}
 
 	if text := f.snippets(); text != "" {
 		fmt.Fprintln(f.out, yellow("\nYou can implement step definitions for undefined steps with these snippets:"))
@@ -385,38 +389,46 @@ func (f *basefmt) snippets() string {
 	var snips []*undefinedSnippet
 	// build snippets
 	for _, u := range f.undefined {
-		expr := snippetExprCleanup.ReplaceAllString(u.step.Text, "\\$1")
-		expr = snippetNumbers.ReplaceAllString(expr, "(\\d+)")
-		expr = snippetExprQuoted.ReplaceAllString(expr, "$1\"([^\"]*)\"$2")
-		expr = "^" + strings.TrimSpace(expr) + "$"
+		steps := []string{u.step.Text}
+		arg := u.step.Argument
+		if u.def != nil {
+			steps = u.def.undefined
+			arg = nil
+		}
+		for _, step := range steps {
+			expr := snippetExprCleanup.ReplaceAllString(step, "\\$1")
+			expr = snippetNumbers.ReplaceAllString(expr, "(\\d+)")
+			expr = snippetExprQuoted.ReplaceAllString(expr, "$1\"([^\"]*)\"$2")
+			expr = "^" + strings.TrimSpace(expr) + "$"
 
-		name := snippetNumbers.ReplaceAllString(u.step.Text, " ")
-		name = snippetExprQuoted.ReplaceAllString(name, " ")
-		name = snippetMethodName.ReplaceAllString(name, "")
-		var words []string
-		for i, w := range strings.Split(name, " ") {
-			if i != 0 {
-				w = strings.Title(w)
-			} else {
-				w = string(unicode.ToLower(rune(w[0]))) + w[1:]
+			name := snippetNumbers.ReplaceAllString(step, " ")
+			name = snippetExprQuoted.ReplaceAllString(name, " ")
+			name = snippetMethodName.ReplaceAllString(name, "")
+			var words []string
+			for i, w := range strings.Split(name, " ") {
+				if i != 0 {
+					w = strings.Title(w)
+				} else {
+					w = string(unicode.ToLower(rune(w[0]))) + w[1:]
+				}
+				words = append(words, w)
 			}
-			words = append(words, w)
-		}
-		name = strings.Join(words, "")
-		if len(name) == 0 {
-			index++
-			name = fmt.Sprintf("stepDefinition%d", index)
-		}
+			name = strings.Join(words, "")
+			if len(name) == 0 {
+				index++
+				name = fmt.Sprintf("stepDefinition%d", index)
+			}
 
-		var found bool
-		for _, snip := range snips {
-			if snip.Expr == expr {
-				found = true
-				break
+			var found bool
+			for _, snip := range snips {
+				if snip.Expr == expr {
+					found = true
+					break
+				}
 			}
-		}
-		if !found {
-			snips = append(snips, &undefinedSnippet{Method: name, Expr: expr, argument: u.step.Argument})
+			if !found {
+				snips = append(snips, &undefinedSnippet{Method: name, Expr: expr, argument: arg})
+			}
 		}
 	}
 

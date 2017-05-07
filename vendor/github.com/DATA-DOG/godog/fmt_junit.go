@@ -21,7 +21,7 @@ func junitFunc(suite string, out io.Writer) Formatter {
 			TestSuites: make([]*junitTestSuite, 0),
 		},
 		out:     out,
-		started: time.Now(),
+		started: timeNowFunc(),
 	}
 }
 
@@ -45,9 +45,9 @@ func (j *junitFormatter) Feature(feature *gherkin.Feature, path string, c []byte
 	}
 
 	if len(j.suite.TestSuites) > 0 {
-		j.current().Time = time.Since(j.featStarted).String()
+		j.current().Time = timeNowFunc().Sub(j.featStarted).String()
 	}
-	j.featStarted = time.Now()
+	j.featStarted = timeNowFunc()
 	j.suite.TestSuites = append(j.suite.TestSuites, testSuite)
 }
 
@@ -62,14 +62,12 @@ func (j *junitFormatter) Node(node interface{}) {
 	switch t := node.(type) {
 	case *gherkin.ScenarioOutline:
 		j.outline = t
+		j.outlineExample = 0
 		return
 	case *gherkin.Scenario:
 		tcase.Name = t.Name
 		suite.Tests++
 		j.suite.Tests++
-	case *gherkin.Examples:
-		j.outlineExample = 0
-		return
 	case *gherkin.TableRow:
 		j.outlineExample++
 		tcase.Name = fmt.Sprintf("%s #%d", j.outline.Name, j.outlineExample)
@@ -78,10 +76,7 @@ func (j *junitFormatter) Node(node interface{}) {
 	default:
 		return
 	}
-	if len(suite.TestCases) > 0 {
-		suite.current().Time = time.Since(j.caseStarted).String()
-	}
-	j.caseStarted = time.Now()
+	j.caseStarted = timeNowFunc()
 	suite.TestCases = append(suite.TestCases, tcase)
 }
 
@@ -91,6 +86,7 @@ func (j *junitFormatter) Failed(step *gherkin.Step, match *StepDef, err error) {
 	j.suite.Failures++
 
 	tcase := suite.current()
+	tcase.Time = timeNowFunc().Sub(j.caseStarted).String()
 	tcase.Status = "failed"
 	tcase.Failure = &junitFailure{
 		Message: fmt.Sprintf("%s %s: %s", step.Type, step.Text, err.Error()),
@@ -101,18 +97,31 @@ func (j *junitFormatter) Passed(step *gherkin.Step, match *StepDef) {
 	suite := j.current()
 
 	tcase := suite.current()
+	tcase.Time = timeNowFunc().Sub(j.caseStarted).String()
 	tcase.Status = "passed"
 }
 
-func (j *junitFormatter) Skipped(step *gherkin.Step) {
-}
-
-func (j *junitFormatter) Undefined(step *gherkin.Step) {
+func (j *junitFormatter) Skipped(step *gherkin.Step, match *StepDef) {
 	suite := j.current()
-	suite.Errors++
-	j.suite.Errors++
 
 	tcase := suite.current()
+	tcase.Time = timeNowFunc().Sub(j.caseStarted).String()
+	tcase.Error = append(tcase.Error, &junitError{
+		Type:    "skipped",
+		Message: fmt.Sprintf("%s %s", step.Type, step.Text),
+	})
+}
+
+func (j *junitFormatter) Undefined(step *gherkin.Step, match *StepDef) {
+	suite := j.current()
+	tcase := suite.current()
+	if tcase.Status != "undefined" {
+		// do not count two undefined steps as another error
+		suite.Errors++
+		j.suite.Errors++
+	}
+
+	tcase.Time = timeNowFunc().Sub(j.caseStarted).String()
 	tcase.Status = "undefined"
 	tcase.Error = append(tcase.Error, &junitError{
 		Type:    "undefined",
@@ -126,6 +135,7 @@ func (j *junitFormatter) Pending(step *gherkin.Step, match *StepDef) {
 	j.suite.Errors++
 
 	tcase := suite.current()
+	tcase.Time = timeNowFunc().Sub(j.caseStarted).String()
 	tcase.Status = "pending"
 	tcase.Error = append(tcase.Error, &junitError{
 		Type:    "pending",
@@ -134,7 +144,10 @@ func (j *junitFormatter) Pending(step *gherkin.Step, match *StepDef) {
 }
 
 func (j *junitFormatter) Summary() {
-	j.suite.Time = time.Since(j.started).String()
+	if j.current() != nil {
+		j.current().Time = timeNowFunc().Sub(j.featStarted).String()
+	}
+	j.suite.Time = timeNowFunc().Sub(j.started).String()
 	io.WriteString(j.out, xml.Header)
 
 	enc := xml.NewEncoder(j.out)

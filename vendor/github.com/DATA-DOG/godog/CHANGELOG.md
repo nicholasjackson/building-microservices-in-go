@@ -1,5 +1,23 @@
 # Change LOG
 
+**2017-05-04**
+- added **--strict** option in order to fail suite when there are pending
+  or undefined steps. By default, suite passes and treats pending or
+  undefined steps as TODOs.
+
+**2017-04-29** - **v0.7.0**
+- added support for nested steps. From now on, it is possible to return
+  **godog.Steps** instead of an **error** in the step definition func.
+  This change introduced few minor changes in **Formatter** interface. Be
+  sure to adapt the changes if you have custom formatters.
+
+**2017-04-27**
+- added an option to randomize scenario execution order, so we could
+  ensure that scenarios do not depend on global state.
+- godog was manually sorting feature files by name. Now it just runs them
+  in given order, you may sort them anyway you like. For example `godog
+  $(find . -name '*.feature' | sort)`
+
 **2016-10-30** - **v0.6.0**
 - added experimental **events** format, this might be used for unified
   cucumber formats. But should be not adapted widely, since it is highly

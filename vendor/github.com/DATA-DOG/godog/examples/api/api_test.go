@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -53,16 +52,41 @@ func (a *apiFeature) theResponseCodeShouldBe(code int) error {
 
 func (a *apiFeature) theResponseShouldMatchJSON(body *gherkin.DocString) (err error) {
 	var expected, actual []byte
-	var data interface{}
-	if err = json.Unmarshal([]byte(body.Content), &data); err != nil {
+	var exp, act interface{}
+
+	// re-encode expected response
+	if err = json.Unmarshal([]byte(body.Content), &exp); err != nil {
 		return
 	}
-	if expected, err = json.Marshal(data); err != nil {
+	if expected, err = json.MarshalIndent(exp, "", "  "); err != nil {
 		return
 	}
-	actual = a.resp.Body.Bytes()
-	if !bytes.Equal(actual, expected) {
-		err = fmt.Errorf("expected json, does not match actual: %s", string(actual))
+
+	// re-encode actual response too
+	if err = json.Unmarshal(a.resp.Body.Bytes(), &act); err != nil {
+		return
+	}
+	if actual, err = json.MarshalIndent(act, "", "  "); err != nil {
+		return
+	}
+
+	// the matching may be adapted per different requirements.
+	if len(actual) != len(expected) {
+		return fmt.Errorf(
+			"expected json length: %d does not match actual: %d:\n%s",
+			len(expected),
+			len(actual),
+			string(actual),
+		)
+	}
+
+	for i, b := range actual {
+		if b != expected[i] {
+			return fmt.Errorf(
+				"expected JSON does not match actual, showing up to last matched character:\n%s",
+				string(actual[:i+1]),
+			)
+		}
 	}
 	return
 }

@@ -30,9 +30,6 @@ Example:
 		  foo
 		  """
 
-As a developer, your work is done as soon as you’ve made the ls command behave as
-described in the Scenario.
-
 Now, wouldn’t it be cool if something could read this sentence and use it to actually
 run a test against the ls command? Hey, that’s exactly what this package does!
 As you’ll see, Godog is easy to learn, quick to use, and will put the fun back into tests.
@@ -42,4 +39,4 @@ Godog was inspired by Behat and Cucumber the above description is taken from it'
 package godog
 
 // Version of package - based on Semantic Versioning 2.0.0 http://semver.org/
-const Version = "v0.6.3"
+const Version = "v0.7.2"

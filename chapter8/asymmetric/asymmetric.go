@@ -1,4 +1,4 @@
-package asymetric
+package asymmetric
 
 import (
 	"crypto/rand"
@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/nicholasjackson/building-microservices-in-go/chapter8/symetric"
+	"github.com/nicholasjackson/building-microservices-in-go/chapter8/symmetric"
 	"github.com/nicholasjackson/building-microservices-in-go/chapter8/utils"
 )
 
@@ -72,7 +72,7 @@ func DecryptMessageWithPrivateKey(message string) (string, error) {
 // used to encypt the message which is encrypted with the public key
 func EncryptLargeMessageWithPublicKey(message string) (ciphertext string, cipherkey string, err error) {
 	key := utils.GenerateRandomString(16) // 16, 24, 32 keysize, random string is 2 bytes per char so 16 chars returns 32 bytes
-	cipherData, err := symetric.EncryptData([]byte(message), []byte(key))
+	cipherData, err := symmetric.EncryptData([]byte(message), []byte(key))
 	if err != nil {
 		return "", "", err
 	}
@@ -99,7 +99,7 @@ func DecryptLargeMessageWithPrivateKey(message, key string) (string, error) {
 		return "", err
 	}
 
-	data, err := symetric.DecryptData(messageData, []byte(keystring))
+	data, err := symmetric.DecryptData(messageData, []byte(keystring))
 
 	return string(data), err
 }

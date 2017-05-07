@@ -4,7 +4,10 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"math/rand"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/DATA-DOG/godog/colors"
 )
@@ -26,9 +29,13 @@ var descTagsOption = "Filter scenarios by tags. Expression can be:\n" +
 	s(4) + "- " + colors.Yellow(`"@wip && ~@new"`) + ": run wip scenarios, but exclude new\n" +
 	s(4) + "- " + colors.Yellow(`"@wip,@undone"`) + ": run wip or undone scenarios"
 
+var descRandomOption = "Randomly shuffle the scenario execution order.\n" +
+	"Specify SEED to reproduce the shuffling from a previous run.\n" +
+	s(4) + `e.g. ` + colors.Yellow(`--random`) + " or " + colors.Yellow(`--random=5738`)
+
 // FlagSet allows to manage flags by external suite runner
 func FlagSet(opt *Options) *flag.FlagSet {
-	descFormatOption := "How to format tests output. Available formats:\n"
+	descFormatOption := "How to format tests output. Built-in formats:\n"
 	// @TODO: sort by name
 	for name, desc := range AvailableFormatters() {
 		descFormatOption += s(4) + "- " + colors.Yellow(name) + ": " + desc + "\n"
@@ -45,7 +52,9 @@ func FlagSet(opt *Options) *flag.FlagSet {
 	set.BoolVar(&opt.ShowStepDefinitions, "definitions", false, "Print all available step definitions.")
 	set.BoolVar(&opt.ShowStepDefinitions, "d", false, "Print all available step definitions.")
 	set.BoolVar(&opt.StopOnFailure, "stop-on-failure", false, "Stop processing on first failed scenario.")
+	set.BoolVar(&opt.Strict, "strict", false, "Fail suite when there are pending or undefined steps.")
 	set.BoolVar(&opt.NoColors, "no-colors", false, "Disable ansi colors.")
+	set.Var(&randomSeed{&opt.Randomize}, "random", descRandomOption)
 	set.Usage = usage(set, opt.Output)
 	return set
 }
@@ -64,7 +73,14 @@ func (f *flagged) name() string {
 	case len(f.short) > 0:
 		name = fmt.Sprintf("-%s", f.short)
 	}
-	if f.dflt != "true" && f.dflt != "false" {
+
+	if f.long == "random" {
+		// `random` is special in that we will later assign it randomly
+		// if the user specifies `--random` without specifying one,
+		// so mask the "default" value here to avoid UI confusion about
+		// what the value will end up being.
+		name += "[=SEED]"
+	} else if f.dflt != "true" && f.dflt != "false" {
 		name += "=" + f.dflt
 	}
 	return name
@@ -117,7 +133,7 @@ func usage(set *flag.FlagSet, w io.Writer) func() {
 
 		// --- GENERAL ---
 		fmt.Fprintln(w, colors.Yellow("Usage:"))
-		fmt.Printf(s(2) + "godog [options] [<features>]\n\n")
+		fmt.Fprintf(w, s(2)+"godog [options] [<features>]\n\n")
 		// description
 		fmt.Fprintln(w, "Builds a test package and runs given feature files.")
 		fmt.Fprintf(w, "Command should be run from the directory of tested package and contain buildable go source.\n\n")
@@ -134,4 +150,43 @@ func usage(set *flag.FlagSet, w io.Writer) func() {
 		}
 		fmt.Fprintln(w, "")
 	}
+}
+
+// randomSeed implements `flag.Value`, see https://golang.org/pkg/flag/#Value
+type randomSeed struct {
+	ref *int64
+}
+
+// Choose randomly assigns a convenient pseudo-random seed value.
+// The resulting seed will be between `1-99999` for later ease of specification.
+func (rs *randomSeed) choose() {
+	r := rand.New(rand.NewSource(time.Now().UTC().UnixNano()))
+	*rs.ref = r.Int63n(99998) + 1
+}
+
+func (rs *randomSeed) Set(s string) error {
+	if s == "true" {
+		rs.choose()
+		return nil
+	}
+
+	if s == "false" {
+		*rs.ref = 0
+		return nil
+	}
+
+	i, err := strconv.ParseInt(s, 10, 64)
+	*rs.ref = i
+	return err
+}
+
+func (rs randomSeed) String() string {
+	return strconv.FormatInt(*rs.ref, 10)
+}
+
+// If a Value has an IsBoolFlag() bool method returning true, the command-line
+// parser makes -name equivalent to -name=true rather than using the next
+// command-line argument.
+func (rs *randomSeed) IsBoolFlag() bool {
+	return *rs.ref == 0
 }

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"io"
 	"math"
+	"strings"
 	"sync"
-	"time"
 
 	"github.com/DATA-DOG/godog/gherkin"
 )
@@ -17,7 +17,7 @@ func init() {
 func progressFunc(suite string, out io.Writer) Formatter {
 	return &progress{
 		basefmt: basefmt{
-			started: time.Now(),
+			started: timeNowFunc(),
 			indent:  2,
 			out:     out,
 		},
@@ -58,7 +58,7 @@ func (f *progress) Summary() {
 	if len(f.failed) > 0 {
 		fmt.Fprintln(f.out, "\n--- "+red("Failed steps:")+"\n")
 		for _, fail := range f.failed {
-			fmt.Fprintln(f.out, s(4)+red(fail.step.Keyword+" "+fail.step.Text)+black(" # "+fail.line()))
+			fmt.Fprintln(f.out, s(4)+red(strings.TrimSpace(fail.step.Keyword)+" "+fail.step.Text)+black(" # "+fail.line()))
 			fmt.Fprintln(f.out, s(6)+red("Error: ")+redb(fmt.Sprintf("%+v", fail.err))+"\n")
 		}
 	}
@@ -91,17 +91,17 @@ func (f *progress) Passed(step *gherkin.Step, match *StepDef) {
 	f.step(f.passed[len(f.passed)-1])
 }
 
-func (f *progress) Skipped(step *gherkin.Step) {
+func (f *progress) Skipped(step *gherkin.Step, match *StepDef) {
 	f.Lock()
 	defer f.Unlock()
-	f.basefmt.Skipped(step)
+	f.basefmt.Skipped(step, match)
 	f.step(f.skipped[len(f.skipped)-1])
 }
 
-func (f *progress) Undefined(step *gherkin.Step) {
+func (f *progress) Undefined(step *gherkin.Step, match *StepDef) {
 	f.Lock()
 	defer f.Unlock()
-	f.basefmt.Undefined(step)
+	f.basefmt.Undefined(step, match)
 	f.step(f.undefined[len(f.undefined)-1])
 }
 
