@@ -11,7 +11,7 @@ import (
 	"github.com/nats-io/nats"
 )
 
-type Product struct {
+type product struct {
 	Name string `json:"name"`
 	SKU  string `json:"sku"`
 }
@@ -59,32 +59,14 @@ func init() {
 
 func main() {
 	log.Println("Subscribing to events")
-
 	natsClient.Subscribe("product.inserted", func(m *nats.Msg) {
 		log.Println("New event")
-
-		product := Product{}
-		err := json.Unmarshal(m.Data, &product)
-		if err != nil {
-			log.Println("Unable to unmarshal event object")
-			return
-		}
-
-		txn := db.Txn(true)
-		if err := txn.Insert("product", product); err != nil {
-			log.Println(err)
-			return
-		}
-		txn.Commit()
-
-		log.Println("Saved product: ", product)
+		productMessage(m)
 	})
-
-	log.Println("Starting Product Service")
 
 	http.DefaultServeMux.HandleFunc("/product", getProducts)
 
-	log.Println("Starting server on port 8081")
+	log.Println("Starting product read service on port 8081")
 	log.Fatal(http.ListenAndServe(":8081", http.DefaultServeMux))
 }
 
@@ -99,7 +81,7 @@ func getProducts(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	products := make([]Product, 0)
+	products := make([]product, 0)
 	for {
 		obj := results.Next()
 		if obj == nil {
@@ -107,9 +89,27 @@ func getProducts(rw http.ResponseWriter, r *http.Request) {
 		}
 
 		fmt.Println(r)
-		products = append(products, obj.(Product))
+		products = append(products, obj.(product))
 	}
 
 	encoder := json.NewEncoder(rw)
 	encoder.Encode(products)
+}
+
+func productMessage(m *nats.Msg) {
+	p := product{}
+	err := json.Unmarshal(m.Data, &p)
+	if err != nil {
+		log.Println("Unable to unmarshal event object")
+		return
+	}
+
+	txn := db.Txn(true)
+	if err := txn.Insert("product", p); err != nil {
+		log.Println(err)
+		return
+	}
+	txn.Commit()
+
+	log.Println("Saved product: ", p)
 }

@@ -12,7 +12,7 @@ import (
 	nats "github.com/nats-io/go-nats"
 )
 
-type Product struct {
+type product struct {
 	Name string `json:"name"`
 	SKU  string `json:"sku"`
 }
@@ -53,11 +53,11 @@ func init() {
 
 	txn := db.Txn(true)
 
-	if err := txn.Insert("product", Product{"Test1", "ABC232323"}); err != nil {
+	if err := txn.Insert("product", product{"Test1", "ABC232323"}); err != nil {
 		log.Fatal(err)
 	}
 
-	if err := txn.Insert("product", Product{"Test2", "ABC883388"}); err != nil {
+	if err := txn.Insert("product", product{"Test2", "ABC883388"}); err != nil {
 		log.Fatal(err)
 	}
 
@@ -70,11 +70,9 @@ func init() {
 }
 
 func main() {
-	log.Println("Starting Product Service")
-
 	http.DefaultServeMux.HandleFunc("/product", productsHandler)
 
-	log.Println("Starting server on port 8080")
+	log.Println("Starting product write service on port 8080")
 	log.Fatal(http.ListenAndServe(":8080", http.DefaultServeMux))
 }
 
