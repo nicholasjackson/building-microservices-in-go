@@ -20,7 +20,7 @@ func main() {
 	fmt.Println("Benchmarking application")
 
 	c = rpc.NewClient(client.PoolSize(256))
-	b := bench.New(400, 300*time.Second, 90*time.Second, 5*time.Second)
+	b := bench.New(!false, 400, 300*time.Second, 90*time.Second, 5*time.Second)
 	b.AddOutput(0*time.Second, os.Stdout, output.WriteTabularData)
 	b.AddOutput(1*time.Second, util.NewFile("./output.txt"), output.WriteTabularData)
 	b.AddOutput(1*time.Second, util.NewFile("./error.txt"), output.WriteErrorLogs)
@@ -34,9 +34,9 @@ func GoMicroRequest() error {
 	request := c.NewRequest("bmigo.micro.Kittens", "Kittens.Hello", &kittens.Request{Name: "Nic"})
 	response := &kittens.Response{}
 
-	err := c.CallRemote(
+	err := c.Call(
 		context.TODO(),
-		"consul.acet.io:8091",
+		// "consul.acet.io:8091",
 		request,
 		response)
 
