@@ -12,14 +12,14 @@ import (
 
 func main() {
 
-	k := kite.New("math", "1.0.0")
+	k := kite.New("hello", "1.0.0")
 	c := config.MustGet()
 	k.Config = c
 	k.Config.KontrolURL = "http://kontrol:6000/kite"
 
 	k.RegisterForever(&url.URL{Scheme: "http", Host: "127.0.0.1:8091", Path: "/kite"})
 
-	// Add our handler method with the name "square"
+	// Add our handler method with the name "Hello"
 	k.HandleFunc("Hello", func(r *kite.Request) (interface{}, error) {
 		name, _ := r.Args.One().String()
 

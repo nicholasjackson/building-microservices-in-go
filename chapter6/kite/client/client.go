@@ -34,7 +34,7 @@ func main() {
 	// Wait until connected
 	<-connected
 
-	response, _ := kittenServer.Tell("Hello", "Nic") // call "square" method with argument 4
+	response, _ := kittenServer.Tell("Hello", "Nic") // call "Hello" method with argument 4
 	message, _ := response.String()
 	fmt.Println("result:", message)
 }

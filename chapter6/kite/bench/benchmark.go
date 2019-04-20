@@ -20,7 +20,7 @@ func main() {
 	kittenServer = k.NewClient("http://consul.acet.io:8091/kite")
 	kittenServer.Dial()
 
-	b := bench.New(400, 300*time.Second, 90*time.Second, 5*time.Second)
+	b := bench.New(false, 400, 300*time.Second, 90*time.Second, 5*time.Second)
 	b.AddOutput(0*time.Second, os.Stdout, output.WriteTabularData)
 	b.AddOutput(1*time.Second, util.NewFile("./output.txt"), output.WriteTabularData)
 	b.AddOutput(1*time.Second, util.NewFile("./error.txt"), output.WriteErrorLogs)
